@@ -9,30 +9,21 @@ export default function ProductForm({
   title: existingTitle,
   description: existingDescription,
   price: existingPrice,
-  images: existingImages,
-  category: assignedCategory,
+  // images: existingImages,
   properties: assignedProperties,
 }) {
   const [title, setTitle] = useState(existingTitle || '');
   const [description, setDescription] = useState(existingDescription || '');
-  const [category, setCategory] = useState(assignedCategory || '');
   const [productProperties, setProductProperties] = useState(assignedProperties || {});
   const [price, setPrice] = useState(existingPrice || '');
-  const [images, setImages] = useState(existingImages || []);
   const [goToProducts, setGoToProducts] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
-  const [categories, setCategories] = useState([]);
   const router = useRouter();
 
-  useEffect(() => {
-    axios.get('/api/categories').then(result => {
-      setCategories(result.data);
-    })
-  }, []);
   async function saveProduct(ev) {
     ev.preventDefault();
     const data = {
-      title, description, price, images, category,
+      title, description, price,
       properties: productProperties
     };
     if (_id) {
@@ -47,41 +38,32 @@ export default function ProductForm({
   if (goToProducts) {
     router.push('/products');
   }
-  async function uploadImages(ev) {
-    const files = ev.target?.files;
-    if (files?.length > 0) {
-      setIsUploading(true);
-      const data = new FormData();
-      for (const file of files) {
-        data.append('file', file);
-      }
-      const res = await axios.post('/api/upload', data);
-      setImages(oldImages => {
-        return [...oldImages, ...res.data.links];
-      });
-      setIsUploading(false);
-    }
-  }
-  function updateImagesOrder(images) {
-    setImages(images);
-  }
+
+  // async function uploadImages(ev) {
+  //   const files = ev.target?.files;
+  //   if (files?.length > 0) {
+  //     setIsUploading(true);
+  //     const data = new FormData();
+  //     for (const file of files) {
+  //       data.append('file', file);
+  //     }
+  //     const res = await axios.post('/api/upload', data);
+  //     setImages(oldImages => {
+  //       return [...oldImages, ...res.data.links];
+  //     });
+  //     setIsUploading(false);
+  //   }
+  // }
+
+  // function updateImagesOrder(images) {
+  //   setImages(images);
+  // }
   function setProductProp(propName, value) {
     setProductProperties(prev => {
       const newProductProps = { ...prev };
       newProductProps[propName] = value;
       return newProductProps;
     });
-  }
-
-  const propertiesToFill = [];
-  if (categories.length > 0 && category) {
-    let catInfo = categories.find(({ _id }) => _id === category);
-    propertiesToFill.push(...catInfo.properties);
-    while (catInfo?.parent?._id) {
-      const parentCat = categories.find(({ _id }) => _id === catInfo?.parent?._id);
-      propertiesToFill.push(...parentCat.properties);
-      catInfo = parentCat;
-    }
   }
 
   return (
@@ -92,15 +74,8 @@ export default function ProductForm({
         placeholder="product name"
         value={title}
         onChange={ev => setTitle(ev.target.value)} />
-      <label>Category</label>
-      <select value={category}
-        onChange={ev => setCategory(ev.target.value)}>
-        <option value="">Uncategorized</option>
-        {categories.length > 0 && categories.map(c => (
-          <option key={c._id} value={c._id}>{c.name}</option>
-        ))}
-      </select>
-      {propertiesToFill.length > 0 && propertiesToFill.map(p => (
+
+      {/* {propertiesToFill.length > 0 && propertiesToFill.map(p => (
         <div key={p.name} className="">
           <label>{p.name[0].toUpperCase() + p.name.substring(1)}</label>
           <div>
@@ -115,8 +90,9 @@ export default function ProductForm({
             </select>
           </div>
         </div>
-      ))}
-      <label>
+      ))} */}
+
+      {/* <label>
         Photos
       </label>
       <div className="mb-2 flex flex-wrap gap-1">
@@ -144,7 +120,8 @@ export default function ProductForm({
           </div>
           <input type="file" onChange={uploadImages} className="hidden" />
         </label>
-      </div>
+      </div> */}
+      
       <label>Description</label>
       <textarea
         placeholder="description"

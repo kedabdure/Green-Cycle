@@ -1,30 +1,36 @@
-import { Product } from "@/models/Product";
-import { mongooseConnect } from "@/lib/mongoose";
+import {Product} from "@/models/Product";
+import {mongooseConnect} from "@/lib/mongoose";
 
 export default async function handle(req, res) {
-  const { method } = req;
+  const {method} = req;
   await mongooseConnect();
 
-  if (method === "POST") {
-    try {
-      const { title, description, price } = req.body;
-
-      // Add input validation here (e.g., using Joi or other validation libraries)
-
-      const productDoc = await Product.create({
-        title,
-        description,
-        price,
-      });
-
-      res.status(201).json(productDoc); // Use 201 Created status code
-      console.log("Product created successfully:", productDoc);
-    } catch (error) {
-      console.error("Error creating product:", error);
-      res.status(500).json({ message: "Internal server error" });
+  if (method === 'GET') {
+    if (req.query?.id) {
+      res.json(await Product.findOne({_id:req.query.id}));
+    } else {
+      res.json(await Product.find());
     }
-  } else {
-    // Handle other request methods if needed
-    res.status(405).end(); // Method not allowed
+  }
+
+  if (method === 'POST') {
+    const {title,description,price,images,category,properties} = req.body;
+    const productDoc = await Product.create({
+      title,description,price,images,category,properties,
+    })
+    res.json(productDoc);
+  }
+
+  if (method === 'PUT') {
+    const {title,description,price,images,category,properties,_id} = req.body;
+    await Product.updateOne({_id}, {title,description,price,images,category,properties});
+    res.json(true);
+  }
+
+  if (method === 'DELETE') {
+    if (req.query?.id) {
+      await Product.deleteOne({_id:req.query?.id});
+      res.json(true);
+    }
   }
 }
