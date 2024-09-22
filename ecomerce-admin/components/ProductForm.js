@@ -9,7 +9,7 @@ export default function ProductForm({
   title: existingTitle,
   description: existingDescription,
   price: existingPrice,
-  // images: existingImages,
+  images: existingImages = [],
   properties: assignedProperties,
 }) {
   const [title, setTitle] = useState(existingTitle || '');
@@ -17,13 +17,14 @@ export default function ProductForm({
   const [productProperties, setProductProperties] = useState(assignedProperties || {});
   const [price, setPrice] = useState(existingPrice || '');
   const [goToProducts, setGoToProducts] = useState(false);
+  const [images, setImages] = useState(existingImages || []);
   const [isUploading, setIsUploading] = useState(false);
   const router = useRouter();
 
   async function saveProduct(ev) {
     ev.preventDefault();
     const data = {
-      title, description, price,
+      title, description, price, images,
       properties: productProperties
     };
     if (_id) {
@@ -39,25 +40,34 @@ export default function ProductForm({
     router.push('/products');
   }
 
-  // async function uploadImages(ev) {
-  //   const files = ev.target?.files;
-  //   if (files?.length > 0) {
-  //     setIsUploading(true);
-  //     const data = new FormData();
-  //     for (const file of files) {
-  //       data.append('file', file);
-  //     }
-  //     const res = await axios.post('/api/upload', data);
-  //     setImages(oldImages => {
-  //       return [...oldImages, ...res.data.links];
-  //     });
-  //     setIsUploading(false);
-  //   }
-  // }
 
-  // function updateImagesOrder(images) {
-  //   setImages(images);
-  // }
+  async function uploadImages(ev) {
+    const files = ev.target?.files;
+    if (files?.length > 0) {
+      setIsUploading(true);
+      const data = new FormData();
+      for (const file of files) {
+        data.append('file', file);
+      }
+      // post the image files to the /api/upload endpoint
+      const res = await axios.post('/api/upload', data, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+      // add the new image URLs to the existing images state
+      setImages(oldImages => {
+        return [...oldImages, ...res.data.links];
+      })
+      setIsUploading(false);
+    }
+  }
+
+  // handle the image reordering
+  function updateImagesOrder(images) {
+    setImages(images);
+  }
+
   function setProductProp(propName, value) {
     setProductProperties(prev => {
       const newProductProps = { ...prev };
@@ -92,10 +102,12 @@ export default function ProductForm({
         </div>
       ))} */}
 
-      {/* <label>
+      {/* Image Upload Section */}
+      <label>
         Photos
       </label>
       <div className="mb-2 flex flex-wrap gap-1">
+        {/* Image reordering */}
         <ReactSortable
           list={images}
           className="flex flex-wrap gap-1"
@@ -106,11 +118,13 @@ export default function ProductForm({
             </div>
           ))}
         </ReactSortable>
+
         {isUploading && (
           <div className="h-24 flex items-center">
             <Spinner />
           </div>
         )}
+
         <label className="w-24 h-24 cursor-pointer text-center flex flex-col items-center justify-center text-sm gap-1 text-primary rounded-sm bg-white shadow-sm border border-primary">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
             <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
@@ -120,8 +134,8 @@ export default function ProductForm({
           </div>
           <input type="file" onChange={uploadImages} className="hidden" />
         </label>
-      </div> */}
-      
+      </div>
+
       <label>Description</label>
       <textarea
         placeholder="description"
