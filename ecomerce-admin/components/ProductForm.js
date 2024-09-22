@@ -68,6 +68,11 @@ export default function ProductForm({
     setImages(images);
   }
 
+  // handle removing an image
+  function removeImage(link) {
+    setImages(images.filter(img => img !== link));
+  }
+
   function setProductProp(propName, value) {
     setProductProperties(prev => {
       const newProductProps = { ...prev };
@@ -103,18 +108,22 @@ export default function ProductForm({
       ))} */}
 
       {/* Image Upload Section */}
-      <label>
-        Photos
-      </label>
+      <label>Photos</label>
       <div className="mb-2 flex flex-wrap gap-1">
-        {/* Image reordering */}
         <ReactSortable
           list={images}
           className="flex flex-wrap gap-1"
           setList={updateImagesOrder}>
           {!!images?.length && images.map(link => (
-            <div key={link} className="h-24 bg-white p-4 shadow-sm rounded-sm border border-gray-200">
+            <div key={link} className="relative h-24 bg-white p-4 shadow-sm rounded-sm border border-gray-200">
               <img src={link} alt="" className="rounded-lg" />
+              <button
+                onClick={() => removeImage(link)}
+                className="absolute top-0 right-0 p-1 bg-red-500 text-white rounded-full opacity-0 hover:opacity-100 transition-opacity">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
             </div>
           ))}
         </ReactSortable>
@@ -129,9 +138,7 @@ export default function ProductForm({
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
             <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
           </svg>
-          <div>
-            Add image
-          </div>
+          <div>Add image</div>
           <input type="file" onChange={uploadImages} className="hidden" />
         </label>
       </div>
