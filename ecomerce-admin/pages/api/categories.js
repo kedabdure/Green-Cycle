@@ -27,4 +27,10 @@ export default async function handle(req, res) {
     });
     res.json(categoryDoc);
   }
+
+  if (method === 'DELETE') {
+    const { _id } = req.query;
+    await Category.deleteOne({ _id });
+    res.json('ok');
+  }
 }
