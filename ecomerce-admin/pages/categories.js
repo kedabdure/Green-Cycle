@@ -33,7 +33,7 @@ export default function Categories() {
         icon: 'error',
         confirmButtonText: 'OK'
       });
-      return; // Stop the function here if validation fails
+      return;
     }
 
     const data = {

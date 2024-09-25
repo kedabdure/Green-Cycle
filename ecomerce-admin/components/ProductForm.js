@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import axios from "axios";
 import Spinner from "@/components/Spinner";
+import Swal from "sweetalert2";
 import { ReactSortable } from "react-sortablejs";
 
 export default function ProductForm({
@@ -14,45 +15,82 @@ export default function ProductForm({
   properties: assignedProperties,
 }) {
   const [title, setTitle] = useState(existingTitle || '');
-  const [categories, setCategories] = useState('')
-  const [category, setCategory] = useState(assignedCategory || '') 
+  const [categories, setCategories] = useState([]);
+  const [category, setCategory] = useState(assignedCategory || '');
   const [description, setDescription] = useState(existingDescription || '');
   const [productProperties, setProductProperties] = useState(assignedProperties || {});
   const [price, setPrice] = useState(existingPrice || '');
   const [goToProducts, setGoToProducts] = useState(false);
   const [images, setImages] = useState(existingImages || []);
   const [isUploading, setIsUploading] = useState(false);
-  const router = useRouter(); 0
-
+  const router = useRouter();
 
   useEffect(() => {
     fetchCategories();
-  }, [])
+  }, []);
+
   function fetchCategories() {
     axios.get('/api/categories').then(result => {
       setCategories(result.data);
     });
   }
 
+  // Save product with validation and error handling
   async function saveProduct(ev) {
     ev.preventDefault();
+
+    // Validate required fields
+    if (!title || !category || !price || !images.length) {
+      Swal.fire({
+        title: 'Validation Error',
+        text: 'Please fill in all required fields: Product name, category, price, and at least one image.',
+        icon: 'error',
+        confirmButtonText: 'OK',
+      });
+      return;
+    }
+
     const data = {
       title, description, price, images, category,
-      properties: productProperties
+      properties: productProperties,
     };
-    if (_id) {
-      //update
-      await axios.put('/api/products', { ...data, _id });
-    } else {
-      //create
-      await axios.post('/api/products', data);
+
+    try {
+      if (_id) {
+        // Update existing product
+        await axios.put('/api/products', { ...data, _id });
+      } else {
+        // Create new product
+        await axios.post('/api/products', data);
+      }
+      setGoToProducts(true);
+
+      Swal.fire({
+        title: 'Success',
+        text: `Product ${_id ? 'updated' : 'created'} successfully!`,
+        icon: 'success',
+        confirmButtonText: 'OK',
+      });
+    } catch (error) {
+      let errorMessage = 'Something went wrong. Please try again.';
+      if (error.response && error.response.status === 500) {
+        errorMessage = 'Server error: Unable to save product.';
+      } else if (error.message === 'Network Error') {
+        errorMessage = 'Network error: Please check your internet connection.';
+      }
+
+      Swal.fire({
+        title: 'Error',
+        text: errorMessage,
+        icon: 'error',
+        confirmButtonText: 'OK',
+      });
     }
-    setGoToProducts(true);
   }
+
   if (goToProducts) {
     router.push('/products');
   }
-
 
   async function uploadImages(ev) {
     const files = ev.target?.files;
@@ -62,32 +100,36 @@ export default function ProductForm({
       for (const file of files) {
         data.append('file', file);
       }
-      // post the image files to the /api/upload endpoint
-      const res = await axios.post('/api/upload', data, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      });
-      // add the new image URLs to the existing images state
-      setImages(oldImages => {
-        return [...oldImages, ...res.data.links];
-      })
-      setIsUploading(false);
+      try {
+        const res = await axios.post('/api/upload', data, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+        setImages((oldImages) => [...oldImages, ...res.data.links]);
+      } catch (error) {
+        Swal.fire({
+          title: 'Error',
+          text: 'Failed to upload images. Please try again.',
+          icon: 'error',
+          confirmButtonText: 'OK',
+        });
+      } finally {
+        setIsUploading(false);
+      }
     }
   }
 
-  // handle the image reordering
   function updateImagesOrder(images) {
     setImages(images);
   }
 
-  // handle removing an image
   function removeImage(link) {
     setImages(images.filter(img => img !== link));
   }
 
   function setProductProp(propName, value) {
-    setProductProperties(prev => {
+    setProductProperties((prev) => {
       const newProductProps = { ...prev };
       newProductProps[propName] = value;
       return newProductProps;
@@ -101,24 +143,8 @@ export default function ProductForm({
         type="text"
         placeholder="product name"
         value={title}
-        onChange={ev => setTitle(ev.target.value)} />
-
-      {/* {propertiesToFill.length > 0 && propertiesToFill.map(p => (
-        <div key={p.name} className="">
-          <label>{p.name[0].toUpperCase() + p.name.substring(1)}</label>
-          <div>
-            <select value={productProperties[p.name]}
-              onChange={ev =>
-                setProductProp(p.name, ev.target.value)
-              }
-            >
-              {p.values.map(v => (
-                <option key={v} value={v}>{v}</option>
-              ))}
-            </select>
-          </div>
-        </div>
-      ))} */}
+        onChange={ev => setTitle(ev.target.value)}
+      />
 
       {/* Product Category */}
       <label>Category</label>
@@ -127,9 +153,11 @@ export default function ProductForm({
         value={category}
         className='mb-0'
       >
-        <option value=""> Uncategorized</option>
+        <option value="">Uncategorized</option>
         {categories.length > 0 && categories.map(category => (
-          <option key={category._id} value={category._id}>{category.name}</option>
+          <option key={category._id} value={category._id}>
+            {category.name}
+          </option>
         ))}
       </select>
 
@@ -175,12 +203,14 @@ export default function ProductForm({
         value={description}
         onChange={ev => setDescription(ev.target.value)}
       />
+
       <label>Price (in USD)</label>
       <input
         type="number" placeholder="price"
         value={price}
         onChange={ev => setPrice(ev.target.value)}
       />
+
       <button
         type="submit"
         className="btn-primary">
