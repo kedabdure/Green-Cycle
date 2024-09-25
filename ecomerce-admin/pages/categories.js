@@ -29,7 +29,7 @@ export default function Categories() {
     if (!name) {
       Swal.fire({
         title: 'Validation Error',
-        text: 'Please fill in all required fields: Category name and at least one property.',
+        text: 'Please fill the required field: Category name required!',
         icon: 'error',
         confirmButtonText: 'OK'
       });
@@ -195,7 +195,7 @@ export default function Categories() {
             Add new property
           </button>
           {properties.length > 0 && properties.map((property, index) => (
-            <div key={property.name} className="flex gap-1 mb-2">
+            <div key={index} className="flex gap-1 mb-2">
               <input type="text"
                 value={property.name}
                 className="mb-0"
