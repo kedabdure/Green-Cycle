@@ -10,6 +10,7 @@ export default function Categories() {
   const [categories, setCategories] = useState([]);
   const [editedCategory, setEditedCategory] = useState();
 
+
   useEffect(() => {
     fetchCategories();
   }, [])
@@ -18,7 +19,6 @@ export default function Categories() {
       setCategories(result.data);
     });
   }
-
 
   async function saveCategory(ev) {
     ev.preventDefault();

@@ -7,24 +7,37 @@ import { ReactSortable } from "react-sortablejs";
 export default function ProductForm({
   _id,
   title: existingTitle,
+  category: assignedCategory,
   description: existingDescription,
   price: existingPrice,
   images: existingImages = [],
   properties: assignedProperties,
 }) {
   const [title, setTitle] = useState(existingTitle || '');
+  const [categories, setCategories] = useState('')
+  const [category, setCategory] = useState(assignedCategory || '') 
   const [description, setDescription] = useState(existingDescription || '');
   const [productProperties, setProductProperties] = useState(assignedProperties || {});
   const [price, setPrice] = useState(existingPrice || '');
   const [goToProducts, setGoToProducts] = useState(false);
   const [images, setImages] = useState(existingImages || []);
   const [isUploading, setIsUploading] = useState(false);
-  const router = useRouter();
+  const router = useRouter(); 0
+
+
+  useEffect(() => {
+    fetchCategories();
+  }, [])
+  function fetchCategories() {
+    axios.get('/api/categories').then(result => {
+      setCategories(result.data);
+    });
+  }
 
   async function saveProduct(ev) {
     ev.preventDefault();
     const data = {
-      title, description, price, images,
+      title, description, price, images, category,
       properties: productProperties
     };
     if (_id) {
@@ -106,6 +119,19 @@ export default function ProductForm({
           </div>
         </div>
       ))} */}
+
+      {/* Product Category */}
+      <label>Category</label>
+      <select
+        onChange={ev => setCategory(ev.target.value)}
+        value={category}
+        className='mb-0'
+      >
+        <option value=""> Uncategorized</option>
+        {categories.length > 0 && categories.map(category => (
+          <option key={category._id} value={category._id}>{category.name}</option>
+        ))}
+      </select>
 
       {/* Image Upload Section */}
       <label>Photos</label>
