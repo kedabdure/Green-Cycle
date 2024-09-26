@@ -3,22 +3,43 @@ import { useRouter } from "next/router";
 import { signOut } from "next-auth/react";
 import Logo from "@/components/Logo";
 
-export default function Nav({ show }) {
-  const inactiveLink = 'flex gap-1 p-1';
-  const activeLink = inactiveLink + ' bg-highlight text-black rounded-sm';
-  const inactiveIcon = 'w-6 h-6';
-  const activeIcon = inactiveIcon + ' text-primary';
+export default function Nav({ show, setShowNav }) {
+  const inactiveLink = "flex gap-1 p-1";
+  const activeLink = inactiveLink + " bg-highlight text-black rounded-sm";
+  const inactiveIcon = "w-6 h-6";
+  const activeIcon = inactiveIcon + " text-primary";
   const router = useRouter();
   const { pathname } = router;
+
   async function logout() {
-    await router.push('/');
+    await router.push("/");
     await signOut();
   }
+
   return (
-    <aside className={(show ? 'left-0' : '-left-full') + " top-0 text-gray-500 p-4 fixed w-full bg-bgGray h-full md:static md:w-auto transition-all"}>
-      <div className="mb-4 mr-4">
+    <aside className={(show ? "left-0" : "-left-full") + " top-0 text-gray-500 p-4 fixed w-full bg-bgGray h-full md:static md:w-auto transition-all"}>
+      {/* Sidebar Header */}
+      <div className="mb-4 mr-4 flex justify-between items-center">
         <Logo />
+        {/* Close Button for Mobile Sidebar */}
+        <button onClick={() => setShowNav(false)} className="md:hidden">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth="1.5"
+            stroke="currentColor"
+            className="w-6 h-6"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M6 18 18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
       </div>
+      {/* Navigation Links */}
       <nav className="flex flex-col gap-2">
         <Link href={'/'} className={pathname === '/' ? activeLink : inactiveLink}>
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={pathname === '/' ? activeIcon : inactiveIcon}>
