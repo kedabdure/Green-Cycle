@@ -1,5 +1,7 @@
+import Button from "./Button";
 import Center from "./Center";
 import styled from "styled-components";
+import CartIcon from "./icons/CartIcon";
 
 const Bg = styled.div`
   background-color: #222;
@@ -17,28 +19,50 @@ const Desc = styled.p`
   font-size: .8rem;
 `;
 
-const Wrapper = styled.div`
+const ColumnWrapper = styled.div`
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: 1fr 1fr;
   gap: 40px;
   img {
     max-width: 100%;
   }
 `;
 
+const ButtonWrapper = styled.div`
+  display: flex;
+  gap: 15px;
+  margin-top: 30px;
+`;
+
+const Column = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
 export default function Featured() {
   return (
     <Bg>
       <Center>
-        <Wrapper>
-          <div>
-            <Title>Pro anywhere</Title>
-            <Desc>Lorem ipsum dolor sit amet, consectetur adipiscing elit  sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</Desc>
-          </div>
-          <div>
-            <img src="https://www.stuff.tv/wp-content/uploads/sites/2/2024/09/Apple-iPhone-16-models-compared-lead.jpg?resize=1536,1024" alt="Pro anywhere" />
-          </div>
-        </Wrapper>
+        <ColumnWrapper>
+          <Column>
+            <div>
+              <Title>Pro anywhere</Title>
+              <Desc>Lorem ipsum dolor sit amet, consectetur adipiscing elit  sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</Desc>
+              <ButtonWrapper>
+                <Button white outline>Read more</Button>
+                <Button primary>
+                  <CartIcon />
+                  Add to cart
+                </Button>
+              </ButtonWrapper>
+            </div>
+          </Column>
+          <Column>
+            <div>
+              <img src="https://i.imgur.com/tKN29Pn.png" alt="Pro anywhere" />
+            </div>
+          </Column>
+        </ColumnWrapper>
       </Center>
     </Bg>
   )
