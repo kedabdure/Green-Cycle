@@ -3,7 +3,7 @@ import {primary} from "@/lib/colors";
 
 export const ButtonStyle = css`
   border:0;
-  padding: 8px 16px;
+  padding: 7px 12px;
   border-radius: 5px;
   cursor: pointer;
   display: inline-flex;
@@ -44,7 +44,7 @@ export const ButtonStyle = css`
   `}
   ${props => props.primary && props.outline && css`
     background-color: transparent;
-    border: 1px solid ${primary};
+    border: 2px solid ${primary};
     color:${primary};
   `}
   ${props => props.size === 'l' && css`

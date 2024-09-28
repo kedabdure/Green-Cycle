@@ -7,7 +7,7 @@ import ButtonLink from "./ButtonLink";
 const Bg = styled.div`
   background-color: #222;
   color: white;
-  padding: 50px 0
+  padding: 20px 0
 `;
 
 const Title = styled.h1`
@@ -24,10 +24,11 @@ const Desc = styled.p`
 
 const ColumnWrapper = styled.div`
   display: grid;
-  grid-template-columns: .9fr 1.1fr;
+  grid-template-columns: 1fr 1fr;
   gap: 50px;
   img {
     max-width: 100%;
+    height: 350px;
   }
 `;
 
@@ -40,10 +41,10 @@ const ButtonWrapper = styled.div`
 const Column = styled.div`
   display: flex;
   align-items: center;
+  justify-content: center;
 `;
 
 export default function Featured({product}) {
-  console.log(product)
   return (
     <Bg>
       <Center>
@@ -54,7 +55,7 @@ export default function Featured({product}) {
               <Desc>{product.description}</Desc>
               <ButtonWrapper>
                 <ButtonLink white outline href={"/products/" + product._id}>Read more</ButtonLink>
-                <Button primary>
+                <Button white>
                   <CartIcon />
                   Add to cart
                 </Button>
@@ -63,7 +64,7 @@ export default function Featured({product}) {
           </Column>
           <Column>
             <div>
-              <img src={"https://dawid-next-ecommerce.s3.amazonaws.com/1679151719649.png"} alt="Pro anywhere" />
+              <img src={product.images[0]} alt="Pro anywhere" />
             </div>
           </Column>
         </ColumnWrapper>
