@@ -6,8 +6,6 @@ import { Product } from "@/models/Product";
 
 
 export default function Home({ featuredProduct, newProducts }) {
-  console.log(newProducts)
-
   return (
     <div>
       <Header />

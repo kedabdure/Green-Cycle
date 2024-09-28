@@ -3,7 +3,7 @@ import {primary} from "@/lib/colors";
 
 export const ButtonStyle = css`
   border:0;
-  padding: 7px 12px;
+  padding: 5px 12px;
   border-radius: 5px;
   cursor: pointer;
   display: inline-flex;
@@ -19,30 +19,30 @@ export const ButtonStyle = css`
     display: block;
     width: 100%;
   `}
-  ${props => props.white && !props.outline && css`
+  ${props => props.$white && !props.$outline && css`
     background-color: #fff;
     color: #000;
   `}
-  ${props => props.white && props.outline && css`
+  ${props => props.$white && props.$outline && css`
     background-color: transparent;
     color: #fff;
     border: 1px solid #fff;
   `}
-  ${props => props.black && !props.outline && css`
+  ${props => props.$black && !props.$outline && css`
     background-color: #000;
     color: #fff;
   `}
-  ${props => props.black && props.outline && css`
+  ${props => props.$black && props.$outline && css`
     background-color: transparent;
     color: #000;
     border: 1px solid #000;
   `}
-  ${props => props.primary && !props.outline && css`
+  ${props => props.$primary && !props.$outline && css`
     background-color: ${primary};
     border: 1px solid ${primary};
     color:#fff;
   `}
-  ${props => props.primary && props.outline && css`
+  ${props => props.$primary && props.$outline && css`
     background-color: transparent;
     border: 2px solid ${primary};
     color:${primary};
@@ -60,7 +60,7 @@ const StyledButton = styled.button`
   ${ButtonStyle}
 `;
 
-export default function Button({children,...rest}) {
+export default function Button({children,outline, primary, white, black,...rest}) {
   return (
     <StyledButton {...rest}>{children}</StyledButton>
   );

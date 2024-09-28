@@ -20,7 +20,7 @@ export default function NewProducts({ newProducts }) {
       <Title>New Arrivals</Title>
       <ProductsGrid>
         {newProducts.map((product) => (
-          <ProductBox {...product} />
+          <ProductBox key={product._id} {...product} />
         ))}
       </ProductsGrid>
     </Center>
