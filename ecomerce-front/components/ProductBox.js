@@ -7,7 +7,7 @@ const ProductWrapper = styled.div`
 
 `;
 
-const WhiteBox = styled.div`
+const WhiteBox = styled(Link)`
   background-color: #fff;
   padding: 20px;
   height: 120px;
@@ -22,9 +22,11 @@ const WhiteBox = styled.div`
   }
 `;
 
-const Title = styled.h2`
+const Title = styled(Link)`
   font-weight: normal;
   font-size: .9rem;
+  text-decoration: none;
+  color: inherit;
   margin: 0;
 `;
 
@@ -35,7 +37,7 @@ const ProductInfo = styled.div`
 `;
 
 const PriceRow = styled.div`
-  margin-top: 1px;
+  margin-top: 2px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -48,15 +50,17 @@ const Price = styled.div`
 
 
 export default function ProductBox({ _id, title, description, price, images }) {
+  const url = '/products/'+_id;
+  
   return (
     <ProductWrapper>
-      <WhiteBox>
+      <WhiteBox href={url}>
         <div>
           <img src={images[0]} alt={title} />
         </div>
       </WhiteBox>
       <ProductInfo>
-        <Title>{title}</Title>
+        <Title href={url}>{title}</Title>
         <PriceRow>
           <Price>{price}birr</Price>
           <Button primary outline>Add to cart</Button>
