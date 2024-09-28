@@ -47,7 +47,7 @@ const Column = styled.div`
 `;
 
 export default function Featured({product}) {
-  const {addProductToCart} = useContext(CartContext);
+  const {addProduct} = useContext(CartContext);
   return (
     <Bg>
       <Center>
@@ -58,7 +58,7 @@ export default function Featured({product}) {
               <Desc>{product.description}</Desc>
               <ButtonWrapper>
                 <ButtonLink $white $outline href={"/products/" + product._id}>Read more</ButtonLink>
-                <Button white onClick={() => addProductToCart(product._id)}>
+                <Button white onClick={() => addProduct(product._id)}>
                   <CartIcon />
                   Add to cart
                 </Button>
