@@ -1,6 +1,10 @@
+import { useContext } from "react";
 import Link from "next/link";
 import styled from "styled-components";
 import Center from "./Center";
+import { CartContext } from "./CartContext";
+import CartIcon from "./icons/CartIcon";
+import LogoWhite from "./icons/LogoWhite";
 
 const StyledHeader = styled.header`
   background-color: #222;
@@ -12,29 +16,45 @@ const StyledNav = styled.nav`
   display: flex;
   gap: 15px;
 `
-const StyledLink = styled(Link)`
-  color: #aaa;
+const Logo = styled(Link)`
   text-decoration: none;
+  width: 60px;
+  height: auto;
 `;
 
-const Logo = styled(Link)`
-  color: white;
+const StyledLink = styled(Link)`
+  display: flex;
+  align-items: center;
+  color: #aaa;
   text-decoration: none;
 `;
 
 const Wrapper = styled.div`
   display: flex;
+  align-items: center;
   justify-content: space-between;
   padding: 20px 0;
 `;
 
+const Cart = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+`;
+
+const Icon = styled.div`
+  width: 25px;
+`;
+
 export default function Header() {
+  const { cartProducts } = useContext(CartContext);
   return (
     <StyledHeader>
       <Center>
         <Wrapper>
           <Logo href="/" passHref>
-            EcoShop
+            <LogoWhite width="120" />
           </Logo>
           <StyledNav>
             <StyledLink href="/" passHref>
@@ -50,7 +70,12 @@ export default function Header() {
               Account
             </StyledLink>
             <StyledLink href="/cart" passHref>
-              Cart (0)
+              <Cart>
+                <Icon>
+                  <CartIcon />
+                </Icon>
+                ({cartProducts.length})
+              </Cart>
             </StyledLink>
           </StyledNav>
         </Wrapper>
