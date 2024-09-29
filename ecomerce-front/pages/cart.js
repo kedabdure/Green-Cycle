@@ -6,7 +6,7 @@ import Center from "@/components/Center";
 import Button from "@/components/Button";
 import axios from 'axios'
 import Table from "@/components/Table";
-import AddressForm from "@/components/orderInfo/OrderForm";
+import AddressForm from "@/components/OrderForm";
 
 const ColumnWrapper = styled.div`
   display: grid;
@@ -84,13 +84,13 @@ export default function Cart() {
     setOrderInfo(data);
   };
 
+  console.log(orderInfo)
+
   let total = 0;
   for (const productID of cartProducts) {
     const price = products.find(product => product._id === productID)?.price;
     total += price;
   }
-
-  console.log(orderInfo)
 
   return (
     <>

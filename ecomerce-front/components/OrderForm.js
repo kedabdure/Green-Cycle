@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-// import { MuiTelInput } from 'mui-tel-input';
 import PhoneInput from 'react-phone-number-input';
 import 'react-phone-number-input/style.css';
 
@@ -16,10 +15,11 @@ const initialValues = {
   lastName: '',
   phone: '',
   email: '',
-  address1: '',
-  address2: '',
+  country: '',
   city: '',
-  zipCode: '',
+  subCity: '',
+  wereda: '',
+  streetAddress: '',
 };
 
 export default function TableOrderForm({ handleSubmit }) {
@@ -31,7 +31,6 @@ export default function TableOrderForm({ handleSubmit }) {
     const errors = {};
     const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
     const phoneRegex = /^\+2519\d{8}$/;
-    const zipCodeRegex = /^\d{4,6}$/; // Modify based on zip code format
 
     // Field validations
     if (!values.firstName) errors.firstName = 'First name is required!';
@@ -46,13 +45,11 @@ export default function TableOrderForm({ handleSubmit }) {
     } else if (!phoneRegex.test(values.phone)) {
       errors.phone = 'Invalid phone number format (+2519XXXXXXXX)';
     }
-    if (!values.address1) errors.address1 = 'Address Line 1 is required!';
+    if (!values.streetAddress) errors.streetAddress = 'Street Address is required!';
     if (!values.city) errors.city = 'City is required!';
-    if (!values.zipCode) {
-      errors.zipCode = 'Zip Code is required!';
-    } else if (!zipCodeRegex.test(values.zipCode)) {
-      errors.zipCode = 'Invalid Zip Code format!';
-    }
+    if (!values.subCity) errors.subCity = 'Sub-City is required!';
+    if (!values.wereda) errors.wereda = 'Wereda is required!';
+    if (!values.country) errors.country = 'Country is required!';
 
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
@@ -65,7 +62,6 @@ export default function TableOrderForm({ handleSubmit }) {
   };
 
   const handlePhoneChange = (value) => {
-    // const sanitizedValue = value.replace(/\s+/g, '');
     setFormValues({ ...formValues, phone: value });
     if (formErrors.phone) setFormErrors({ ...formErrors, phone: '' });
   };
@@ -156,34 +152,20 @@ export default function TableOrderForm({ handleSubmit }) {
           {formErrors.email && <Alert severity="error">{formErrors.email}</Alert>}
         </FormControl>
 
-        {/* Address Line 1 */}
+        {/* Country */}
         <FormControl fullWidth>
           <TextField
-            label="Address Line 1"
-            id="address1"
-            name="address1"
+            label="Country"
+            id="country"
+            name="country"
             type="text"
-            placeholder="123 Main St"
-            value={formValues.address1}
+            placeholder="Enter country"
+            value={formValues.country}
             onChange={handleChange}
             required
             size="small"
           />
-          {formErrors.address1 && <Alert severity="error">{formErrors.address1}</Alert>}
-        </FormControl>
-
-        {/* Address Line 2 */}
-        <FormControl fullWidth>
-          <TextField
-            label="Address Line 2"
-            id="address2"
-            name="address2"
-            type="text"
-            placeholder="Apartment, Suite, etc."
-            value={formValues.address2}
-            onChange={handleChange}
-            size="small"
-          />
+          {formErrors.country && <Alert severity="error">{formErrors.country}</Alert>}
         </FormControl>
 
         {/* City */}
@@ -202,20 +184,52 @@ export default function TableOrderForm({ handleSubmit }) {
           {formErrors.city && <Alert severity="error">{formErrors.city}</Alert>}
         </FormControl>
 
-        {/* Zip Code */}
+        {/* Sub-City */}
         <FormControl fullWidth>
           <TextField
-            label="Zip Code"
-            id="zipCode"
-            name="zipCode"
+            label="Sub-City"
+            id="subCity"
+            name="subCity"
             type="text"
-            placeholder="Enter zip code"
-            value={formValues.zipCode}
+            placeholder="Enter Sub-City"
+            value={formValues.subCity}
             onChange={handleChange}
             required
             size="small"
           />
-          {formErrors.zipCode && <Alert severity="error">{formErrors.zipCode}</Alert>}
+          {formErrors.subCity && <Alert severity="error">{formErrors.subCity}</Alert>}
+        </FormControl>
+
+        {/* Wereda */}
+        <FormControl fullWidth>
+          <TextField
+            label="Wereda"
+            id="wereda"
+            name="wereda"
+            type="text"
+            placeholder="Enter Wereda"
+            value={formValues.wereda}
+            onChange={handleChange}
+            required
+            size="small"
+          />
+          {formErrors.wereda && <Alert severity="error">{formErrors.wereda}</Alert>}
+        </FormControl>
+
+        {/* Street Address */}
+        <FormControl fullWidth>
+          <TextField
+            label="Street Address"
+            id="streetAddress"
+            name="streetAddress"
+            type="text"
+            placeholder="Enter street address"
+            value={formValues.streetAddress}
+            onChange={handleChange}
+            required
+            size="small"
+          />
+          {formErrors.streetAddress && <Alert severity="error">{formErrors.streetAddress}</Alert>}
         </FormControl>
 
         {/* Submit Button */}

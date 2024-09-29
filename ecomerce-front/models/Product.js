@@ -11,5 +11,4 @@ const ProductSchema = new Schema({
   timestamps: true,
 });
 
-// check if Product model exists or not then create the model
 export const Product = models.Product || model('Product', ProductSchema);
