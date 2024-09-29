@@ -75,7 +75,8 @@ export default function TableOrderForm({ handleSubmit }) {
     const isValid = validate(formValues);
     if (isValid) {
       setSubmitSuccess(true);
-      // handleSubmit(formValues);
+      handleSubmit(formValues);
+      setFormValues(initialValues);
     } else {
       setSubmitSuccess(false);
     }
@@ -138,8 +139,6 @@ export default function TableOrderForm({ handleSubmit }) {
             </Alert>
           )}
         </FormControl>
-
-
 
         {/* Email */}
         <FormControl fullWidth>
@@ -220,7 +219,7 @@ export default function TableOrderForm({ handleSubmit }) {
         </FormControl>
 
         {/* Submit Button */}
-        <Button type="submit" fullWidth variant="contained" style={{ height: "40px" ,color: "#fff", backgroundColor: "#111" }}>
+        <Button type="submit" fullWidth variant="contained" style={{ height: "40px", color: "#fff", backgroundColor: "#111" }}>
           Place Order
         </Button>
         {submitSuccess && <Alert severity="success">Form submitted successfully!</Alert>}

@@ -81,6 +81,7 @@ export default function Cart() {
 
   const handleFormSubmit = (data) => {
     console.log("Received form data:", data);
+    setOrderInfo(data);
   };
 
   let total = 0;
@@ -88,6 +89,8 @@ export default function Cart() {
     const price = products.find(product => product._id === productID)?.price;
     total += price;
   }
+
+  console.log(orderInfo)
 
   return (
     <>
@@ -127,14 +130,14 @@ export default function Cart() {
                           onClick={() => moreOfThisProduct(product._id)}>+</Button>
                       </td>
                       <td>
-                        ${cartProducts.filter(id => id === product._id).length * product.price}
+                        {cartProducts.filter(id => id === product._id).length * product.price} ETB
                       </td>
                     </tr>
                   ))}
                   <tr>
                     <td></td>
                     <td></td>
-                    <td>${total}</td>
+                    <td>{total} ETB</td>
                   </tr>
                 </tbody>
               </Table>
