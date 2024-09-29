@@ -6,12 +6,14 @@ import Center from "@/components/Center";
 import Button from "@/components/Button";
 import axios from 'axios'
 import Table from "@/components/Table";
+import AddressForm from "@/components/orderInfo/OrderForm";
 
 const ColumnWrapper = styled.div`
   display: grid;
   grid-template-columns: 1.3fr .7fr;
-  gap: 40px;
+  gap: 20px;
   margin-top: 40px;
+  margin-bottom: 20px;
 `;
 
 const Box = styled.div`
@@ -26,8 +28,8 @@ const ProductInfoCell = styled.td`
 `;
 
 const ProductImageBox = styled.div`
-  width: 100px;
-  height: 100px;
+  width: 120px;
+  height: 120px;
   max-width: 150px;
   max-height: 150px;
   padding: 10px;
@@ -37,8 +39,8 @@ const ProductImageBox = styled.div`
   justify-content: center;
   align-items: center;
   img {
-    max-width: 80px;
-    max-height: 80px;
+    max-width: 100px;
+    max-height: 100px;
   }
 `;
 
@@ -47,9 +49,16 @@ const QuantityLabel = styled.span`
   padding: 0 5px;
 `;
 
+const MainTitle = styled.h2`
+  font-weight: 700;
+  font-size: 1.7rem;
+  margin-bottom: 1.2rem;
+`;
+
 export default function Cart() {
   const { cartProducts, addProduct, removeProduct } = useContext(CartContext);
   const [products, setProducts] = useState([])
+  const [orderInfo, setOrderInfo] = useState([]);
 
   useEffect(() => {
     if (cartProducts.length > 0) {
@@ -70,6 +79,10 @@ export default function Cart() {
     removeProduct(id);
   }
 
+  const handleFormSubmit = (data) => {
+    console.log("Received form data:", data);
+  };
+
   let total = 0;
   for (const productID of cartProducts) {
     const price = products.find(product => product._id === productID)?.price;
@@ -82,7 +95,7 @@ export default function Cart() {
       <Center>
         <ColumnWrapper>
           <Box>
-            <h2>Cart</h2>
+            <MainTitle>Cart</MainTitle>
             {!cartProducts?.length && (
               <div>Your cart is empty</div>
             )}
@@ -129,8 +142,8 @@ export default function Cart() {
           </Box>
           {!!cartProducts?.length && (
             <Box>
-              <h1>Order Information</h1>
-              <Button $black $block>Place Order</Button>
+              <MainTitle>Order Information</MainTitle>
+              <AddressForm handleSubmit={handleFormSubmit} />
             </Box>
           )}
         </ColumnWrapper>

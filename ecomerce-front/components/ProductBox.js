@@ -12,7 +12,7 @@ const ProductWrapper = styled.div`
 const WhiteBox = styled(Link)`
   background-color: #fff;
   padding: 20px;
-  height: 120px;
+  height: 150px;
   text-align: center;
   display: flex;
   align-items: center;
@@ -20,7 +20,7 @@ const WhiteBox = styled(Link)`
   border-radius: 10px;
   img{
     max-width: 100%;
-    max-height: 80px;
+    max-height: 110px;
   }
 `;
 
@@ -33,7 +33,7 @@ const Title = styled(Link)`
 `;
 
 const ProductInfo = styled.div`
-  margin-top: 10px;
+  margin: 10px 0;
   display: flex;
   flex-direction: column;
 `;
