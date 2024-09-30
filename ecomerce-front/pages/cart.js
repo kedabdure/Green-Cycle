@@ -78,10 +78,22 @@ export default function Cart() {
     removeProduct(id);
   }
 
+  // PAYMENT
   async function goToPayment(data) {
     const orderData = { ...data, cartProducts };
+    console.log("Order Data:", orderData);
 
-    await axios.post('/api/checkout', orderData);
+    try {
+      const res = await axios.post('/api/checkout', orderData);
+      console.log("Payment URL:", res.data.payment_url);
+      if (res.data && res.data.payment_url) {
+        window.location.href = res.data.payment_url;
+      } else {
+        console.error("No payment URL returned");
+      }
+    } catch (error) {
+      console.error("Payment Initialization Failed:", error.message);
+    }
   }
 
   let total = 0;

@@ -30,7 +30,7 @@ export default function TableOrderForm({ handleSubmit }) {
   const validate = (values) => {
     const errors = {};
     const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
-    const phoneRegex = /^\+2519\d{8}$/;
+    const phoneRegex = /^\+251(9|7)\d{8}$/;
 
     // Field validations
     if (!values.firstName) errors.firstName = 'First name is required!';
@@ -43,7 +43,7 @@ export default function TableOrderForm({ handleSubmit }) {
     if (!values.phone) {
       errors.phone = 'Phone number is required!';
     } else if (!phoneRegex.test(values.phone)) {
-      errors.phone = 'Invalid phone number format (+2519XXXXXXXX)';
+      errors.phone = 'Enter 9 or 7 after +251';
     }
     if (!values.streetAddress) errors.streetAddress = 'Street Address is required!';
     if (!values.city) errors.city = 'City is required!';
@@ -55,23 +55,27 @@ export default function TableOrderForm({ handleSubmit }) {
     return Object.keys(errors).length === 0;
   };
 
+  const handlePhoneChange = (value) => {
+    setFormValues({ ...formValues, phone: value });
+    if (formErrors.phone) setFormErrors({ ...formErrors, phone: '' });
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormValues({ ...formValues, [name]: value });
     if (formErrors[name]) setFormErrors({ ...formErrors, [name]: '' });
   };
 
-  const handlePhoneChange = (value) => {
-    setFormValues({ ...formValues, phone: value });
-    if (formErrors.phone) setFormErrors({ ...formErrors, phone: '' });
-  };
 
   function handleSubmitForm(e) {
     e.preventDefault();
     const isValid = validate(formValues);
     if (isValid) {
       setSubmitSuccess(true);
-      handleSubmit(formValues);
+      handleSubmit({
+        ...formValues,
+        phone: formValues.phone.replace(/^\+251/, '0'),
+      });
       setFormValues(initialValues);
     } else {
       setSubmitSuccess(false);

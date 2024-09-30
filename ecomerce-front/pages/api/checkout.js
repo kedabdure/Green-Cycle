@@ -1,6 +1,7 @@
 import { mongooseConnect } from "@/lib/mongoose";
 import { Product } from "@/models/Product";
 import { Order } from "@/models/Order";
+import { initializePayment } from "@/lib/chapaService";
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -18,6 +19,9 @@ export default async function handler(req, res) {
     phone, country, city, subCity,
     wereda, streetAddress, cartProducts,
   } = req.body;
+
+  // debugger;
+  console.log(req.body);
 
   await mongooseConnect();
   const productsIds = cartProducts;
@@ -40,11 +44,30 @@ export default async function handler(req, res) {
     }
   }
 
+  // Create the order document in MongoDB
   const orderDoc = await Order.create({
     line_items, firstName, lastName, email, phone, country,
     city, subCity, wereda, streetAddress, paid: false,
   });
 
-  // Send the response back with the order document
-  res.status(201).json({ success: true, order: orderDoc });
+  try {
+    const response = await initializePayment({
+      first_name: firstName,
+      last_name: lastName,
+      email,
+      phone_number: phone,
+      amount: line_items.reduce((acc, item) => acc + item.price_data.amount, 0),
+    });
+
+    // Log the response for debugging
+    console.log("Chapa Response:", response.data);
+
+    // Return the checkout URL only
+    res.status(200).json({ payment_url: response.data.checkout_url });
+  } catch (error) {
+    // Log the error for more insight
+    console.error("Error during payment initialization:", error.message);
+    res.status(500).json({ error: error.message });
+  }
+
 }
