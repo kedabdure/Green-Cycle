@@ -4,7 +4,7 @@ const chapa = new Chapa({
   secretKey: process.env.CHAPA_SK,
 });
 
-export async function initializePayment({ first_name, last_name, email, phone_number, amount }) {
+export async function initializePayment({ first_name, last_name, email, phone_number }) {
   const tx_ref = await chapa.genTxRef();
 
   const initializeOptions = {
@@ -13,10 +13,10 @@ export async function initializePayment({ first_name, last_name, email, phone_nu
     email,
     phone_number,
     currency: 'ETB',
-    amount: amount.toString(),
+    amount: '1',
     tx_ref,
-    callback_url: 'https://localhost:3000/payment-callback',
-    return_url: 'https://localhost:3000/payment-status',
+    callback_url: `${process.env.BASE_URL}/payment-callback`,
+    return_url: `${process.env.BASE_URL}/payment-status`,
     customization: {
       title: 'Test Payment',
       description: 'E-commerce Checkout Payment',
@@ -24,9 +24,6 @@ export async function initializePayment({ first_name, last_name, email, phone_nu
   };
 
   try {
-    // Log the request options
-    console.log("Initialize Options:", initializeOptions);
-
     const response = await chapa.initialize(initializeOptions);
     
     // Log the full response for debugging

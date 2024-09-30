@@ -20,9 +20,6 @@ export default async function handler(req, res) {
     wereda, streetAddress, cartProducts,
   } = req.body;
 
-  // debugger;
-  console.log(req.body);
-
   await mongooseConnect();
   const productsIds = cartProducts;
   const uniqueIds = [...new Set(productsIds)];
@@ -56,7 +53,7 @@ export default async function handler(req, res) {
       last_name: lastName,
       email,
       phone_number: phone,
-      amount: line_items.reduce((acc, item) => acc + item.price_data.amount, 0),
+      // amount: line_items.reduce((acc, item) => acc + item.price_data.amount, 0),
     });
 
     // Log the response for debugging
