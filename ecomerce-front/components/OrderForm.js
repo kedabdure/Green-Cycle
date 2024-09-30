@@ -234,7 +234,7 @@ export default function TableOrderForm({ handleSubmit }) {
 
         {/* Submit Button */}
         <Button type="submit" fullWidth variant="contained" style={{ height: "40px", color: "#fff", backgroundColor: "#111" }}>
-          Place Order
+          Continue to payment
         </Button>
         {submitSuccess && <Alert severity="success">Form submitted successfully!</Alert>}
       </Box>

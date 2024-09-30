@@ -58,8 +58,7 @@ const MainTitle = styled.h2`
 export default function Cart() {
   const { cartProducts, addProduct, removeProduct } = useContext(CartContext);
   const [products, setProducts] = useState([])
-  const [orderInfo, setOrderInfo] = useState([]);
-
+  const [orderData, setOrderData] = useState({});
   useEffect(() => {
     if (cartProducts.length > 0) {
       axios.post('/api/cart', { ids: cartProducts })
@@ -79,12 +78,11 @@ export default function Cart() {
     removeProduct(id);
   }
 
-  const handleFormSubmit = (data) => {
-    console.log("Received form data:", data);
-    setOrderInfo(data);
-  };
+  async function goToPayment(data) {
+    const orderData = { ...data, cartProducts };
 
-  console.log(orderInfo)
+    await axios.post('/api/checkout', orderData);
+  }
 
   let total = 0;
   for (const productID of cartProducts) {
@@ -146,7 +144,7 @@ export default function Cart() {
           {!!cartProducts?.length && (
             <Box>
               <MainTitle>Order Information</MainTitle>
-              <AddressForm handleSubmit={handleFormSubmit} />
+              <AddressForm handleSubmit={goToPayment} />
             </Box>
           )}
         </ColumnWrapper>
