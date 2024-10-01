@@ -1,11 +1,14 @@
 import { Chapa } from 'chapa-nodejs';
+import axios from 'axios';
 
-const chapa = new Chapa({
+export const chapa = new Chapa({
   secretKey: process.env.CHAPA_SK,
 });
 
-export async function initializePayment({ first_name, last_name, email, phone_number }) {
-  const tx_ref = await chapa.genTxRef();
+export async function initializePayment({ first_name, last_name, email, phone_number, tx_ref }) {
+
+  const callbackUrl = `${process.env.BASE_URL}/api/paymentCallback`;
+  const returnUrl = `${process.env.BASE_URL}/orderSummary?tx_ref=${tx_ref}`;
 
   const initializeOptions = {
     first_name,
@@ -13,10 +16,10 @@ export async function initializePayment({ first_name, last_name, email, phone_nu
     email,
     phone_number,
     currency: 'ETB',
-    amount: '1',
+    amount: '5',
     tx_ref,
-    callback_url: `${process.env.BASE_URL}/payment-callback`,
-    return_url: `${process.env.BASE_URL}/payment-status`,
+    callback_url: callbackUrl,
+    return_url: returnUrl,
     customization: {
       title: 'Test Payment',
       description: 'E-commerce Checkout Payment',
@@ -25,13 +28,8 @@ export async function initializePayment({ first_name, last_name, email, phone_nu
 
   try {
     const response = await chapa.initialize(initializeOptions);
-    
-    // Log the full response for debugging
-    console.log("Chapa Initialize Response:", response);
-
     return response;
   } catch (error) {
-    console.error("Chapa Initialization Error:", error);
     throw new Error("Chapa Payment Initialization Failed");
   }
 }
@@ -39,6 +37,20 @@ export async function initializePayment({ first_name, last_name, email, phone_nu
 
 // Function to verify a payment
 export async function verifyPayment(tx_ref) {
-  const response = await chapa.verify({ tx_ref });
-  return response;
+  try {
+    const response = await axios.get(
+      `https://api.chapa.co/v1/transaction/verify/${tx_ref}`,
+      {
+        headers: {
+          Authorization: `Bearer ${process.env.CHAPA_SK}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    return response.data;
+
+  } catch (error) {
+    throw new Error(`Payment verification failed: ${error.message}`);
+  }
 }

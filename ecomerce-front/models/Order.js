@@ -13,6 +13,7 @@ const OrderSchema = new Schema(
     wereda: String,
     streetAddress: String,
     paid: Boolean,
+    tx_ref: String,
   },
   {
     timestamps: true,
