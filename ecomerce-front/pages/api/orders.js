@@ -13,9 +13,7 @@ export default async function handler(req, res) {
 
   try {
     await mongooseConnect();
-    console.log("Querying for tx_ref:", tx_ref);
     const order = await Order.findOne({ tx_ref: tx_ref });
-    console.log("Order found:", order);
 
     if (!order) {
       return res.status(404).json({ error: 'Order not found' });

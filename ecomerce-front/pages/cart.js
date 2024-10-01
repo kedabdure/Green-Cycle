@@ -58,7 +58,7 @@ const MainTitle = styled.h2`
 export default function Cart() {
   const { cartProducts, addProduct, removeProduct } = useContext(CartContext);
   const [products, setProducts] = useState([])
-  const [orderData, setOrderData] = useState({});
+
   useEffect(() => {
     if (cartProducts.length > 0) {
       axios.post('/api/cart', { ids: cartProducts })
@@ -81,11 +81,8 @@ export default function Cart() {
   // PAYMENT
   async function goToPayment(data) {
     const orderData = { ...data, cartProducts };
-    console.log("Order Data:", orderData);
-
     try {
       const res = await axios.post('/api/checkout', orderData);
-      console.log("Payment URL:", res.data.payment_url);
       if (res.data && res.data.payment_url) {
         window.location.href = res.data.payment_url;
       } else {

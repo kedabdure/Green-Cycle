@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useRouter } from 'next/router';
 import styled from 'styled-components';
 import axios from 'axios';
 import jsPDF from 'jspdf';
+import { CartContext } from '@/components/CartContext';
 
 const Container = styled.div`
   display: flex;
@@ -82,6 +83,7 @@ export default function OrderSummary() {
   const { tx_ref } = router.query;
   const [order, setOrder] = useState(null);
   const [loading, setLoading] = useState(true);
+  const { clearCart } = useContext(CartContext);
 
   useEffect(() => {
     async function fetchOrder() {
@@ -89,6 +91,7 @@ export default function OrderSummary() {
         try {
           const response = await axios.get(`/api/orders?tx_ref=${tx_ref}`);
           setOrder(response.data);
+          clearCart();
         } catch (error) {
           console.error('Error fetching order:', error);
         } finally {
