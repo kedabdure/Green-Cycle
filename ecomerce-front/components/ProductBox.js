@@ -52,7 +52,7 @@ const Price = styled.div`
 
 
 export default function ProductBox({ _id, title, price, images }) {
-  const url = '/products/'+_id;
+  const url = '/product/'+_id;
   const {addProduct} = useContext(CartContext);
   
   return (
