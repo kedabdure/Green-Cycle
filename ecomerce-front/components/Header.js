@@ -57,10 +57,22 @@ const NavLink = styled(Link)`
   color: #aaa;
   text-decoration: none;
   padding: 10px 0;
+  transition: color 0.3s ease;
+
+  &:hover {
+    color: white;
+  }
 
   @media screen and (min-width: 768px) {
     padding: 0;
   }
+`;
+
+const ButtonWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
 `;
 
 const NavButton = styled.button`
@@ -91,6 +103,33 @@ const CartIconWrapper = styled.div`
 const Cart = styled.div`
   width: 26px;
   height: 26px;
+  position: relative;
+  z-index: 100;
+  cursor: pointer;
+`;
+
+const CartBadge = styled.div`
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  background-color: #f50057;
+  color: white;
+  border-radius: 50%;
+  z-index: 100;
+
+  @media screen and (min-width: 768px) {
+    font-size: 0.75rem;
+    width: 19px;
+    height: 19px;
+    top: -8px;
+    right: -8px;
+  };
 `;
 
 export default function Header() {
@@ -116,23 +155,28 @@ export default function Header() {
           <Logo href="/" passHref>
             <LogoWhite width="120" />
           </Logo>
+
           <StyledNav $mobileNavActive={mobileNavActive}>
             <NavLink href={"/"}>Home</NavLink>
             <NavLink href={"/products"}>All products</NavLink>
             <NavLink href={"/categories"}>Categories</NavLink>
             <NavLink href={"/account"}>Account</NavLink>
+          </StyledNav>
+
+          <ButtonWrapper>
             <NavLink href={"/cart"}>
               <CartIconWrapper>
                 <Cart>
                   <CartIcon />
+                  <CartBadge>{cartProducts.length}</CartBadge>
                 </Cart>
-                ({cartProducts.length})
               </CartIconWrapper>
             </NavLink>
-          </StyledNav>
-          <NavButton onClick={() => setMobileNavActive(prev => !prev)}>
-            {!mobileNavActive ? <BarsIcon /> : <Close />}
-          </NavButton>
+            <NavButton onClick={() => setMobileNavActive(prev => !prev)}>
+              {!mobileNavActive ? <BarsIcon /> : <Close />}
+            </NavButton>
+          </ButtonWrapper>
+
         </Wrapper>
       </Center>
     </StyledHeader>

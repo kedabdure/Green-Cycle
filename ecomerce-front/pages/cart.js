@@ -11,19 +11,23 @@ import Currency from "@/components/Currency";
 
 const ColumnWrapper = styled.div`
   display: grid;
+  gap: 40px;
   grid-template-columns: 1fr;
   @media screen and (min-width: 768px) {
     grid-template-columns: 1.3fr .7fr;
+    gap: 30px;
   }
-  gap: 20px;
   margin-top: 40px;
-  margin-bottom: 20px;
+  margin-bottom: 30px;
 `;
 
 const Box = styled.div`
   background-color: #fff;
   border-radius: 10px;
-  padding: 20px;
+  padding: 30px 15px;
+  @media screen and (min-width: 768px) {
+    padding: 40px;
+  }
 `;
 
 const ProductInfoCell = styled.td`
@@ -32,10 +36,10 @@ const ProductInfoCell = styled.td`
 `;
 
 const ProductImageBox = styled.div`
-  width: 120px;
-  height: 120px;
-  max-width: 150px;
-  max-height: 150px;
+  width: 100px;
+  height: 100px;
+  max-width: 120px;
+  max-height: 120px;
   padding: 10px;
   border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 10px;
@@ -43,8 +47,20 @@ const ProductImageBox = styled.div`
   justify-content: center;
   align-items: center;
   img {
-    max-width: 100px;
-    max-height: 100px;
+    max-width: 80px;
+    max-height: 80px;
+  }
+
+@media screen and (min-width: 768px) {
+    width: 120px;
+    height: 120px;
+    max-width: 150px;
+    max-height: 150px;
+
+    img {
+      max-width: 100px;
+      max-height: 100px;
+    }
   }
 `;
 
@@ -160,7 +176,9 @@ export default function Cart() {
                           onClick={() => moreOfThisProduct(product._id)}>+</Button>
                       </td>
                       <td>
-                        {cartProducts.filter(id => id === product._id).length * product.price} ETB
+                        <>
+                          {formatPrice(cartProducts.filter(id => id === product._id).length * product.price)} <Currency>ETB</Currency>
+                        </>
                       </td>
                     </tr>
                   ))}
@@ -172,7 +190,6 @@ export default function Cart() {
                         {formatPrice(total)}
                         <Currency>ETB</Currency>
                       </Price>
-
                     </td>
                   </tr>
                 </tbody>

@@ -12,13 +12,14 @@ const StyledBox = styled.div`
   width: 100%;
   background-color: #1c2229;
   color: #e1e2e2;
-  padding: 4rem 0;
+  padding-top: 2rem;
   position: relative;
 `;
 
 const StyledContainer = styled.div`
-  max-width: 1200px;
+  max-width: 100%;
   margin: 0 auto;
+  padding: 0 1rem;
 `;
 
 const StyledGrid = styled.div`
@@ -114,12 +115,18 @@ const ScrollToTopButton = styled.button`
   border: none;
   cursor: pointer;
   z-index: 99999;
-  padding: 10px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   border-radius: 50%;
-  transition: background-color 0.3s ease;
+  opacity: 0.2;
+  transition: all 0.3s ease;
+
   &:hover {
     background-color: #fb8122;
-    color: white;
+    opacity: .8;
   }
 `;
 
@@ -160,11 +167,26 @@ export default function Contact() {
             </LogoBox>
           </StyledItem>
 
+          {/* Company Links */}
+          <StyledItem>
+            <SectionTitle>Company</SectionTitle>
+            <NavLink href="/about">About</NavLink>
+            <NavLink href="/cart">Cart</NavLink>
+          </StyledItem>
+
+          {/* Services Links */}
+          <StyledItem>
+            <SectionTitle>Quick Links</SectionTitle>
+            <NavLink href="/">Home</NavLink>
+            <NavLink href="/cart">Carts</NavLink>
+            <NavLink href="/products">All Products</NavLink>
+          </StyledItem>
+
           {/* Contact Info */}
           <StyledItem>
-            <SectionTitle>Find Us</SectionTitle>
+            <SectionTitle>Contact Us</SectionTitle>
             <ContactText>
-              <PhoneIcon /> Phone: (+251) 953-431-572
+              <PhoneIcon /> Phone: (+251) 953-431-542
             </ContactText>
             <ContactText>
               <EmailIcon /> Email: nexaddis@gmail.com
@@ -176,7 +198,6 @@ export default function Contact() {
 
         <FooterText>
           <Text>© {getCurrentYear()} NexAddis</Text>
-          <NavLink href="/privacy">Privacy Policy</NavLink>
         </FooterText>
 
         {showScrollToTop && (

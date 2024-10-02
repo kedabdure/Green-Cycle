@@ -20,9 +20,15 @@ const WhiteBox = styled(Link)`
   justify-content: center;
   border-radius: 10px;
   img{
+    transition: all ease 0.2s;
     max-width: 100%;
     max-height: 110px;
+
+    &:hover{
+      transform: scale(1.1) rotate(5deg);
+    }
   }
+
 `;
 
 const Title = styled(Link)`
@@ -31,6 +37,11 @@ const Title = styled(Link)`
   text-decoration: none;
   color: inherit;
   margin: 0;
+  transition: text-decoration 0.5s;
+
+  &:hover {
+    text-decoration: underline;
+  }
 `;
 
 const PropertiesWrapper = styled.div`

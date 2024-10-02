@@ -5,6 +5,7 @@ import { Product } from "@/models/Product";
 import { mongooseConnect } from "@/lib/mongoose";
 import styled from "styled-components";
 import Title from "@/components/Title";
+import Footer from "@/components/Footer"
 
 export default function Products({ products }) {
   return (
@@ -14,6 +15,7 @@ export default function Products({ products }) {
         <Title>All Products</Title>
         <ProductsGrid products={products} />
       </Center>
+      <Footer />
     </>
   )
 }
