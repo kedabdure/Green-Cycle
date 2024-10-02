@@ -4,17 +4,14 @@ import ProductsGrid from "@/components/ProductsGrid";
 import { Product } from "@/models/Product";
 import { mongooseConnect } from "@/lib/mongoose";
 import styled from "styled-components";
-
-const Title = styled.h1`
-  font-size: 1.5em;
-`;
+import Title from "@/components/Title";
 
 export default function Products({ products }) {
   return (
     <>
       <Header />
       <Center>
-        <Title>Products</Title>
+        <Title>All Products</Title>
         <ProductsGrid products={products} />
       </Center>
     </>
