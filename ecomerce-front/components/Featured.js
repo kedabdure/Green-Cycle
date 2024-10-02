@@ -13,9 +13,13 @@ const Bg = styled.div`
 `;
 
 const Title = styled.h1`
-  font-size: 2.5rem;
-  margin: 0;
+  font-size: 2rem;
+  margin: 10px 0;
   font-weight: normal;
+
+  @media screen and (min-width: 768px) {
+    font-size: 2.5rem;
+  }
 `
 
 const Desc = styled.p`
@@ -26,11 +30,34 @@ const Desc = styled.p`
 
 const ColumnWrapper = styled.div`
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 50px;
+  grid-template-columns: 1fr;
+  gap: 40px;
+  padding-bottom: 30px;
+
   img {
+    margin-top: 20px;
     max-width: 100%;
-    height: 350px;
+    height: 250px;
+  }
+
+  div:nth-child(1) {
+    order: 2;
+  }
+
+  @media screen and (min-width: 768px) {
+    grid-template-columns: .9fr 1.1fr;
+    padding-bottom: 0;
+    gap: 50px;
+
+    div:nth-child(1) {
+      order: 0;
+    }
+
+    img {
+      margin-top: 0;
+      max-width: 100%;
+      height: 350px;
+    }
   }
 `;
 
@@ -46,8 +73,8 @@ const Column = styled.div`
   justify-content: center;
 `;
 
-export default function Featured({product}) {
-  const {addProduct} = useContext(CartContext);
+export default function Featured({ product }) {
+  const { addProduct } = useContext(CartContext);
   return (
     <Bg>
       <Center>
@@ -57,8 +84,8 @@ export default function Featured({product}) {
               <Title>{product.title}</Title>
               <Desc>{product.description}</Desc>
               <ButtonWrapper>
-                <ButtonLink $white $outline href={"/products/" + product._id}>Read more</ButtonLink>
-                <Button white onClick={() => addProduct(product._id)}>
+                <ButtonLink $white $outline href={"/product/" + product._id}>Read more</ButtonLink>
+                <Button black outline onClick={() => addProduct(product._id)}>
                   <CartIcon />
                   Add to cart
                 </Button>

@@ -22,6 +22,7 @@ const ColWrapper = styled.div`
 `;
 const PriceRow = styled.div`
   display: flex;
+  margin-top: 20px;
   gap: 20px;
   align-items: center;
 `;
@@ -47,7 +48,7 @@ export default function ProductPage({product}) {
                 <Price>${product.price}</Price>
               </div>
               <div>
-                <Button primary onClick={() => addProduct(product._id)}>
+                <Button $black onClick={() => addProduct(product._id)}>
                   <CartIcon />Add to cart
                 </Button>
               </div>
