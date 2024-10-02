@@ -124,11 +124,11 @@ export const ButtonStyle = css`
 
   /* Responsive styles */
   @media screen and (max-width: 768px) {
-    padding: 10px; /* Increase padding for smaller screens */
-    font-size: 1rem; /* Adjust font size */
+    padding: 10px;
+    font-size: 1rem;
 
     svg {
-      height: 18px; /* Slightly increase SVG size */
+      height: 18px;
       margin-right: 3px;
     }
 
@@ -141,7 +141,7 @@ export const ButtonStyle = css`
   }
 
   @media screen and (max-width: 480px) {
-    padding: 8px; /* Further adjustment for extra small screens */
+    padding: 8px;
     font-size: 0.9rem;
 
     svg {

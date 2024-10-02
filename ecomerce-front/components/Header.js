@@ -28,16 +28,16 @@ const Wrapper = styled.div`
 
 const StyledNav = styled.nav`
   transition: height 0.4s ease-in-out, opacity 0.4s ease-in-out;
-  height: ${props => (props.mobileNavActive ? "100vh" : "0")};
-  opacity: ${props => (props.mobileNavActive ? "1" : "0")};
-  font-size: ${props => (props.mobileNavActive ? "1.2rem" : "")};
+  height: ${props => (props.$mobileNavActive ? "100vh" : "0")};
+  opacity: ${props => (props.$mobileNavActive ? "1" : "0")};
+  font-size: ${props => (props.$mobileNavActive ? "1.2rem" : "")};
   overflow: hidden;
   position: fixed;
   top: 0;
   bottom: 0;
   left: 0;
   right: 0;
-  padding: ${props => (props.mobileNavActive ? "100px 20px 20px 25px" : "0 20px")};
+  padding: ${props => (props.$mobileNavActive ? "100px 20px 20px 25px" : "0 20px")};
   background-color: #222;
   z-index: 2;
 
@@ -103,6 +103,7 @@ export default function Header() {
     } else {
       document.body.style.overflow = "auto";
     }
+
     return () => {
       document.body.style.overflow = "auto";
     };
@@ -115,7 +116,7 @@ export default function Header() {
           <Logo href="/" passHref>
             <LogoWhite width="120" />
           </Logo>
-          <StyledNav mobileNavActive={mobileNavActive}>
+          <StyledNav $mobileNavActive={mobileNavActive}>
             <NavLink href={"/"}>Home</NavLink>
             <NavLink href={"/products"}>All products</NavLink>
             <NavLink href={"/categories"}>Categories</NavLink>

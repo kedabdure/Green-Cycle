@@ -33,6 +33,19 @@ const Title = styled(Link)`
   margin: 0;
 `;
 
+const PropertiesWrapper = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+`;
+
+const Property = styled.div`
+  font-size: .8rem;
+  color: #666;
+  background-color: #f5f5f5;
+  padding: 2px 5px;
+`;
+
 const ProductInfo = styled.div`
   margin: 10px 0;
   display: flex;
@@ -64,7 +77,7 @@ const Price = styled.div`
 `;
 
 
-export default function ProductBox({ _id, title, price, images }) {
+export default function ProductBox({ _id, title, price, images, properties, category }) {
   const url = '/product/' + _id;
   const { addProduct } = useContext(CartContext);
 
@@ -81,6 +94,14 @@ export default function ProductBox({ _id, title, price, images }) {
       </WhiteBox>
       <ProductInfo>
         <Title href={url}>{title}</Title>
+        <PropertiesWrapper>
+          {/* Ensure properties is an object and use Object.entries to iterate */}
+          {properties && Object.entries(properties).map(([key, value], index) => (
+            <Property key={index}>
+              {key}: {value}
+            </Property>
+          ))}
+        </PropertiesWrapper>
         <PriceRow>
           <Price>
             {formatPrice(price)}

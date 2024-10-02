@@ -158,22 +158,6 @@ export default function Contact() {
             <LogoBox>
               <LogoWhite />
             </LogoBox>
-            <Text mt="2rem">Empowering businesses with innovative digital solutions.</Text>
-            <Text small>Contact us to elevate your digital presence.</Text>
-          </StyledItem>
-
-          {/* Company Links */}
-          <StyledItem>
-            <SectionTitle>Company</SectionTitle>
-            <NavLink href="/about">About</NavLink>
-            <NavLink href="/products">Testimonial</NavLink>
-            <NavLink href="/cart">Services</NavLink>
-          </StyledItem>
-
-          {/* Services Links */}
-          <StyledItem>
-            <SectionTitle>Our Products</SectionTitle>
-            <NavLink href="/">Website Design & Development</NavLink>
           </StyledItem>
 
           {/* Contact Info */}
@@ -184,9 +168,6 @@ export default function Contact() {
             </ContactText>
             <ContactText>
               <EmailIcon /> Email: nexaddis@gmail.com
-            </ContactText>
-            <ContactText>
-              <LocationOnIcon /> Address: Addis Ababa, Ethiopia
             </ContactText>
           </StyledItem>
         </StyledGrid>

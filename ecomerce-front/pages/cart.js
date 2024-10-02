@@ -7,10 +7,14 @@ import Button from "@/components/Button";
 import axios from 'axios'
 import Table from "@/components/Table";
 import AddressForm from "@/components/OrderForm";
+import Currency from "@/components/Currency";
 
 const ColumnWrapper = styled.div`
   display: grid;
-  grid-template-columns: 1.3fr .7fr;
+  grid-template-columns: 1fr;
+  @media screen and (min-width: 768px) {
+    grid-template-columns: 1.3fr .7fr;
+  }
   gap: 20px;
   margin-top: 40px;
   margin-bottom: 20px;
@@ -55,6 +59,21 @@ const MainTitle = styled.h2`
   margin-bottom: 1.2rem;
 `;
 
+const Price = styled.div`
+  font-size: 1rem;
+  font-weight: 500;
+  text-align: right;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  @media screen and (min-width: 768px) {
+    text-align: left;
+    font-size: 1.1rem;
+    font-weight: bold;
+  }
+`;
+
+
 export default function Cart() {
   const { cartProducts, addProduct, removeProduct } = useContext(CartContext);
   const [products, setProducts] = useState([])
@@ -98,6 +117,10 @@ export default function Cart() {
     const price = products.find(product => product._id === productID)?.price;
     total += price;
   }
+
+  const formatPrice = (value) => {
+    return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  };
 
   return (
     <>
@@ -144,7 +167,13 @@ export default function Cart() {
                   <tr>
                     <td></td>
                     <td></td>
-                    <td>{total} ETB</td>
+                    <td>
+                      <Price>
+                        {formatPrice(total)}
+                        <Currency>ETB</Currency>
+                      </Price>
+
+                    </td>
                   </tr>
                 </tbody>
               </Table>
