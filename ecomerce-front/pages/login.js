@@ -131,8 +131,9 @@ const Divider = styled.div`
 export default function RegisterPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [creatingUser, setCreatingUser] = useState(false);
+  const [loginInProgress, setLoginInProgress] = useState(false);
   const [userCreated, setUserCreated] = useState(false);
+
   const [error, setError] = useState(false);
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
@@ -158,24 +159,31 @@ export default function RegisterPage() {
 
     if (!valid) return;
 
-    setCreatingUser(true);
+    setLoginInProgress(true);
     setError(false);
     setUserCreated(false);
 
-    try {
-      const response = await axios.post("/api/register", { email, password });
-      if (response.status === 201) {
-        setUserCreated(true);
-        setEmail("");
-        setPassword("");
-      } else {
-        setError(true);
-      }
-    } catch (err) {
-      setError(true);
-    }
+    const result = await signIn("credentials", { email, password });
 
-    setCreatingUser(false);
+    if (result.error) {
+      console.error("Login error:", result.error);
+    } else {
+      console.log("Login successful:", result);
+
+      
+    }
+    // try {
+    //   const response = await axios.post("/api/login", { email, password });
+    //   if (response.status === 200) {
+    //     setUserCreated(true);
+    //   } else {
+    //     setError(true);
+    //   }
+    // } catch (err) {
+    //   setError(true);
+    // }
+
+    setLoginInProgress(false);
   }
 
   return (
@@ -201,9 +209,10 @@ export default function RegisterPage() {
         <Title>Log In</Title>
         <Input
           type="email"
+          name="email"
           placeholder="Email"
           value={email}
-          disabled={creatingUser}
+          disabled={loginInProgress}
           onChange={(ev) => {
             setEmail(ev.target.value);
             setEmailError("");
@@ -214,9 +223,10 @@ export default function RegisterPage() {
         {emailError && <ErrorText>{emailError}</ErrorText>}
         <Input
           type="password"
+          name="password"
           placeholder="Password"
           value={password}
-          disabled={creatingUser}
+          disabled={loginInProgress}
           onChange={(ev) => {
             setPassword(ev.target.value);
             setPasswordError("");
@@ -225,7 +235,7 @@ export default function RegisterPage() {
           pattern=".*"
         />
         {passwordError && <ErrorText>{passwordError}</ErrorText>}
-        <Button type="submit" disabled={creatingUser}>
+        <Button type="submit" disabled={loginInProgress}>
           Log In
         </Button>
         <SmallText>or login with provider</SmallText>
