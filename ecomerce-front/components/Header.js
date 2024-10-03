@@ -175,6 +175,9 @@ export default function Header() {
             <NavButton onClick={() => setMobileNavActive(prev => !prev)}>
               {!mobileNavActive ? <BarsIcon /> : <Close />}
             </NavButton>
+            <NavLink href={"/register"}>
+              <button>Sign up</button>
+            </NavLink>
           </ButtonWrapper>
 
         </Wrapper>
