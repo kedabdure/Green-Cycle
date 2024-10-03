@@ -5,7 +5,6 @@ import Link from "next/link";
 import styled from "styled-components";
 import Google from "../components/icons/Google";
 import axios from "axios";
-import { set } from "mongoose";
 
 // Styled Components
 const Section = styled.section`
@@ -130,13 +129,11 @@ const Divider = styled.div`
 `;
 
 export default function RegisterPage() {
-  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [creatingUser, setCreatingUser] = useState(false);
   const [userCreated, setUserCreated] = useState(false);
   const [error, setError] = useState(false);
-  const [nameError, setNameError] = useState("");
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
 
@@ -144,16 +141,10 @@ export default function RegisterPage() {
     ev.preventDefault();
 
     // Reset error messages before validation
-    setNameError("");
     setEmailError("");
     setPasswordError("");
 
     let valid = true;
-
-    if (!name) {
-      setNameError("Please enter your full name.");
-      valid = false;
-    }
 
     if (!email || !/\S+@\S+\.\S+/.test(email)) {
       setEmailError("Please enter a valid email address.");
@@ -172,10 +163,9 @@ export default function RegisterPage() {
     setUserCreated(false);
 
     try {
-      const response = await axios.post("/api/register", { name, email, password });
+      const response = await axios.post("/api/register", { email, password });
       if (response.status === 201) {
         setUserCreated(true);
-        setName("");
         setEmail("");
         setPassword("");
       } else {
@@ -208,20 +198,7 @@ export default function RegisterPage() {
         </Message>
       )}
       <Form onSubmit={handleFormSubmit}>
-        <Title>Register</Title>
-        <Input
-          type="text"
-          placeholder="Full name"
-          value={name}
-          disabled={creatingUser}
-          onChange={(ev) => {
-            setName(ev.target.value);
-            setNameError("");
-          }}
-          $isInvalid={!!nameError}
-          pattern=".*"
-        />
-        {nameError && <ErrorText>{nameError}</ErrorText>}
+        <Title>Log In</Title>
         <Input
           type="email"
           placeholder="Email"
@@ -249,7 +226,7 @@ export default function RegisterPage() {
         />
         {passwordError && <ErrorText>{passwordError}</ErrorText>}
         <Button type="submit" disabled={creatingUser}>
-          Register
+          Log In
         </Button>
         <SmallText>or login with provider</SmallText>
         <ProviderButton onClick={() => signIn("google", { callbackUrl: "/" })}>
@@ -257,9 +234,9 @@ export default function RegisterPage() {
           Login with Google
         </ProviderButton>
         <Divider>
-          Existing account?{" "}
-          <Link href="/login" passHref>
-            <button style={{ textDecoration: "underline" }}>Login here &raquo;</button>
+          Don't have an account?{" "}
+          <Link href="/register" passHref>
+            <button style={{ textDecoration: "underline" }}>register here &raquo;</button>
           </Link>
         </Divider>
       </Form>
