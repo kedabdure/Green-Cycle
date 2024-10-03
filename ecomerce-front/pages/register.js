@@ -1,23 +1,23 @@
 "use client";
 import { useState } from "react";
 import { signIn } from "next-auth/react";
-import Image from "next/image";
 import Link from "next/link";
 import styled from "styled-components";
-import Google from "@/components/icons/Google";
+import Google from "../components/icons/Google";
+import axios from "axios";
 
 // Styled Components
 const Section = styled.section`
   margin-top: 2rem;
   padding: 1rem;
-  @media and screen (min-width: 768px) {
+  @media screen and (min-width: 768px) {
     margin-top: 4rem;
     padding: 0 2rem;
   }
 `;
 
 const Title = styled.h1`
-  text-align: center; 
+  text-align: center;
   color: #333;
   font-size: 2rem;
   margin-bottom: 1rem;
@@ -26,14 +26,14 @@ const Title = styled.h1`
 const Message = styled.div`
   margin: 1rem 0;
   text-align: center;
-  color: ${({ error }) => (error ? "red" : "green")};
+  color: ${({ $error }) => ($error ? "red" : "green")};
 `;
 
 const Form = styled.form`
   display: block;
-  max-width: 20rem;
+  max-width: 22rem;
   margin: 0 auto;
-  padding: 1.5rem 1rem;
+  padding: 1.5rem 1.2rem;
   border: 1px solid #ddd;
   border-radius: 8px;
   background-color: #f9f9f9;
@@ -45,13 +45,16 @@ const Input = styled.input`
   width: 100%;
   padding: 0.75rem;
   margin: 0.5rem 0;
-  border: 1px solid ${({ isInvalid }) => (isInvalid ? "red" : "#ddd")};
+  border: 1px solid ${({ $isInvalid }) => ($isInvalid ? "red" : "#ddd")};
   border-radius: 4px;
   &:disabled {
     background-color: #f3f3f3;
   }
+  &::placeholder {
+    color: ${({ $isInvalid }) => ($isInvalid ? "red" : "#aaa")};
+  }
   &:focus {
-    border-color: ${({ isInvalid }) => (isInvalid ? "red" : "#007bff")};
+    border-color: ${({ $isInvalid }) => ($isInvalid ? "red" : "#333")};
   }
 `;
 
@@ -71,6 +74,7 @@ const Button = styled.button`
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  font-size: .9rem;
   transition: background-color 0.3s;
   &:hover {
     background-color: #0056b3;
@@ -94,10 +98,13 @@ const ProviderButton = styled(Button)`
   align-items: center;
   gap: 1rem;
   margin: 0;
-  padding: 0.47rem;
-  background-color: #de5246;
+  font-size: .9rem;
+  padding: .5em 0.75rem;
+  background-color: #f1f1f1;
+  color: #333;
+  border: 1px solid #ddd;
   &:hover {
-    background-color: #c7433b;
+    background-color: #f3f3f3;
   }
 `;
 
@@ -122,21 +129,30 @@ const Divider = styled.div`
 `;
 
 export default function RegisterPage() {
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [creatingUser, setCreatingUser] = useState(false);
   const [userCreated, setUserCreated] = useState(false);
   const [error, setError] = useState(false);
+  const [nameError, setNameError] = useState("");
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
 
   async function handleFormSubmit(ev) {
     ev.preventDefault();
 
-    // Basic validation
-    let valid = true;
+    // Reset error messages before validation
+    setNameError("");
     setEmailError("");
     setPasswordError("");
+
+    let valid = true;
+
+    if (!name) {
+      setNameError("Please enter your full name.");
+      valid = false;
+    }
 
     if (!email || !/\S+@\S+\.\S+/.test(email)) {
       setEmailError("Please enter a valid email address.");
@@ -154,17 +170,17 @@ export default function RegisterPage() {
     setError(false);
     setUserCreated(false);
 
-    const response = await fetch("/api/register", {
-      method: "POST",
-      body: JSON.stringify({ email, password }),
-      headers: { "Content-Type": "application/json" },
-    });
-
-    if (response.ok) {
-      setUserCreated(true);
-    } else {
+    try {
+      const response = await axios.post("/api/register", { name, email, password });
+      if (response.status === 201) {
+        setUserCreated(true);
+      } else {
+        setError(true);
+      }
+    } catch (err) {
       setError(true);
     }
+
     setCreatingUser(false);
   }
 
@@ -182,7 +198,7 @@ export default function RegisterPage() {
         </Message>
       )}
       {error && (
-        <Message error>
+        <Message $error>
           An error has occurred.<br />
           Please try again later.
         </Message>
@@ -192,18 +208,27 @@ export default function RegisterPage() {
         <Input
           type="text"
           placeholder="Full name"
-          value={email}
+          value={name}
           disabled={creatingUser}
-          onChange={(ev) => setEmail(ev.target.value)}
-          isInvalid={emailError}
+          onChange={(ev) => {
+            setName(ev.target.value);
+            setNameError("");
+          }}
+          $isInvalid={!!nameError}
+          pattern=".*"
         />
+        {nameError && <ErrorText>{nameError}</ErrorText>}
         <Input
           type="email"
           placeholder="Email"
           value={email}
           disabled={creatingUser}
-          onChange={(ev) => setEmail(ev.target.value)}
-          isInvalid={emailError}
+          onChange={(ev) => {
+            setEmail(ev.target.value);
+            setEmailError("");
+          }}
+          $isInvalid={!!emailError}
+          pattern=".*"
         />
         {emailError && <ErrorText>{emailError}</ErrorText>}
         <Input
@@ -211,8 +236,12 @@ export default function RegisterPage() {
           placeholder="Password"
           value={password}
           disabled={creatingUser}
-          onChange={(ev) => setPassword(ev.target.value)}
-          isInvalid={passwordError}
+          onChange={(ev) => {
+            setPassword(ev.target.value);
+            setPasswordError("");
+          }}
+          $isInvalid={!!passwordError}
+          pattern=".*"
         />
         {passwordError && <ErrorText>{passwordError}</ErrorText>}
         <Button type="submit" disabled={creatingUser}>

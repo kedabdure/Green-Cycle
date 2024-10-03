@@ -1,7 +1,7 @@
 import styled from "styled-components"
-import Center from "@/components/Center";
-import ProductBox from "@/components/ProductBox";
-import Title from "@/components/Title";
+import Center from "./Center";
+import ProductBox from "./ProductBox";
+import Title from "./Title";
 
 const ProductsGrid = styled.div`
   display: grid;

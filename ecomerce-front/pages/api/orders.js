@@ -1,5 +1,5 @@
-import { mongooseConnect } from "@/lib/mongoose";
-import { Order } from "@/models/Order";
+import { mongooseConnect } from "../../lib/mongoose";
+import { Order } from "../../models/Order";
 
 export default async function handler(req, res) {
   if (req.method !== 'GET') {

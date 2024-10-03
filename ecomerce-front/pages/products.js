@@ -1,11 +1,11 @@
-import Center from "@/components/Center";
-import Header from "@/components/Header";
-import ProductsGrid from "@/components/ProductsGrid";
-import { Product } from "@/models/Product";
-import { mongooseConnect } from "@/lib/mongoose";
+import Center from "../components/Center";
+import Header from "../components/Header";
+import ProductsGrid from "../components/ProductsGrid";
+import { Product } from "../models/Product";
+import { mongooseConnect } from "../lib/mongoose";
 import styled from "styled-components";
-import Title from "@/components/Title";
-import Footer from "@/components/Footer"
+import Title from "../components/Title";
+import Footer from "../components/Footer";
 
 export default function Products({ products }) {
   return (

@@ -1,10 +1,10 @@
 import styled from "styled-components";
 import Link from "next/link";
-import CartIcon from "@/components/icons/CartIcon";
-import Button from "@/components/Button";
+import CartIcon from "./icons/CartIcon";
+import Button from "./Button";
 import { useContext } from "react";
-import { CartContext } from "@/components/CartContext";
-import Currency from "@/components/Currency";
+import { CartContext } from "./CartContext";
+import Currency from "./Currency";
 
 const ProductWrapper = styled.div`
 

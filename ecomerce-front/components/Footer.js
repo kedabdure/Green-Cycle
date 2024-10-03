@@ -5,7 +5,7 @@ import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import PhoneIcon from '@mui/icons-material/Phone';
 import EmailIcon from '@mui/icons-material/Email';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
-import LogoWhite from "@/components/icons/LogoWhite";
+import LogoWhite from "./icons/LogoWhite";
 
 // Styled Components
 const StyledBox = styled.div`

@@ -1,13 +1,13 @@
-import Header from "@/components/Header";
+import Header from "../components/Header";
 import { useContext, useEffect, useState } from "react";
-import { CartContext } from "@/components/CartContext";
+import { CartContext } from "../components/CartContext";
 import styled from "styled-components";
-import Center from "@/components/Center";
-import Button from "@/components/Button";
+import Center from "../components/Center";
+import Button from "../components/Button";
 import axios from 'axios'
-import Table from "@/components/Table";
-import AddressForm from "@/components/OrderForm";
-import Currency from "@/components/Currency";
+import Table from "../components/Table";
+import OrderForm from "../components/OrderForm";
+import Currency from "../components/Currency";
 
 const ColumnWrapper = styled.div`
   display: grid;
@@ -199,7 +199,7 @@ export default function Cart() {
           {!!cartProducts?.length && (
             <Box>
               <MainTitle>Order Information</MainTitle>
-              <AddressForm handleSubmit={goToPayment} />
+              <OrderForm handleSubmit={goToPayment} />
             </Box>
           )}
         </ColumnWrapper>

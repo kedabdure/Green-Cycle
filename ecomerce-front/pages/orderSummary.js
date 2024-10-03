@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import styled from 'styled-components';
 import axios from 'axios';
 import jsPDF from 'jspdf';
-import { CartContext } from '@/components/CartContext';
+import { CartContext } from '../components/CartContext';
 
 const Container = styled.div`
   display: flex;

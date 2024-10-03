@@ -12,6 +12,7 @@
     "@mui/icons-material": "^6.1.1",
     "@mui/material": "^6.1.1",
     "axios": "^1.7.7",
+    "bcrypt": "^5.1.1",
     "chapa-nodejs": "^2.0.1",
     "jspdf": "^2.5.2",
     "mongodb": "^6.9.0",
@@ -24,6 +25,7 @@
     "styled-components": "^6.1.13"
   },
   "devDependencies": {
+    "@types/node": "22.7.4",
     "eslint": "^8",
     "eslint-config-next": "14.2.8"
   }

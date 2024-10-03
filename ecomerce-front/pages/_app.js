@@ -1,4 +1,4 @@
-import CartContextProvider from "@/components/CartContext";
+import CartContextProvider from "../components/CartContext";
 import { createGlobalStyle } from "styled-components";
 import "../styles/globals.css";
 

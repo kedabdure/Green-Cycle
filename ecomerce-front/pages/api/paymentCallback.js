@@ -1,6 +1,6 @@
-import { verifyPayment } from "@/lib/chapaService";
-import { Order } from "@/models/Order";
-import { mongooseConnect } from "@/lib/mongoose";
+import { verifyPayment } from "../../lib/chapaService";
+import { Order } from "../../models/Order";
+import { mongooseConnect } from "../../lib/mongoose";
 
 export default async function handler(req, res) {
   if (req.method !== 'GET') {

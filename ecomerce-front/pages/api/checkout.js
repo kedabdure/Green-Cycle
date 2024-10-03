@@ -1,7 +1,7 @@
-import { mongooseConnect } from "@/lib/mongoose";
-import { Product } from "@/models/Product";
-import { Order } from "@/models/Order";
-import { initializePayment, chapa } from "@/lib/chapaService";
+import { mongooseConnect } from "../../lib/mongoose";
+import { Product } from "../../models/Product";
+import { Order } from "../../models/Order";
+import { initializePayment, chapa } from "../../lib/chapaService";
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {

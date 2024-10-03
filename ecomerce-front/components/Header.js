@@ -1,11 +1,11 @@
 import LogoWhite from "./icons/LogoWhite";
 import Link from "next/link";
 import styled from "styled-components";
-import Center from "@/components/Center";
+import Center from "./Center";
 import { useContext, useState, useEffect } from "react";
-import { CartContext } from "@/components/CartContext";
-import BarsIcon from "@/components/icons/Bars";
-import CartIcon from "@/components/icons/CartIcon";
+import { CartContext } from "./CartContext";
+import BarsIcon from "./icons/Bars";
+import CartIcon from "./icons/CartIcon";
 import Close from "./icons/Close";
 
 const StyledHeader = styled.header`
