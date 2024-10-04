@@ -17,7 +17,7 @@ const ColumnWrapper = styled.div`
     grid-template-columns: 1.3fr .7fr;
     gap: 30px;
   }
-  margin-top: 40px;
+  margin-top: 100px;
   margin-bottom: 30px;
 `;
 
@@ -26,7 +26,7 @@ const Box = styled.div`
   border-radius: 10px;
   padding: 30px 15px;
   @media screen and (min-width: 768px) {
-    padding: 40px;
+    padding: 40px 25px;
   }
 `;
 

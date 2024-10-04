@@ -88,7 +88,7 @@ export default function TableOrderForm({ handleSubmit }) {
         sx={{
           display: 'flex',
           flexDirection: 'column',
-          gap: '20px',
+          gap: '15px',
         }}
       >
         {/* First Name */}

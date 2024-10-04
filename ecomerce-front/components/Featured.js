@@ -9,7 +9,8 @@ import { CartContext } from "./CartContext";
 const Bg = styled.div`
   background-color: #222;
   color: white;
-  padding: 20px 0
+  padding: 20px 0;
+  margin-top: 70px;
 `;
 
 const Title = styled.h1`

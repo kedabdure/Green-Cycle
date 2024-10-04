@@ -1,4 +1,6 @@
+"use client"
 import { useState, createContext, useEffect } from 'react';
+import { SessionProvider } from 'next-auth/react';
 
 export const CartContext = createContext();
 
@@ -37,8 +39,10 @@ export default function CartContextProvider({ children }) {
     ls?.removeItem('cart');
   }
   return (
-    <CartContext.Provider value={{ cartProducts, setCartProducts, addProduct, removeProduct, clearCart }}>
-      {children}
-    </CartContext.Provider>
+    <SessionProvider>
+      <CartContext.Provider value={{ cartProducts, setCartProducts, addProduct, removeProduct, clearCart }}>
+        {children}
+      </CartContext.Provider>
+    </SessionProvider>
   )
 }

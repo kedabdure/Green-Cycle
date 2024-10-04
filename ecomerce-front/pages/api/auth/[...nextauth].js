@@ -1,5 +1,5 @@
 import clientPromise from "../../../lib/mongoConnect";
-import mongooseConnect from "../../../lib/mongoose";
+import { mongooseConnect } from "../../../lib/mongoose";
 // import {UserInfo} from "@/models/UserInfo";
 import bcrypt from "bcrypt";
 import * as mongoose from "mongoose";
@@ -30,32 +30,16 @@ export const authOptions = {
         const password = credentials?.password;
         console.log('Email:', email);
 
-        if (!email || !password) {
-          throw new Error('Missing email or password');
-        }
+        await mongooseConnect();
+        const user = await User.findOne({ email });
+        const passwordOk = user && bcrypt.compareSync(password, user.password);
 
-        try {
-          console.log("mongooseConnect function:", mongooseConnect);
-          await mongooseConnect();
-          const user = await User.findOne({ email });
-          console.log("user:" + user)
-          if (!user) {
-            throw new Error('No user found with this email');
-          }
-
-          const passwordOk = bcrypt.compareSync(password, user.password);
-          console.log("password:" + passwordOk);
-          if (!passwordOk) {
-            throw new Error('Invalid password');
-          }
-
+        if (passwordOk) {
+          console.log('User:', user);
           return user;
-        } catch (error) {
-          console.error('Authorize error:', error);
-          throw new Error('Authorization failed');
         }
+        return null
       }
-
     })
   ],
 };

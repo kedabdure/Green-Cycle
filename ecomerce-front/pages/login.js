@@ -4,7 +4,6 @@ import { signIn } from "next-auth/react";
 import Link from "next/link";
 import styled from "styled-components";
 import Google from "../components/icons/Google";
-import axios from "axios";
 
 // Styled Components
 const Section = styled.section`
@@ -133,7 +132,6 @@ export default function RegisterPage() {
   const [password, setPassword] = useState("");
   const [loginInProgress, setLoginInProgress] = useState(false);
   const [userCreated, setUserCreated] = useState(false);
-
   const [error, setError] = useState(false);
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
@@ -163,25 +161,7 @@ export default function RegisterPage() {
     setError(false);
     setUserCreated(false);
 
-    const result = await signIn("credentials", { email, password });
-
-    if (result.error) {
-      console.error("Login error:", result.error);
-    } else {
-      console.log("Login successful:", result);
-
-      
-    }
-    // try {
-    //   const response = await axios.post("/api/login", { email, password });
-    //   if (response.status === 200) {
-    //     setUserCreated(true);
-    //   } else {
-    //     setError(true);
-    //   }
-    // } catch (err) {
-    //   setError(true);
-    // }
+    await signIn('credentials', {email, password, callbackUrl: '/'});
 
     setLoginInProgress(false);
   }

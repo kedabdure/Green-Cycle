@@ -7,14 +7,21 @@ import { CartContext } from "./CartContext";
 import BarsIcon from "./icons/Bars";
 import CartIcon from "./icons/CartIcon";
 import Close from "./icons/Close";
+import { useSession } from "next-auth/react";
 
 const StyledHeader = styled.header`
-  background-color: #222;
+  width: 100%;
+  height: 70px;
+  background-color: #111;
+  position: fixed;
+  top: 0;
+  // padding: 17px 0;
+  z-index: 1000;
 `;
 
 const Logo = styled(Link)`
   text-decoration: none;
-  width: 60px;
+  width: 120px;
   height: auto;
   z-index: 3;
 `;
@@ -23,26 +30,30 @@ const Wrapper = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px 0;
+  padding: 16px 0;
 `;
 
 const StyledNav = styled.nav`
   transition: height 0.4s ease-in-out, opacity 0.4s ease-in-out;
   height: ${props => (props.$mobileNavActive ? "100vh" : "0")};
   opacity: ${props => (props.$mobileNavActive ? "1" : "0")};
-  font-size: ${props => (props.$mobileNavActive ? "1.2rem" : "")};
   overflow: hidden;
   position: fixed;
   top: 0;
   bottom: 0;
   left: 0;
   right: 0;
-  padding: ${props => (props.$mobileNavActive ? "100px 20px 20px 25px" : "0 20px")};
-  background-color: #222;
-  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: ${props => (props.$mobileNavActive ? "40px 20px 20px 25px" : "0 10px")};
+  background-color: #111;
+  font-size: 1rem;
 
   @media screen and (min-width: 768px) {
     display: flex;
+    flex-direction: row;
     gap: 15px;
     position: static;
     height: auto;
@@ -72,7 +83,31 @@ const ButtonWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 10px;
+  gap: 15px;
+
+  @media (min-width: 768px) {
+    gap: 30px;
+  }
+`;
+
+const DesktopButtons = styled.div`
+  display: none;
+  
+  @media screen and (min-width: 768px) {
+    display: flex;
+    gap: 15px;
+  }
+`;
+
+const MobileButtons = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px 0;
+
+  @media screen and (min-width: 768px) {
+    display: none;
+  }
 `;
 
 const NavButton = styled.button`
@@ -98,6 +133,7 @@ const CartIconWrapper = styled.div`
   flex-direction: row;
   align-items: center;
   gap: 1px;
+  z-index: 1000;
 `;
 
 const Cart = styled.div`
@@ -129,24 +165,46 @@ const CartBadge = styled.div`
     height: 19px;
     top: -8px;
     right: -8px;
-  };
+  }
+`;
+
+const Button = styled.div`
+  max-width: 200px;
+  padding: 8px 15px;
+  text-align: center;
+  border-radius: 30px;
+  font-size: 0.9rem;
+  background-color: #fb8122;
+  border: 1px solid #fb8122;
+  color: #fff;
+
+  &:hover {
+    opacity: 0.9;
+  }
+`;
+
+const OutlinedButton = styled.div`
+  max-width: 120px;
+  padding: 8px 0;
+  text-align: center;
+  font-size: 1rem;
+  // background-color: #fb8122;
+  // border: 1px solid #fb8122;
+  border: none;
+  border-radius: 4px;
+  color: #ccc;
+
+  &:hover {
+    opacity: 0.9;
+  }
 `;
 
 export default function Header() {
   const { cartProducts } = useContext(CartContext);
   const [mobileNavActive, setMobileNavActive] = useState(false);
+  const { session } = useSession();
 
-  useEffect(() => {
-    if (mobileNavActive) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "auto";
-    }
-
-    return () => {
-      document.body.style.overflow = "auto";
-    };
-  }, [mobileNavActive]);
+  console.log(session)
 
   return (
     <StyledHeader>
@@ -161,6 +219,16 @@ export default function Header() {
             <NavLink href={"/products"}>All products</NavLink>
             <NavLink href={"/categories"}>Categories</NavLink>
             <NavLink href={"/account"}>Account</NavLink>
+
+            {/* Mobile Buttons */}
+            <MobileButtons>
+              <NavLink href={"/login"}>
+                <OutlinedButton>Login</OutlinedButton>
+              </NavLink>
+              <NavLink href={"/register"}>
+                <Button>Sign up</Button>
+              </NavLink>
+            </MobileButtons>
           </StyledNav>
 
           <ButtonWrapper>
@@ -172,14 +240,25 @@ export default function Header() {
                 </Cart>
               </CartIconWrapper>
             </NavLink>
+
             <NavButton onClick={() => setMobileNavActive(prev => !prev)}>
               {!mobileNavActive ? <BarsIcon /> : <Close />}
             </NavButton>
-            <NavLink href={"/register"}>
-              <button>Sign up</button>
-            </NavLink>
-          </ButtonWrapper>
 
+            {/* Desktop Buttons */}
+            <DesktopButtons>
+              {!session && (
+                <>
+                  <NavLink href={"/login"}>
+                    <OutlinedButton>Login</OutlinedButton>
+                  </NavLink>
+                  <NavLink href={"/register"}>
+                    <Button>Sign up</Button>
+                  </NavLink>
+                </>
+              )}
+            </DesktopButtons>
+          </ButtonWrapper>
         </Wrapper>
       </Center>
     </StyledHeader>

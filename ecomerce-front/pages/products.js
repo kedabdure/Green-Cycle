@@ -7,14 +7,21 @@ import styled from "styled-components";
 import Title from "../components/Title";
 import Footer from "../components/Footer";
 
+
+const Container = styled.div`
+  margin-top: 100px;
+`;
+
 export default function Products({ products }) {
   return (
     <>
       <Header />
-      <Center>
-        <Title>All Products</Title>
-        <ProductsGrid products={products} />
-      </Center>
+      <Container>
+        <Center>
+          <Title>All Products</Title>
+          <ProductsGrid products={products} />
+        </Center>
+      </Container>
       <Footer />
     </>
   )
