@@ -51,7 +51,7 @@ const StyledNav = styled.nav`
   background-color: #111;
   font-size: 1rem;
 
-  @media screen and (min-width: 768px) {
+  @media screen and (min-width: 800px) {
     display: flex;
     flex-direction: row;
     gap: 15px;
@@ -74,7 +74,7 @@ const NavLink = styled(Link)`
     color: white;
   }
 
-  @media screen and (min-width: 768px) {
+  @media screen and (min-width: 800px) {
     padding: 0;
   }
 `;
@@ -85,7 +85,7 @@ const ButtonWrapper = styled.div`
   justify-content: space-between;
   gap: 15px;
 
-  @media (min-width: 768px) {
+  @media (min-width: 800px) {
     gap: 30px;
   }
 `;
@@ -93,7 +93,7 @@ const ButtonWrapper = styled.div`
 const DesktopButtons = styled.div`
   display: none;
   
-  @media screen and (min-width: 768px) {
+  @media screen and (min-width: 800px) {
     display: flex;
     gap: 15px;
   }
@@ -105,7 +105,7 @@ const MobileButtons = styled.div`
   align-items: center;
   padding: 20px 0;
 
-  @media screen and (min-width: 768px) {
+  @media screen and (min-width: 800px) {
     display: none;
   }
 `;
@@ -123,7 +123,7 @@ const NavButton = styled.button`
   position: relative;
   z-index: 3;
 
-  @media screen and (min-width: 768px) {
+  @media screen and (min-width: 800px) {
     display: none;
   }
 `;
@@ -159,7 +159,7 @@ const CartBadge = styled.div`
   border-radius: 50%;
   z-index: 100;
 
-  @media screen and (min-width: 768px) {
+  @media screen and (min-width: 800px) {
     font-size: 0.75rem;
     width: 19px;
     height: 19px;
@@ -202,8 +202,8 @@ const OutlinedButton = styled.div`
 export default function Header() {
   const { cartProducts } = useContext(CartContext);
   const [mobileNavActive, setMobileNavActive] = useState(false);
-  const { session } = useSession();
 
+  const { session } = useSession();
   console.log(session)
 
   return (

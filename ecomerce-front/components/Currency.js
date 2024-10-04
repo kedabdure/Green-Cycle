@@ -4,7 +4,8 @@ const CurrencyWrapper = styled.div`
   font-size: .9rem;
   color: #666;
   display: inline-block;
-  fontWeight: 500;
+  fontWeight: 600;
+  margin: 2px 2px 0 0;
   @media screen and (min-width: 768px) {
     font-size: .9rem;
   }

@@ -38,9 +38,23 @@ export default function CartContextProvider({ children }) {
     setCartProducts([]);
     ls?.removeItem('cart');
   }
+
+  function removeAllInstance(id) {
+    setCartProducts((prev) => prev.filter((productId) => productId !== id));
+  }
+
+
   return (
     <SessionProvider>
-      <CartContext.Provider value={{ cartProducts, setCartProducts, addProduct, removeProduct, clearCart }}>
+      <CartContext.Provider
+        value={{
+          cartProducts,
+          setCartProducts,
+          addProduct,
+          removeProduct,
+          clearCart,
+          removeAllInstance,
+        }}>
         {children}
       </CartContext.Provider>
     </SessionProvider>

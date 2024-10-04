@@ -31,6 +31,8 @@ const ImageButton = styled.div`
   `;
 const BigImageWrapper = styled.div`
   text-align: center;
+  width: 100%;
+  height: 350px;
 `;
 
 export default function ProductImages({images}) {
