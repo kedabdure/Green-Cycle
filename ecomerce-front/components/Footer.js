@@ -3,7 +3,6 @@ import styled from "styled-components";
 import Link from "next/link";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 
-
 const StyledBox = styled.footer`
   background-color: #111;
   color: #ccc;
@@ -42,12 +41,13 @@ const ScrollToTopButton = styled.button`
   align-items: center;
   justify-content: center;
   border-radius: 4px;
-  opacity: 0.5;
-  transition: all 0.3s ease;
-
+  opacity: ${({ $isVisible }) => ($isVisible ? 1 : 0)};
+  transform: ${({ $isVisible }) => ($isVisible ? "translateY(0)" : "translateY(20px)")};
+  transition: opacity 0.3s ease, transform 0.3s ease, background-color 0.3s ease;
+  pointer-events: ${({ $isVisible }) => ($isVisible ? "auto" : "none")};
   &:hover {
     background-color: #fb8122;
-    opacity: .8;
+    opacity: 0.8;
   }
 `;
 
@@ -63,11 +63,8 @@ export default function Contact() {
   const [showScrollToTop, setShowScrollToTop] = useState(false);
 
   const handleScroll = () => {
-    if (window.scrollY > window.innerHeight) {
-      setShowScrollToTop(true);
-    } else {
-      setShowScrollToTop(false);
-    }
+    // Show the button if user scrolls down 200 pixels or more.
+    setShowScrollToTop(window.scrollY > 200);
   };
 
   useEffect(() => {
@@ -90,14 +87,16 @@ export default function Contact() {
     <StyledBox>
       <StyledContainer>
         <FooterText>
-          <Text>© {getCurrentYear()} All right reserved | powered by <Powered href="http://localhost:3000/">nexaddis</Powered> </Text>
+          <Text>
+            © {getCurrentYear()} All right reserved | powered by{" "}
+            <Powered href="http://localhost:3000/">nexaddis</Powered>
+          </Text>
         </FooterText>
 
-        {showScrollToTop && (
-          <ScrollToTopButton onClick={scrollToTop}>
-            <ArrowUpwardIcon />
-          </ScrollToTopButton>
-        )}
+        {/* Always render the button but control its visibility through styles */}
+        <ScrollToTopButton $isVisible={showScrollToTop} onClick={scrollToTop}>
+          <ArrowUpwardIcon />
+        </ScrollToTopButton>
       </StyledContainer>
     </StyledBox>
   );
