@@ -31,22 +31,15 @@ export const authOptions = {
         const email = credentials?.email;
         const password = credentials?.password;
 
-        // console.log('Received Credentials:', { email, password });
-
         await mongooseConnect();
-
         const user = await User.findOne({ email });
-        // console.log("Found User:", user);
-
         if (!user) {
           console.log('No user found with this email');
           throw new Error('No user found with this email');
         }
-
         if (!user.password || !bcrypt.compareSync(password, user.password)) {
           throw new Error('Invalid password');
         }
-
         return user;
       }
     })

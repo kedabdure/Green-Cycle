@@ -7,7 +7,6 @@ import Google from "../../components/icons/Google";
 import axios from "axios";
 import { IconButton, CircularProgress, Alert, Stack, Snackbar } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import { set } from "mongoose";
 
 
 // Styled Components
@@ -25,12 +24,6 @@ const Title = styled.h1`
   color: #333;
   font-size: 2rem;
   margin: .5rem auto 1rem auto;
-`;
-
-const Message = styled.div`
-  margin: 1rem 0;
-  text-align: center;
-  color: ${({ $error }) => ($error ? "red" : "green")};
 `;
 
 const Form = styled.form`
@@ -75,7 +68,7 @@ const Button = styled.button`
   display: block;
   width: 100%;
   padding: 0.75rem;
-  margin: 1.5rem 0 1rem 0;
+  margin: 2rem 0 1rem 0;
   background-color: #007bff;
   color: white;
   border: none;
@@ -289,17 +282,6 @@ export default function RegisterPage() {
 
 
       <Section>
-        {/* {userCreated && (
-          <Message>
-            User created.<br />
-            Now you can{" "}
-            <Link href="/auth/login" passHref>
-              <button style={{ textDecoration: "underline", color: "green" }}>
-                Login &raquo;
-              </button>
-            </Link>
-          </Message>
-        )} */}
         <Form onSubmit={handleFormSubmit}>
           <Title>Register</Title>
           <Input

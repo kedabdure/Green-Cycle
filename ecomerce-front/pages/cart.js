@@ -10,6 +10,7 @@ import OrderForm from "../components/OrderForm";
 import Currency from "../components/Currency";
 import Trash from "../components/icons/Trash";
 import Footer from "../components/Footer";
+import EmptyCartPage from "../components/EmptyCartPage";
 
 const ColumnWrapper = styled.div`
   display: grid;
@@ -159,76 +160,81 @@ export default function Cart() {
     <>
       <Header />
       <Center>
-        <ColumnWrapper>
-          <Box>
+        {!cartProducts?.length && (
+          <>
             <MainTitle>Cart</MainTitle>
-            {!cartProducts?.length && (
-              <div>Your cart is empty</div>
-            )}
-            {products?.length > 0 && (
-              <Table>
-                <thead>
-                  <tr>
-                    <th>Product</th>
-                    <th>Quantity</th>
-                    <th>Price</th>
-                  </tr>
-                  <DividerRow>
-                    <td colSpan="4"></td>
-                  </DividerRow>
-                </thead>
-                <tbody>
-                  {products.map((product, index) => (
-                    <>
-                      <tr key={product._id}>
-                        <ProductInfoCell>
-                          <ProductImageBox>
-                            <img src={product.images[0]} alt="" />
-                          </ProductImageBox>
-                          {product.title}
-                        </ProductInfoCell>
-                        <td>
-                          <Button onClick={() => lessOfThisProduct(product._id)}>-</Button>
-                          <QuantityLabel>
-                            {cartProducts.filter(id => id === product._id).length}
-                          </QuantityLabel>
-                          <Button onClick={() => moreOfThisProduct(product._id)}>+</Button>
-                        </td>
-                        <td>
-                          <PriceCell>
-                            {formatPrice(cartProducts.filter(id => id === product._id).length * product.price)} <Currency>ETB</Currency>
-                          </PriceCell>
-                        </td>
-                        <TrashIconWrapper onClick={() => removeAllInstanceOfProduct(product._id)}>
-                          <Trash />
-                        </TrashIconWrapper>
-                      </tr>
-                      {index < products.length - 1 && <DividerRow><td colSpan="4"></td></DividerRow>}
-                    </>
-                  ))}
-                </tbody>
-                <tfoot>
-                  <DividerRow><td colSpan="4"></td></DividerRow>
-                  <tr>
-                    <td></td>
-                    <td></td>
-                    <td>
-                      <PriceSummary>
-                        {formatPrice(total)}<Currency>ETB</Currency>
-                      </PriceSummary>
-                    </td>
-                  </tr>
-                </tfoot>
-              </Table>
-            )}
-          </Box>
-          {!!cartProducts?.length && (
+            <EmptyCartPage />
+          </>
+        )}
+        {cartProducts?.length > 0 && (
+          <ColumnWrapper>
             <Box>
-              <MainTitle>Order Information</MainTitle>
-              <OrderForm handleSubmit={goToPayment} />
+              <MainTitle>Cart</MainTitle>
+              {products?.length > 0 && (
+                <Table>
+                  <thead>
+                    <tr>
+                      <th>Product</th>
+                      <th>Quantity</th>
+                      <th>Price</th>
+                    </tr>
+                    <DividerRow>
+                      <td colSpan="4"></td>
+                    </DividerRow>
+                  </thead>
+                  <tbody>
+                    {products.map((product, index) => (
+                      <>
+                        <tr key={product._id}>
+                          <ProductInfoCell>
+                            <ProductImageBox>
+                              <img src={product.images[0]} alt="" />
+                            </ProductImageBox>
+                            {product.title}
+                          </ProductInfoCell>
+                          <td>
+                            <Button onClick={() => lessOfThisProduct(product._id)}>-</Button>
+                            <QuantityLabel>
+                              {cartProducts.filter(id => id === product._id).length}
+                            </QuantityLabel>
+                            <Button onClick={() => moreOfThisProduct(product._id)}>+</Button>
+                          </td>
+                          <td>
+                            <PriceCell>
+                              {formatPrice(cartProducts.filter(id => id === product._id).length * product.price)} <Currency>ETB</Currency>
+                            </PriceCell>
+                          </td>
+                          <TrashIconWrapper onClick={() => removeAllInstanceOfProduct(product._id)}>
+                            <Trash />
+                          </TrashIconWrapper>
+                        </tr>
+                        {index < products.length - 1 && <DividerRow><td colSpan="4"></td></DividerRow>}
+                      </>
+                    ))}
+                  </tbody>
+                  <tfoot>
+                    <DividerRow><td colSpan="4"></td></DividerRow>
+                    <tr>
+                      <td></td>
+                      <td></td>
+                      <td>
+                        <PriceSummary>
+                          {formatPrice(total)}<Currency>ETB</Currency>
+                        </PriceSummary>
+                      </td>
+                    </tr>
+                  </tfoot>
+                </Table>
+              )}
             </Box>
-          )}
-        </ColumnWrapper>
+            {!!cartProducts?.length && (
+              <Box>
+                <MainTitle>Order Information</MainTitle>
+                <OrderForm handleSubmit={goToPayment} />
+              </Box>
+            )}
+          </ColumnWrapper>
+        )}
       </Center>
       <Footer />
     </>
