@@ -206,9 +206,6 @@ export default function Header() {
 
   const { data: session, status } = useSession();
 
-  console.log("Session Status: ", status);
-  console.log("Session Data: ", session);
-
   return (
     <StyledHeader>
       <Center>
@@ -225,12 +222,20 @@ export default function Header() {
 
             {/* Mobile Buttons */}
             <MobileButtons>
-              <NavLink href={"/auth/login"}>
-                <OutlinedButton>Login</OutlinedButton>
-              </NavLink>
-              <NavLink href={"/auth/register"}>
-                <Button>Sign up</Button>
-              </NavLink>
+              {session && status === "authenticated" && (
+                <Button onClick={() => signOut()}>logout</Button>
+              )}
+              {!session && status !== "authenticated" && (
+                <>
+                  <NavLink href={"/auth/login"}>
+                    <OutlinedButton>Login</OutlinedButton>
+                  </NavLink>
+                  <NavLink href={"/auth/register"}>
+                    <Button>Sign up</Button>
+                  </NavLink>
+                </>
+              )}
+
             </MobileButtons>
           </StyledNav>
 
@@ -263,7 +268,6 @@ export default function Header() {
               {session && status === "authenticated" && (
                 <Button onClick={() => signOut()}>logout</Button>
               )}
-
             </DesktopButtons>
           </ButtonWrapper>
         </Wrapper>

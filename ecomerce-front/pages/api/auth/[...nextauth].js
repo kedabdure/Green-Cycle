@@ -31,12 +31,12 @@ export const authOptions = {
         const email = credentials?.email;
         const password = credentials?.password;
 
-        console.log('Received Credentials:', { email, password });
+        // console.log('Received Credentials:', { email, password });
 
         await mongooseConnect();
 
         const user = await User.findOne({ email });
-        console.log("Found User:", user);
+        // console.log("Found User:", user);
 
         if (!user) {
           console.log('No user found with this email');
@@ -44,13 +44,12 @@ export const authOptions = {
         }
 
         const passwordOk = bcrypt.compareSync(password, user.password);
-        console.log('Password Match:', passwordOk);
+        // console.log('Password Match:', passwordOk);
 
         if (passwordOk) {
-          console.log('Returning authenticated user:', user);
           return user;
         } else {
-          console.log('Invalid password');
+          // console.log('Invalid password');
           return null;
         }
       }
@@ -64,10 +63,9 @@ export const authOptions = {
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        token.id = user._id.toString();
+        token.id = user._id;
         token.email = user.email;
       }
-      console.log("token:", token);
       return token;
     },
     async session({ session, token }) {
@@ -75,7 +73,6 @@ export const authOptions = {
         session.user.id = token.id;
         session.user.email = token.email;
       }
-      console.log("session:", session);
       return session;
     }
   },

@@ -226,7 +226,7 @@ export default function RegisterPage() {
           Log In
         </Button>
         <SmallText>or login with provider</SmallText>
-        <ProviderButton onClick={() => signIn("google")}>
+        <ProviderButton type="button" onClick={() => signIn("google", { callbackUrl: "/" })}>
           <Google />
           Google
         </ProviderButton>
