@@ -23,7 +23,11 @@ const FooterText = styled.div`
 
 const Text = styled.p`
   color: #ccc;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
+
+  @media screen and (min-width: 768px) {
+    font-size: 0.9rem;
+  }
 `;
 
 const ScrollToTopButton = styled.button`
@@ -88,8 +92,8 @@ export default function Contact() {
       <StyledContainer>
         <FooterText>
           <Text>
-            © {getCurrentYear()} All right reserved | powered by{" "}
-            <Powered href="http://localhost:3000/">nexaddis</Powered>
+            © {getCurrentYear()} Nexaddis | All right reserved
+            {/* <Powered href="http://localhost:3000/">nexaddis</Powered> */}
           </Text>
         </FooterText>
 

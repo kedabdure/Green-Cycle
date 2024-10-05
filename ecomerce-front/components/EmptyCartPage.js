@@ -43,6 +43,7 @@ const ActionButton = styled(Link)`
   text-decoration: none;
   box-shadow: 0 4px 10px rgba(0, 123, 255, 0.2);
   transition: all 0.3s;
+  cursor: pointer;
 
   &:hover {
     opacity: 0.8;

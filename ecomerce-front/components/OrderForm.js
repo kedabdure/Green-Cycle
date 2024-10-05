@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import PhoneInput from 'react-phone-number-input';
 import 'react-phone-number-input/style.css';
-
 import {
   TextField,
   Button,
@@ -9,6 +8,7 @@ import {
   FormControl,
   Box,
 } from '@mui/material';
+import { useSession } from 'next-auth/react';
 
 const initialValues = {
   firstName: '',
@@ -26,6 +26,12 @@ export default function TableOrderForm({ handleSubmit }) {
   const [formValues, setFormValues] = useState(initialValues);
   const [formErrors, setFormErrors] = useState({});
   const [submitSuccess, setSubmitSuccess] = useState(false);
+
+  const { data: session } = useSession()
+
+  const name = session?.user?.name;
+  const existingFirstName = name?.split(' ')[0];
+  const existingLastName = name?.split(' ')[1];
 
   const validate = (values) => {
     const errors = {};
@@ -98,7 +104,7 @@ export default function TableOrderForm({ handleSubmit }) {
             id="firstName"
             name="firstName"
             type="text"
-            value={formValues.firstName}
+            value={ existingFirstName || formValues.firstName}
             onChange={handleChange}
             required
             size="small"
@@ -113,7 +119,7 @@ export default function TableOrderForm({ handleSubmit }) {
             id="lastName"
             name="lastName"
             type="text"
-            value={formValues.lastName}
+            value={ existingLastName || formValues.lastName}
             onChange={handleChange}
             required
             size="small"
@@ -148,7 +154,7 @@ export default function TableOrderForm({ handleSubmit }) {
             name="email"
             type="email"
             placeholder="example@gmail.com"
-            value={formValues.email}
+            value={ session?.user?.email || formValues.email}
             onChange={handleChange}
             required
             size="small"

@@ -178,6 +178,7 @@ const Button = styled.div`
   background-color: #fb8122;
   border: 1px solid #fb8122;
   color: #fff;
+  cursor: pointer;
 
   &:hover {
     opacity: 0.9;

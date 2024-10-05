@@ -1,3 +1,4 @@
+import React from "react";
 import Header from "../components/Header";
 import { useContext, useEffect, useState } from "react";
 import { CartContext } from "../components/CartContext";
@@ -74,16 +75,23 @@ const PriceSummary = styled.div`
   gap: 2px;
 `;
 
+const QuantityWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+
+  @media screen and (min-width: 768px) {
+    flex-direction: row;
+  }
+`;
+
 const PriceCell = styled.div`
   text-align: left;
   gap: 2px;
 `;
 
 const TrashIconWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 4rem;
   cursor: pointer;
   svg {
     width: 24px;
@@ -97,7 +105,6 @@ const TrashIconWrapper = styled.div`
   }
 `;
 
-// Styled Divider Row
 const DividerRow = styled.tr`
   td {
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
@@ -184,8 +191,8 @@ export default function Cart() {
                   </thead>
                   <tbody>
                     {products.map((product, index) => (
-                      <>
-                        <tr key={product._id}>
+                      <React.Fragment key={product._id}>
+                        <tr>
                           <ProductInfoCell>
                             <ProductImageBox>
                               <img src={product.images[0]} alt="" />
@@ -193,23 +200,27 @@ export default function Cart() {
                             {product.title}
                           </ProductInfoCell>
                           <td>
-                            <Button onClick={() => lessOfThisProduct(product._id)}>-</Button>
-                            <QuantityLabel>
-                              {cartProducts.filter(id => id === product._id).length}
-                            </QuantityLabel>
-                            <Button onClick={() => moreOfThisProduct(product._id)}>+</Button>
+                            <QuantityWrapper>
+                              <Button onClick={() => lessOfThisProduct(product._id)}>-</Button>
+                              <QuantityLabel>
+                                {cartProducts.filter(id => id === product._id).length}
+                              </QuantityLabel>
+                              <Button onClick={() => moreOfThisProduct(product._id)}>+</Button>
+                            </QuantityWrapper>
                           </td>
                           <td>
                             <PriceCell>
                               {formatPrice(cartProducts.filter(id => id === product._id).length * product.price)} <Currency>ETB</Currency>
                             </PriceCell>
                           </td>
-                          <TrashIconWrapper onClick={() => removeAllInstanceOfProduct(product._id)}>
-                            <Trash />
-                          </TrashIconWrapper>
+                          <td>
+                            <TrashIconWrapper onClick={() => removeAllInstanceOfProduct(product._id)}>
+                              <Trash />
+                            </TrashIconWrapper>
+                          </td>
                         </tr>
                         {index < products.length - 1 && <DividerRow><td colSpan="4"></td></DividerRow>}
-                      </>
+                      </React.Fragment>
                     ))}
                   </tbody>
                   <tfoot>
