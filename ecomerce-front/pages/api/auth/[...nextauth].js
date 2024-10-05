@@ -40,7 +40,7 @@ export const authOptions = {
 
         if (!user) {
           console.log('No user found with this email');
-          return null;
+          throw new Error('No user found with this email');
         }
 
         const passwordOk = bcrypt.compareSync(password, user.password);
@@ -50,7 +50,7 @@ export const authOptions = {
           return user;
         } else {
           // console.log('Invalid password');
-          return null;
+          throw new Error('Invalid password');
         }
       }
     })

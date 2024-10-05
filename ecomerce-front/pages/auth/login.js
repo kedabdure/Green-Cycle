@@ -4,6 +4,13 @@ import { signIn } from "next-auth/react";
 import Link from "next/link";
 import styled from "styled-components";
 import Google from "../../components/icons/Google";
+import Snackbar, { SnackbarCloseReason } from '@mui/material/Snackbar';
+import IconButton from '@mui/material/IconButton';
+import CloseIcon from '@mui/icons-material/Close';
+import CircularProgress from '@mui/material/CircularProgress';
+import Alert from '@mui/material/Alert';
+import Stack from '@mui/material/Stack';
+
 
 // Styled Components
 const Section = styled.section`
@@ -64,9 +71,11 @@ const ErrorText = styled.div`
 `;
 
 const Button = styled.button`
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 100%;
-  padding: 0.75rem;
+  padding: 0.8rem;
   margin: 1.5rem 0 1rem 0;
   background-color: #007bff;
   color: white;
@@ -135,6 +144,9 @@ export default function RegisterPage() {
   const [error, setError] = useState(false);
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
+  const [errorMessages, setErrorMessages] = useState([]);
+  const [open, setOpen] = useState(false);
+
 
   async function handleFormSubmit(ev) {
     ev.preventDefault();
@@ -161,82 +173,135 @@ export default function RegisterPage() {
     setError(false);
     setUserCreated(false);
 
-    const res = await signIn('credentials', { email, password, redirect: false });
+    const res = await signIn('credentials',
+      {
+        email,
+        password,
+        redirect: false
+      });
+
     console.log('SignIn Response:', res);
 
     if (res?.ok) {
       window.location.href = '/';
     } else {
-      console.error('Login failed:', res);
+      setErrorMessages(res?.error);
+      setOpen(true);
     }
 
     setLoginInProgress(false);
   }
 
+
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpen(false);
+  };
+
   return (
-    <Section>
-      {userCreated && (
-        <Message>
-          User created.<br />
-          Now you can{" "}
-          <Link href="/login" passHref>
-            <button style={{ textDecoration: "underline", color: "green" }}>
-              Login &raquo;
-            </button>
-          </Link>
-        </Message>
-      )}
-      {error && (
-        <Message $error>
-          An error has occurred.<br />
-          Please try again later.
-        </Message>
-      )}
-      <Form onSubmit={handleFormSubmit}>
-        <Title>Log In</Title>
-        <Input
-          type="email"
-          name="email"
-          placeholder="Email"
-          value={email}
-          disabled={loginInProgress}
-          onChange={(ev) => {
-            setEmail(ev.target.value);
-            setEmailError("");
-          }}
-          $isInvalid={!!emailError}
-          pattern=".*"
-        />
-        {emailError && <ErrorText>{emailError}</ErrorText>}
-        <Input
-          type="password"
-          name="password"
-          placeholder="Password"
-          value={password}
-          disabled={loginInProgress}
-          onChange={(ev) => {
-            setPassword(ev.target.value);
-            setPasswordError("");
-          }}
-          $isInvalid={!!passwordError}
-          pattern=".*"
-        />
-        {passwordError && <ErrorText>{passwordError}</ErrorText>}
-        <Button type="submit" disabled={loginInProgress}>
-          Log In
-        </Button>
-        <SmallText>or login with provider</SmallText>
-        <ProviderButton type="button" onClick={() => signIn("google", { callbackUrl: "/" })}>
-          <Google />
-          Google
-        </ProviderButton>
-        <Divider>
-          Don't have an account?{" "}
-          <Link href="/auth/register" passHref>
-            <button style={{ textDecoration: "underline" }}>register here &raquo;</button>
-          </Link>
-        </Divider>
-      </Form>
-    </Section>
+    <>
+      <Stack padding="1rem" spacing={2}>
+        <Snackbar
+          open={open}
+          autoHideDuration={6000}
+          onClose={handleClose}
+          anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        >
+          <Alert
+            onClose={handleClose}
+            severity="error"
+            sx={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              width: '100%',
+              fontSize: '1rem',
+              padding: '0.4rem 1rem',
+            }}
+            variant="filled"
+            action={
+              <IconButton
+                size="small"
+                aria-label="close"
+                color="inherit"
+                onClick={handleClose}
+                sx={{ marginLeft: 'auto', marginTop: '-0.25rem' }}
+              >
+                <CloseIcon fontSize="small" />
+              </IconButton>
+            }
+          >
+            {errorMessages}
+          </Alert>
+        </Snackbar>
+      </Stack>
+      <Section>
+        {userCreated && (
+          <Message>
+            User created.<br />
+            Now you can{" "}
+            <Link href="/login" passHref>
+              <button style={{ textDecoration: "underline", color: "green" }}>
+                Login &raquo;
+              </button>
+            </Link>
+          </Message>
+        )}
+        {error && (
+          <Message $error>
+            An error has occurred.<br />
+            Please try again later.
+          </Message>
+        )}
+        <Form onSubmit={handleFormSubmit}>
+          <Title>Log In</Title>
+          <Input
+            type="email"
+            name="email"
+            placeholder="Email"
+            value={email}
+            disabled={loginInProgress}
+            onChange={(ev) => {
+              setEmail(ev.target.value);
+              setEmailError("");
+            }}
+            $isInvalid={!!emailError}
+            pattern=".*"
+          />
+          {emailError && <ErrorText>{emailError}</ErrorText>}
+          <Input
+            type="password"
+            name="password"
+            placeholder="Password"
+            value={password}
+            disabled={loginInProgress}
+            onChange={(ev) => {
+              setPassword(ev.target.value);
+              setPasswordError("");
+            }}
+            $isInvalid={!!passwordError}
+            pattern=".*"
+          />
+          {passwordError && <ErrorText>{passwordError}</ErrorText>}
+          <Button type="submit" disabled={loginInProgress}>
+            {loginInProgress && <CircularProgress size={17} style={{ marginRight: "1rem" }} />}
+            Log In
+          </Button>
+          <SmallText>or login with provider</SmallText>
+          <ProviderButton type="button" onClick={() => signIn("google", { callbackUrl: "/" })}>
+            <Google />
+            Google
+          </ProviderButton>
+          <Divider>
+            Don't have an account?{" "}
+            <Link href="/auth/register" passHref>
+              <button style={{ textDecoration: "underline" }}>register here &raquo;</button>
+            </Link>
+          </Divider>
+        </Form>
+      </Section>
+    </>
   );
 }
