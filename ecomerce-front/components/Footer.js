@@ -15,13 +15,6 @@ const StyledContainer = styled.div`
   padding: 1rem;
 `;
 
-// const Divider = styled.hr`
-//   border: 0;
-//   height: 1px;
-//   background-color: grey;
-//   // margin: 2rem 0;
-// `;
-
 const FooterText = styled.div`
   display: flex;
   align-items: center;
@@ -96,39 +89,6 @@ export default function Contact() {
   return (
     <StyledBox>
       <StyledContainer>
-        {/* <StyledGrid>
-          <StyledItem>
-            <LogoBox>
-              <LogoWhite />
-            </LogoBox>
-          </StyledItem>
-
-          <StyledItem>
-            <SectionTitle>Company</SectionTitle>
-            <NavLink href="/about">About</NavLink>
-            <NavLink href="/cart">Cart</NavLink>
-          </StyledItem>
-
-          <StyledItem>
-            <SectionTitle>Quick Links</SectionTitle>
-            <NavLink href="/">Home</NavLink>
-            <NavLink href="/cart">Carts</NavLink>
-            <NavLink href="/products">All Products</NavLink>
-          </StyledItem>
-
-          <StyledItem>
-            <SectionTitle>Contact Us</SectionTitle>
-            <ContactText>
-              <PhoneIcon /> Phone: (+251) 953-431-542
-            </ContactText>
-            <ContactText>
-              <EmailIcon /> Email: nexaddis@gmail.com
-            </ContactText>
-          </StyledItem>
-        </StyledGrid> */}
-
-        {/* <Divider /> */}
-
         <FooterText>
           <Text>© {getCurrentYear()} All right reserved | powered by <Powered href="http://localhost:3000/">nexaddis</Powered> </Text>
         </FooterText>

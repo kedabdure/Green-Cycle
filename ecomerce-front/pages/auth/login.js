@@ -53,16 +53,23 @@ const Input = styled.input`
   margin: 0.5rem 0;
   border: 1px solid ${({ $isInvalid }) => ($isInvalid ? "red" : "#ddd")};
   border-radius: 4px;
+
   &:disabled {
     background-color: #f3f3f3;
   }
+
   &::placeholder {
     color: ${({ $isInvalid }) => ($isInvalid ? "red" : "#aaa")};
   }
+
   &:focus {
     border-color: ${({ $isInvalid }) => ($isInvalid ? "red" : "#333")};
+    &::placeholder {
+      color: #333;
+    }
   }
 `;
+
 
 const ErrorText = styled.div`
   color: red;
@@ -191,7 +198,6 @@ export default function RegisterPage() {
 
     setLoginInProgress(false);
   }
-
 
   const handleClose = (event, reason) => {
     if (reason === 'clickaway') {

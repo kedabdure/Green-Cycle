@@ -43,15 +43,11 @@ export const authOptions = {
           throw new Error('No user found with this email');
         }
 
-        const passwordOk = bcrypt.compareSync(password, user.password);
-        // console.log('Password Match:', passwordOk);
-
-        if (passwordOk) {
-          return user;
-        } else {
-          // console.log('Invalid password');
+        if (!user.password || !bcrypt.compareSync(password, user.password)) {
           throw new Error('Invalid password');
         }
+
+        return user;
       }
     })
   ],
