@@ -70,7 +70,6 @@ const Input = styled.input`
   }
 `;
 
-
 const ErrorText = styled.div`
   color: red;
   font-size: 0.875rem;
@@ -83,7 +82,7 @@ const Button = styled.button`
   justify-content: center;
   width: 100%;
   padding: 0.8rem;
-  margin: 1.5rem 0 1rem 0;
+  margin: 2rem 0 1rem 0;
   background-color: #007bff;
   color: white;
   border: none;
@@ -186,8 +185,6 @@ export default function RegisterPage() {
         password,
         redirect: false
       });
-
-    console.log('SignIn Response:', res);
 
     if (res?.ok) {
       window.location.href = '/';

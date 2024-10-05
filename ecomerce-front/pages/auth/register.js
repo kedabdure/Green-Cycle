@@ -5,7 +5,10 @@ import Link from "next/link";
 import styled from "styled-components";
 import Google from "../../components/icons/Google";
 import axios from "axios";
+import { IconButton, CircularProgress, Alert, Stack, Snackbar } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 import { set } from "mongoose";
+
 
 // Styled Components
 const Section = styled.section`
@@ -32,7 +35,7 @@ const Message = styled.div`
 
 const Form = styled.form`
   display: block;
-  max-width: 22rem;
+  max-width: 23rem;
   margin: 0 auto;
   padding: 1.5rem 1.2rem;
   border: 1px solid #ddd;
@@ -56,6 +59,9 @@ const Input = styled.input`
   }
   &:focus {
     border-color: ${({ $isInvalid }) => ($isInvalid ? "red" : "#333")};
+    &::placeholder {
+      color: #333;
+    }
   }
 `;
 
@@ -76,6 +82,9 @@ const Button = styled.button`
   border-radius: 4px;
   cursor: pointer;
   font-size: .9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   transition: background-color 0.3s;
   &:hover {
     background-color: #0056b3;
@@ -134,11 +143,13 @@ export default function RegisterPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [creatingUser, setCreatingUser] = useState(false);
-  const [userCreated, setUserCreated] = useState(false);
-  const [error, setError] = useState(false);
   const [nameError, setNameError] = useState("");
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
+  const [open, setOpen] = useState(false);
+  const [errorMessages, setErrorMessages] = useState([]);
+  const [userCreated, setUserCreated] = useState(false);
+  const [successMessages, setSuccessMessages] = useState([]);
 
   async function handleFormSubmit(ev) {
     ev.preventDefault();
@@ -168,101 +179,185 @@ export default function RegisterPage() {
     if (!valid) return;
 
     setCreatingUser(true);
-    setError(false);
     setUserCreated(false);
 
     try {
       const response = await axios.post("/api/register", { name, email, password });
+
       if (response.status === 201) {
         setUserCreated(true);
+        setSuccessMessages(["User created successfully."]);
+        window.location.href = "/auth/login"
+        setOpen(true)
         setName("");
         setEmail("");
         setPassword("");
-      } else {
-        setError(true);
       }
     } catch (err) {
-      setError(true);
+      const errorMessages = err.response?.data.message
+        ? [err.response.data.message]
+        : ["An error has occurred. Please try again later."];
+      setErrorMessages(errorMessages);
+      setUserCreated(false)
+      setOpen(true);
+    } finally {
+      setCreatingUser(false);
     }
-
-    setCreatingUser(false);
   }
 
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpen(false);
+  };
+
   return (
-    <Section>
-      {userCreated && (
-        <Message>
-          User created.<br />
-          Now you can{" "}
-          <Link href="/auth/login" passHref>
-            <button style={{ textDecoration: "underline", color: "green" }}>
-              Login &raquo;
-            </button>
-          </Link>
-        </Message>
-      )}
-      {error && (
-        <Message $error>
-          An error has occurred.<br />
-          Please try again later.
-        </Message>
-      )}
-      <Form onSubmit={handleFormSubmit}>
-        <Title>Register</Title>
-        <Input
-          type="text"
-          placeholder="Full name"
-          value={name}
-          disabled={creatingUser}
-          onChange={(ev) => {
-            setName(ev.target.value);
-            setNameError("");
-          }}
-          $isInvalid={!!nameError}
-          pattern=".*"
-        />
-        {nameError && <ErrorText>{nameError}</ErrorText>}
-        <Input
-          type="email"
-          placeholder="Email"
-          value={email}
-          disabled={creatingUser}
-          onChange={(ev) => {
-            setEmail(ev.target.value);
-            setEmailError("");
-          }}
-          $isInvalid={!!emailError}
-          pattern=".*"
-        />
-        {emailError && <ErrorText>{emailError}</ErrorText>}
-        <Input
-          type="password"
-          placeholder="Password"
-          value={password}
-          disabled={creatingUser}
-          onChange={(ev) => {
-            setPassword(ev.target.value);
-            setPasswordError("");
-          }}
-          $isInvalid={!!passwordError}
-          pattern=".*"
-        />
-        {passwordError && <ErrorText>{passwordError}</ErrorText>}
-        <Button type="submit" disabled={creatingUser}>
-          Register
-        </Button>
-        <SmallText>or login with provider</SmallText>
-        <ProviderButton type="button" onClick={() => signIn("google", { callbackUrl: "/" })}>
-          <Google />
-          Login with Google
-        </ProviderButton>
-        <Divider>
-          Existing account?{" "}
-          <Link href="/auth/login" passHref>
-            <button style={{ textDecoration: "underline" }}>Login here &raquo;</button>
-          </Link>
-        </Divider>
-      </Form>
-    </Section>
+    <>
+      <Stack padding="1rem" spacing={2}>
+        <Snackbar
+          open={open && !userCreated}
+          autoHideDuration={6000}
+          onClose={handleClose}
+          anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        >
+          <Alert
+            onClose={handleClose}
+            severity="error"
+            sx={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              width: '100%',
+              fontSize: '1rem',
+              padding: '0.4rem 1rem',
+            }}
+            variant="filled"
+            action={
+              <IconButton
+                size="small"
+                aria-label="close"
+                color="inherit"
+                onClick={handleClose}
+                sx={{ marginLeft: 'auto', marginTop: '-0.25rem' }}
+              >
+                <CloseIcon fontSize="small" />
+              </IconButton>
+            }
+          >
+            {errorMessages}
+          </Alert>
+        </Snackbar>
+      </Stack>
+
+      {/* Success */}
+      <Stack padding="1rem" spacing={2}>
+        <Snackbar
+          open={open && userCreated}
+          autoHideDuration={10000}
+          onClose={handleClose}
+          anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        >
+          <Alert
+            onClose={handleClose}
+            severity="success"
+            sx={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              width: '100%',
+              fontSize: '1rem',
+              padding: '0.4rem 1rem',
+            }}
+            variant="filled"
+            action={
+              <IconButton
+                size="small"
+                aria-label="close"
+                color="inherit"
+                onClick={handleClose}
+                sx={{ marginLeft: 'auto', marginTop: '-0.25rem' }}
+              >
+                <CloseIcon fontSize="small" />
+              </IconButton>
+            }
+          >
+            {successMessages}
+          </Alert>
+        </Snackbar>
+      </Stack>
+
+
+      <Section>
+        {/* {userCreated && (
+          <Message>
+            User created.<br />
+            Now you can{" "}
+            <Link href="/auth/login" passHref>
+              <button style={{ textDecoration: "underline", color: "green" }}>
+                Login &raquo;
+              </button>
+            </Link>
+          </Message>
+        )} */}
+        <Form onSubmit={handleFormSubmit}>
+          <Title>Register</Title>
+          <Input
+            type="text"
+            placeholder="Full name"
+            value={name}
+            disabled={creatingUser}
+            onChange={(ev) => {
+              setName(ev.target.value);
+              setNameError("");
+            }}
+            $isInvalid={!!nameError}
+            pattern=".*"
+          />
+          {nameError && <ErrorText>{nameError}</ErrorText>}
+          <Input
+            type="email"
+            placeholder="Email"
+            value={email}
+            disabled={creatingUser}
+            onChange={(ev) => {
+              setEmail(ev.target.value);
+              setEmailError("");
+            }}
+            $isInvalid={!!emailError}
+            pattern=".*"
+          />
+          {emailError && <ErrorText>{emailError}</ErrorText>}
+          <Input
+            type="password"
+            placeholder="Password"
+            value={password}
+            disabled={creatingUser}
+            onChange={(ev) => {
+              setPassword(ev.target.value);
+              setPasswordError("");
+            }}
+            $isInvalid={!!passwordError}
+            pattern=".*"
+          />
+          {passwordError && <ErrorText>{passwordError}</ErrorText>}
+          <Button type="submit" disabled={creatingUser}>
+            {creatingUser && <CircularProgress size={17} style={{ marginRight: "1rem", color: "white" }} />}
+            Register
+          </Button>
+          <SmallText>or login with provider</SmallText>
+          <ProviderButton type="button" onClick={() => signIn("google", { callbackUrl: "/" })}>
+            <Google />
+            Login with Google
+          </ProviderButton>
+          <Divider>
+            Existing account?{" "}
+            <Link href="/auth/login" passHref>
+              <button style={{ textDecoration: "underline" }}>Login here &raquo;</button>
+            </Link>
+          </Divider>
+        </Form>
+      </Section>
+    </>
   );
 }
