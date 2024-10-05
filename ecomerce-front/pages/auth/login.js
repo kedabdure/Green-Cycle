@@ -3,9 +3,7 @@ import { useState } from "react";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
 import styled from "styled-components";
-import Google from "../components/icons/Google";
-import axios from "axios";
-import { set } from "mongoose";
+import Google from "../../components/icons/Google";
 
 // Styled Components
 const Section = styled.section`
@@ -130,13 +128,11 @@ const Divider = styled.div`
 `;
 
 export default function RegisterPage() {
-  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [creatingUser, setCreatingUser] = useState(false);
+  const [loginInProgress, setLoginInProgress] = useState(false);
   const [userCreated, setUserCreated] = useState(false);
   const [error, setError] = useState(false);
-  const [nameError, setNameError] = useState("");
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
 
@@ -144,16 +140,10 @@ export default function RegisterPage() {
     ev.preventDefault();
 
     // Reset error messages before validation
-    setNameError("");
     setEmailError("");
     setPasswordError("");
 
     let valid = true;
-
-    if (!name) {
-      setNameError("Please enter your full name.");
-      valid = false;
-    }
 
     if (!email || !/\S+@\S+\.\S+/.test(email)) {
       setEmailError("Please enter a valid email address.");
@@ -167,25 +157,20 @@ export default function RegisterPage() {
 
     if (!valid) return;
 
-    setCreatingUser(true);
+    setLoginInProgress(true);
     setError(false);
     setUserCreated(false);
 
-    try {
-      const response = await axios.post("/api/register", { name, email, password });
-      if (response.status === 201) {
-        setUserCreated(true);
-        setName("");
-        setEmail("");
-        setPassword("");
-      } else {
-        setError(true);
-      }
-    } catch (err) {
-      setError(true);
+    const res = await signIn('credentials', { email, password, redirect: false });
+    console.log('SignIn Response:', res);
+
+    if (res?.ok) {
+      window.location.href = '/';
+    } else {
+      console.error('Login failed:', res);
     }
 
-    setCreatingUser(false);
+    setLoginInProgress(false);
   }
 
   return (
@@ -208,25 +193,13 @@ export default function RegisterPage() {
         </Message>
       )}
       <Form onSubmit={handleFormSubmit}>
-        <Title>Register</Title>
-        <Input
-          type="text"
-          placeholder="Full name"
-          value={name}
-          disabled={creatingUser}
-          onChange={(ev) => {
-            setName(ev.target.value);
-            setNameError("");
-          }}
-          $isInvalid={!!nameError}
-          pattern=".*"
-        />
-        {nameError && <ErrorText>{nameError}</ErrorText>}
+        <Title>Log In</Title>
         <Input
           type="email"
+          name="email"
           placeholder="Email"
           value={email}
-          disabled={creatingUser}
+          disabled={loginInProgress}
           onChange={(ev) => {
             setEmail(ev.target.value);
             setEmailError("");
@@ -237,9 +210,10 @@ export default function RegisterPage() {
         {emailError && <ErrorText>{emailError}</ErrorText>}
         <Input
           type="password"
+          name="password"
           placeholder="Password"
           value={password}
-          disabled={creatingUser}
+          disabled={loginInProgress}
           onChange={(ev) => {
             setPassword(ev.target.value);
             setPasswordError("");
@@ -248,18 +222,18 @@ export default function RegisterPage() {
           pattern=".*"
         />
         {passwordError && <ErrorText>{passwordError}</ErrorText>}
-        <Button type="submit" disabled={creatingUser}>
-          Register
+        <Button type="submit" disabled={loginInProgress}>
+          Log In
         </Button>
         <SmallText>or login with provider</SmallText>
-        <ProviderButton onClick={() => signIn("google", { callbackUrl: "/" })}>
+        <ProviderButton onClick={() => signIn("google")}>
           <Google />
-          Login with Google
+          Google
         </ProviderButton>
         <Divider>
-          Existing account?{" "}
-          <Link href="/login" passHref>
-            <button style={{ textDecoration: "underline" }}>Login here &raquo;</button>
+          Don't have an account?{" "}
+          <Link href="/auth/register" passHref>
+            <button style={{ textDecoration: "underline" }}>register here &raquo;</button>
           </Link>
         </Divider>
       </Form>

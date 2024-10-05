@@ -3,7 +3,9 @@ import { useState } from "react";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
 import styled from "styled-components";
-import Google from "../components/icons/Google";
+import Google from "../../components/icons/Google";
+import axios from "axios";
+import { set } from "mongoose";
 
 // Styled Components
 const Section = styled.section`
@@ -128,11 +130,13 @@ const Divider = styled.div`
 `;
 
 export default function RegisterPage() {
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loginInProgress, setLoginInProgress] = useState(false);
+  const [creatingUser, setCreatingUser] = useState(false);
   const [userCreated, setUserCreated] = useState(false);
   const [error, setError] = useState(false);
+  const [nameError, setNameError] = useState("");
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
 
@@ -140,10 +144,16 @@ export default function RegisterPage() {
     ev.preventDefault();
 
     // Reset error messages before validation
+    setNameError("");
     setEmailError("");
     setPasswordError("");
 
     let valid = true;
+
+    if (!name) {
+      setNameError("Please enter your full name.");
+      valid = false;
+    }
 
     if (!email || !/\S+@\S+\.\S+/.test(email)) {
       setEmailError("Please enter a valid email address.");
@@ -157,13 +167,25 @@ export default function RegisterPage() {
 
     if (!valid) return;
 
-    setLoginInProgress(true);
+    setCreatingUser(true);
     setError(false);
     setUserCreated(false);
 
-    await signIn('credentials', {email, password, callbackUrl: '/'});
+    try {
+      const response = await axios.post("/api/register", { name, email, password });
+      if (response.status === 201) {
+        setUserCreated(true);
+        setName("");
+        setEmail("");
+        setPassword("");
+      } else {
+        setError(true);
+      }
+    } catch (err) {
+      setError(true);
+    }
 
-    setLoginInProgress(false);
+    setCreatingUser(false);
   }
 
   return (
@@ -172,7 +194,7 @@ export default function RegisterPage() {
         <Message>
           User created.<br />
           Now you can{" "}
-          <Link href="/login" passHref>
+          <Link href="/auth/login" passHref>
             <button style={{ textDecoration: "underline", color: "green" }}>
               Login &raquo;
             </button>
@@ -186,13 +208,25 @@ export default function RegisterPage() {
         </Message>
       )}
       <Form onSubmit={handleFormSubmit}>
-        <Title>Log In</Title>
+        <Title>Register</Title>
+        <Input
+          type="text"
+          placeholder="Full name"
+          value={name}
+          disabled={creatingUser}
+          onChange={(ev) => {
+            setName(ev.target.value);
+            setNameError("");
+          }}
+          $isInvalid={!!nameError}
+          pattern=".*"
+        />
+        {nameError && <ErrorText>{nameError}</ErrorText>}
         <Input
           type="email"
-          name="email"
           placeholder="Email"
           value={email}
-          disabled={loginInProgress}
+          disabled={creatingUser}
           onChange={(ev) => {
             setEmail(ev.target.value);
             setEmailError("");
@@ -203,10 +237,9 @@ export default function RegisterPage() {
         {emailError && <ErrorText>{emailError}</ErrorText>}
         <Input
           type="password"
-          name="password"
           placeholder="Password"
           value={password}
-          disabled={loginInProgress}
+          disabled={creatingUser}
           onChange={(ev) => {
             setPassword(ev.target.value);
             setPasswordError("");
@@ -215,8 +248,8 @@ export default function RegisterPage() {
           pattern=".*"
         />
         {passwordError && <ErrorText>{passwordError}</ErrorText>}
-        <Button type="submit" disabled={loginInProgress}>
-          Log In
+        <Button type="submit" disabled={creatingUser}>
+          Register
         </Button>
         <SmallText>or login with provider</SmallText>
         <ProviderButton onClick={() => signIn("google", { callbackUrl: "/" })}>
@@ -224,9 +257,9 @@ export default function RegisterPage() {
           Login with Google
         </ProviderButton>
         <Divider>
-          Don't have an account?{" "}
-          <Link href="/register" passHref>
-            <button style={{ textDecoration: "underline" }}>register here &raquo;</button>
+          Existing account?{" "}
+          <Link href="/auth/login" passHref>
+            <button style={{ textDecoration: "underline" }}>Login here &raquo;</button>
           </Link>
         </Divider>
       </Form>

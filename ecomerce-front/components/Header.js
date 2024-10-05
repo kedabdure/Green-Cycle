@@ -7,7 +7,8 @@ import { CartContext } from "./CartContext";
 import BarsIcon from "./icons/Bars";
 import CartIcon from "./icons/CartIcon";
 import Close from "./icons/Close";
-import { useSession } from "next-auth/react";
+import { signIn, useSession, signOut } from "next-auth/react";
+
 
 const StyledHeader = styled.header`
   width: 100%;
@@ -203,8 +204,10 @@ export default function Header() {
   const { cartProducts } = useContext(CartContext);
   const [mobileNavActive, setMobileNavActive] = useState(false);
 
-  const { session } = useSession();
-  console.log(session)
+  const { data: session, status } = useSession();
+
+  console.log("Session Status: ", status);
+  console.log("Session Data: ", session);
 
   return (
     <StyledHeader>
@@ -222,10 +225,10 @@ export default function Header() {
 
             {/* Mobile Buttons */}
             <MobileButtons>
-              <NavLink href={"/login"}>
+              <NavLink href={"/auth/login"}>
                 <OutlinedButton>Login</OutlinedButton>
               </NavLink>
-              <NavLink href={"/register"}>
+              <NavLink href={"/auth/register"}>
                 <Button>Sign up</Button>
               </NavLink>
             </MobileButtons>
@@ -249,14 +252,18 @@ export default function Header() {
             <DesktopButtons>
               {!session && (
                 <>
-                  <NavLink href={"/login"}>
+                  <NavLink href={"/auth/login"}>
                     <OutlinedButton>Login</OutlinedButton>
                   </NavLink>
-                  <NavLink href={"/register"}>
+                  <NavLink href={"/auth/register"}>
                     <Button>Sign up</Button>
                   </NavLink>
                 </>
               )}
+              {session && status === "authenticated" && (
+                <Button onClick={() => signOut()}>logout</Button>
+              )}
+
             </DesktopButtons>
           </ButtonWrapper>
         </Wrapper>

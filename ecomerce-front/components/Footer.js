@@ -130,7 +130,7 @@ export default function Contact() {
         {/* <Divider /> */}
 
         <FooterText>
-          <Text>© {getCurrentYear()} All right reserved | powered by <Powered href="http://localhost:3000">nexaddis</Powered> </Text>
+          <Text>© {getCurrentYear()} All right reserved | powered by <Powered href="http://localhost:3000/">nexaddis</Powered> </Text>
         </FooterText>
 
         {showScrollToTop && (
