@@ -2,9 +2,10 @@ import styled from "styled-components";
 import Link from "next/link";
 import CartIcon from "./icons/CartIcon";
 import Button from "./Button";
-import { useContext } from "react";
+import React, { useContext } from "react";
 import { CartContext } from "./CartContext";
 import Currency from "./Currency";
+import FlyingBtn from "./FlyingButton";
 
 const ProductWrapper = styled.div`
 
@@ -106,19 +107,30 @@ export default function ProductBox({ _id, title, price, images, properties, cate
       <ProductInfo>
         <Title href={url}>{title}</Title>
         <PropertiesWrapper>
-          {/* Ensure properties is an object and use Object.entries to iterate */}
-          {properties && Object.entries(properties).map(([key, value], index) => (
-            <Property key={index}>
-              {key}: {value}
-            </Property>
-          ))}
+          {
+            <React.Fragment>
+              {properties.RAM && <Property>RAM: {properties.RAM}GB</Property>}
+              {properties.storage && <Property>storage: {properties.storage}GB</Property>}
+              {properties.SIM && <Property>{properties.SIM} SIM</Property>}
+              {properties.Core && <Property>Core {properties.Core}</Property>}
+              {properties.Gen && <Property>{properties.Gen} Gen</Property>}
+            </React.Fragment>
+          }
         </PropertiesWrapper>
         <PriceRow>
           <Price>
             {formatPrice(price)}
             <Currency>ETB</Currency>
           </Price>
-          <Button $primary $outline onClick={() => { addProduct(_id) }}>Add to cart</Button>
+          <FlyingBtn
+            url={images[0]}
+            // onClick={() => addProduct(_id)}
+            $white
+            $primary
+            $outline
+          >
+            Add to cart
+          </FlyingBtn>
         </PriceRow>
       </ProductInfo>
     </ProductWrapper>

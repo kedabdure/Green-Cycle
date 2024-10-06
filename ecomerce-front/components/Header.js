@@ -240,16 +240,8 @@ export default function Header() {
             </MobileButtons>
           </StyledNav>
 
+          {/* CartWrapper */}
           <ButtonWrapper>
-            <NavLink href={"/cart"}>
-              <CartIconWrapper>
-                <Cart>
-                  <CartIcon />
-                  <CartBadge>{cartProducts.length}</CartBadge>
-                </Cart>
-              </CartIconWrapper>
-            </NavLink>
-
             <NavButton onClick={() => setMobileNavActive(prev => !prev)}>
               {!mobileNavActive ? <BarsIcon /> : <Close />}
             </NavButton>
@@ -270,6 +262,15 @@ export default function Header() {
                 <Button onClick={() => signOut()}>logout</Button>
               )}
             </DesktopButtons>
+
+            <NavLink href={"/cart"}>
+              <CartIconWrapper>
+                <Cart>
+                  <CartIcon />
+                  <CartBadge>{cartProducts.length}</CartBadge>
+                </Cart>
+              </CartIconWrapper>
+            </NavLink>
           </ButtonWrapper>
         </Wrapper>
       </Center>

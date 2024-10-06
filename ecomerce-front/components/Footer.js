@@ -39,8 +39,8 @@ const ScrollToTopButton = styled.button`
   border: none;
   cursor: pointer;
   z-index: 999;
-  width: 40px;
-  height: 40px;
+  width: 35px;
+  height: 35px;
   display: flex;
   align-items: center;
   justify-content: center;
