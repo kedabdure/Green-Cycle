@@ -91,8 +91,7 @@ export const ButtonStyle = css`
       color: #fff;
 
       &:hover {
-        background-color: #005bb5;
-        border-color: #005bb5;
+        opacity: .7;
       }
     `}
   
