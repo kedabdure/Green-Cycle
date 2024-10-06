@@ -12,7 +12,7 @@ import { signIn, useSession, signOut } from "next-auth/react";
 
 const StyledHeader = styled.header`
   width: 100%;
-  height: 70px;
+  height: 68px;
   background-color: #111;
   position: fixed;
   top: 0;
@@ -171,7 +171,7 @@ const CartBadge = styled.div`
 
 const Button = styled.div`
   max-width: 200px;
-  padding: 8px 15px;
+  padding: 6px 15px;
   text-align: center;
   border-radius: 30px;
   font-size: 0.9rem;
