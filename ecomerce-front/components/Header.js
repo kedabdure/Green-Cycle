@@ -201,11 +201,20 @@ const OutlinedButton = styled.div`
   }
 `;
 
+const LogoutWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #ccc;
+  font-size: 1rem;
+`;
+
 export default function Header() {
   const { cartProducts } = useContext(CartContext);
   const [mobileNavActive, setMobileNavActive] = useState(false);
 
   const { data: session, status } = useSession();
+  const username = session?.user?.name.split(" ")[0];
 
   return (
     <StyledHeader>
@@ -259,7 +268,12 @@ export default function Header() {
                 </>
               )}
               {session && status === "authenticated" && (
-                <Button onClick={() => signOut()}>logout</Button>
+                <LogoutWrapper>
+                  <p>
+                    hello, {username}
+                  </p>
+                  <Button onClick={() => signOut()}>logout</Button>
+                </LogoutWrapper>
               )}
             </DesktopButtons>
 
