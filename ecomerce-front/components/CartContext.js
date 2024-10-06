@@ -1,33 +1,39 @@
-"use client"
-import { useState, createContext, useEffect } from 'react';
+"use client";
+import { useState, createContext, useEffect } from "react";
 
 export const CartContext = createContext();
 
 export default function CartContextProvider({ children }) {
-  const ls = typeof window !== 'undefined' ? window.localStorage : null;
+  const ls = typeof window !== "undefined" ? window.localStorage : null;
   const [cartProducts, setCartProducts] = useState([]);
 
+  // Load cart items from localStorage on initial render
   useEffect(() => {
-    if (cartProducts?.length > 0) {
-      ls?.setItem('cart', JSON.stringify(cartProducts));
+    if (ls && ls.getItem("cart")) {
+      setCartProducts(JSON.parse(ls.getItem("cart")));
     }
-  }, [cartProducts])
+  }, []);
 
+  // Update localStorage whenever cartProducts changes
   useEffect(() => {
-    if (ls && ls.getItem('cart')) {
-      setCartProducts(JSON.parse(ls.getItem('cart')));
+    if (ls) {
+      if (cartProducts?.length > 0) {
+        ls.setItem("cart", JSON.stringify(cartProducts));
+      } else {
+        ls.removeItem("cart");
+      }
     }
-  }, [])
+  }, [cartProducts, ls]);
 
   function addProduct(productId) {
-    setCartProducts(prev => [...prev, productId]);
+    setCartProducts((prev) => [...prev, productId]);
   }
 
   function removeProduct(productId) {
-    setCartProducts(prev => {
+    setCartProducts((prev) => {
       const pos = prev.indexOf(productId);
       if (pos !== -1) {
-        return prev.filter((value, index) => index !== pos);
+        return prev.filter((_, index) => index !== pos);
       }
       return prev;
     });
@@ -35,13 +41,12 @@ export default function CartContextProvider({ children }) {
 
   function clearCart() {
     setCartProducts([]);
-    ls?.removeItem('cart');
+    ls?.removeItem("cart");
   }
 
   function removeAllInstance(id) {
     setCartProducts((prev) => prev.filter((productId) => productId !== id));
   }
-
 
   return (
     <CartContext.Provider
@@ -52,8 +57,9 @@ export default function CartContextProvider({ children }) {
         removeProduct,
         clearCart,
         removeAllInstance,
-      }}>
+      }}
+    >
       {children}
     </CartContext.Provider>
-  )
+  );
 }

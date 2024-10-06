@@ -93,6 +93,7 @@ export default function Featured({ product }) {
                   url={product.images[0]}
                   productID={product._id}
                 >
+                  <CartIcon />
                   Add to cart
                 </FlyingBtn>
               </ButtonWrapper>

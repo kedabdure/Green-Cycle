@@ -1,9 +1,7 @@
+import React from "react";
 import styled from "styled-components";
 import Link from "next/link";
 import CartIcon from "./icons/CartIcon";
-import Button from "./Button";
-import React, { useContext } from "react";
-import { CartContext } from "./CartContext";
 import Currency from "./Currency";
 import FlyingBtn from "./FlyingButton";
 
@@ -91,7 +89,6 @@ const Price = styled.div`
 
 export default function ProductBox({ _id, title, price, images, properties, category }) {
   const url = '/product/' + _id;
-  const { addProduct } = useContext(CartContext);
 
   const formatPrice = (value) => {
     return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -124,11 +121,12 @@ export default function ProductBox({ _id, title, price, images, properties, cate
           </Price>
           <FlyingBtn
             url={images[0]}
-            // onClick={() => addProduct(_id)}
+            productID={_id}
             $white
             $primary
             $outline
           >
+            <CartIcon />
             Add to cart
           </FlyingBtn>
         </PriceRow>
