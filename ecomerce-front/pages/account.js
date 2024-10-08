@@ -154,42 +154,46 @@ export default function Account() {
     }
   }
 
-  async function handleFileChange(ev) {
-    const file = ev.target?.files[0];
-    if (file) {
-      setUploading(true);
-      const data = new FormData();
-      data.append("file", file);
+async function handleFileChange(ev) {
+  const file = ev.target?.files[0];
+  if (file) {
+    setUploading(true);
+    const data = new FormData();
+    data.append("file", file);
+    data.append("email", email); // Make sure 'email' is defined and has a value
 
-      console.log("File being uploaded:", file); // Add this line for debugging
+    console.log("File being uploaded:", file);
+    console.log("Email being sent:", email); // Log the email to check its value
 
-      try {
-        const res = await axios.post("/api/imagekit", data, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        });
+    try {
+      const res = await axios.post("/api/imagekit", data, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
 
-        const { url } = res.data;
-        console.log("client" + url)
+      const { url } = res.data;
+      console.log("Client: " + url);
 
-        setImageUrl(url);
-        setSnackbarState({
-          open: true,
-          message: "Image uploaded successfully!",
-          severity: "success",
-        });
-      } catch (error) {
-        setSnackbarState({
-          open: true,
-          message: `Upload failed: ${error.message}`,
-          severity: "error",
-        });
-      } finally {
-        setUploading(false);
-      }
+      setImageUrl(url);
+      setSnackbarState({
+        open: true,
+        message: "Image uploaded successfully!",
+        severity: "success",
+      });
+    } catch (error) {
+      console.error("Upload error:", error); // Log the error for debugging
+      setSnackbarState({
+        open: true,
+        message: `Upload failed: ${error.message}`,
+        severity: "error",
+      });
+    } finally {
+      setUploading(false);
     }
   }
+}
+
 
 
   const handleCloseSnackbar = () => setSnackbarState({ open: false, message: "", severity: "" });
