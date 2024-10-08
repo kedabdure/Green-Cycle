@@ -11,6 +11,8 @@ import { CircularProgress, Snackbar, Alert, Stack, IconButton } from "@mui/mater
 import CloseIcon from "@mui/icons-material/Close";
 import axios from "axios";
 
+import userProfileImage from '../public/user-profile.webp';
+
 const ProfileWrapper = styled.div`
   padding-top: 70px;
   min-height: 100vh;
@@ -94,9 +96,9 @@ const StyledSpan = styled.span`
   color: #333;
 
   &:hover {
-    background-color: #111;
-    color: #fff;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    background-color: #ddd;
+    // color: #fff;
+    // box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
   }
 
   &:active {
@@ -154,47 +156,43 @@ export default function Account() {
     }
   }
 
-async function handleFileChange(ev) {
-  const file = ev.target?.files[0];
-  if (file) {
-    setUploading(true);
-    const data = new FormData();
-    data.append("file", file);
-    data.append("email", email); // Make sure 'email' is defined and has a value
+  async function handleFileChange(ev) {
+    const file = ev.target?.files[0];
+    if (file) {
+      setUploading(true);
+      const data = new FormData();
+      data.append("file", file);
+      data.append("email", email);
 
-    console.log("File being uploaded:", file);
-    console.log("Email being sent:", email); // Log the email to check its value
+      try {
+        const res = await axios.post("/api/imagekit", data, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
 
-    try {
-      const res = await axios.post("/api/imagekit", data, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+        const { url } = res.data;
 
-      const { url } = res.data;
-      console.log("Client: " + url);
-
-      setImageUrl(url);
-      setSnackbarState({
-        open: true,
-        message: "Image uploaded successfully!",
-        severity: "success",
-      });
-    } catch (error) {
-      console.error("Upload error:", error); // Log the error for debugging
-      setSnackbarState({
-        open: true,
-        message: `Upload failed: ${error.message}`,
-        severity: "error",
-      });
-    } finally {
-      setUploading(false);
+        setImageUrl(url);
+        setSnackbarState({
+          open: true,
+          message: "Image uploaded successfully!",
+          severity: "success",
+        });
+      } catch (error) {
+        console.error("Upload error:", error);
+        setSnackbarState({
+          open: true,
+          message: `Upload failed: ${error.message}`,
+          severity: "error",
+        });
+      } finally {
+        setUploading(false);
+      }
     }
   }
-}
 
-
+const defaultBlurDataURL = "data:image/webp;base64,UklGRlIAAABXRUJQVlA4IBYAAAAwAQCdASoEAAEAAkA4JYYAAA==";
 
   const handleCloseSnackbar = () => setSnackbarState({ open: false, message: "", severity: "" });
 
@@ -231,12 +229,20 @@ async function handleFileChange(ev) {
           <Container>
             <ImageWrapper>
               <div>
-                <StyledImage src={imageUrl || '/user-profile.webp'} width={100} height={100} alt="user-photo" priority />
+                <StyledImage
+                  src={imageUrl || userProfileImage}
+                  width={100}
+                  height={100}
+                  alt="user-photo"
+                  blurDataURL={defaultBlurDataURL}
+                  loading="lazy"
+                  placeholder="blur"
+                />
               </div>
               <StyledLabel>
                 <StyledFileInput type="file" onChange={handleFileChange} />
                 <StyledSpan disabled={uploading}>
-                  {uploading ? <CircularProgress size={16} /> : "Edit"}
+                  {uploading ? <CircularProgress size={16} /> : "Edit Photo"}
                 </StyledSpan>
               </StyledLabel>
             </ImageWrapper>

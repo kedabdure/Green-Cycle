@@ -38,10 +38,6 @@ const handler = async (req, res) => {
     const file = data.files.file[0];
     const email = data.fields.email[0];
 
-    console.log("Email:", email);
-    console.log("File:", file);
-
-
     // READ THE FILE CONTENTS IN BASE64 ENCODING
     const contents = await fs.readFile(file.path, { encoding: "base64" });
 
@@ -59,8 +55,8 @@ const handler = async (req, res) => {
         src: result.url,
         transformation: [
           {
-            height: "120",
-            width: "120",
+            height: "100",
+            width: "100",
           },
         ],
       });
