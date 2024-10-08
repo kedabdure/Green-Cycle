@@ -70,6 +70,8 @@ const StyledForm = styled.form`
 
 const StyledImage = styled(Image)`
   width: 100%;
+  height: auto;
+  object-fit: cover;
   border-radius: 10px;
 `;
 
@@ -108,7 +110,7 @@ const StyledFileInput = styled.input`
 
 export default function Account() {
   const router = useRouter();
-  const { data: session, status, update } = useSession();
+  const { data: session, status } = useSession();
   const [username, setUsername] = useState("");
   const [imageUrl, setImageUrl] = useState(session?.user?.image || "");
   const [saving, setSaving] = useState(false);
@@ -120,6 +122,7 @@ export default function Account() {
   useEffect(() => {
     if (status === "authenticated") {
       setUsername(session?.user?.name || "");
+      setImageUrl(session?.user?.image || "");
     }
   }, [session, status]);
 
@@ -158,15 +161,19 @@ export default function Account() {
       const data = new FormData();
       data.append("file", file);
 
+      console.log("File being uploaded:", file); // Add this line for debugging
+
       try {
-        const res = await axios.post("/api/upload", data, {
+        const res = await axios.post("/api/imagekit", data, {
           headers: {
             "Content-Type": "multipart/form-data",
           },
         });
 
-        const newImageUrl = res.data.url;
-        setImageUrl(newImageUrl); // Update profile image URL
+        const { url } = res.data;
+        console.log("client" + url)
+
+        setImageUrl(url);
         setSnackbarState({
           open: true,
           message: "Image uploaded successfully!",
@@ -183,6 +190,7 @@ export default function Account() {
       }
     }
   }
+
 
   const handleCloseSnackbar = () => setSnackbarState({ open: false, message: "", severity: "" });
 
@@ -219,11 +227,13 @@ export default function Account() {
           <Container>
             <ImageWrapper>
               <div>
-                <StyledImage src={imageUrl} width={100} height={100} alt="user-photo" />
+                <StyledImage src={imageUrl || '/user-profile.webp'} width={100} height={100} alt="user-photo" priority />
               </div>
               <StyledLabel>
                 <StyledFileInput type="file" onChange={handleFileChange} />
-                <StyledSpan>{uploading ? "Uploading..." : "Edit"}</StyledSpan>
+                <StyledSpan disabled={uploading}>
+                  {uploading ? <CircularProgress size={16} /> : "Edit"}
+                </StyledSpan>
               </StyledLabel>
             </ImageWrapper>
 
@@ -250,9 +260,7 @@ export default function Account() {
                   gap: "3px",
                 }}
               >
-                {saving && (
-                  <CircularProgress size={16} style={{ marginRight: ".5rem", color: "#fff" }} />
-                )}
+                {saving && <CircularProgress size={16} style={{ marginRight: ".5rem", color: "#fff" }} />}
                 Save
               </Button>
             </StyledForm>
