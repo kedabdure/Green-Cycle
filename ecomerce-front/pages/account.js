@@ -31,11 +31,16 @@ const Title = styled.h1`
 
 const Container = styled.div`
   margin: 0 auto;
-  width: 500px;
+  width: 90%; // Make it responsive
+  max-width: 500px; // Set max-width
   display: flex;
-  flex-direction: row;
-  align-items: center;
+  flex-direction: column; // Stack vertically
+  align-items: center; // Center items
   gap: 10px;
+
+  @media screen and (min-width: 768px) {
+    flex-direction: row; // Change to row on larger screens
+  }
 `;
 
 const Input = styled.input`
@@ -59,20 +64,23 @@ const Input = styled.input`
 `;
 
 const ImageWrapper = styled.div`
-  width: 110px;
+  width: 100%;
+  max-width: 110px; // Set max width
   background-color: #eee;
   display: flex;
   flex-direction: column;
   gap: 3px;
+  align-items: center; // Center the image and button
 `;
 
 const StyledForm = styled.form`
   flex-grow: 1;
+  width: 100%; // Make form full width
 `;
 
 const StyledImage = styled(Image)`
   width: 100%;
-  height: auto;
+  height: 100px;
   object-fit: cover;
   border-radius: 10px;
 `;
@@ -97,8 +105,6 @@ const StyledSpan = styled.span`
 
   &:hover {
     background-color: #ddd;
-    // color: #fff;
-    // box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
   }
 
   &:active {
@@ -192,7 +198,7 @@ export default function Account() {
     }
   }
 
-const defaultBlurDataURL = "data:image/webp;base64,UklGRlIAAABXRUJQVlA4IBYAAAAwAQCdASoEAAEAAkA4JYYAAA==";
+  const defaultBlurDataURL = "data:image/webp;base64,UklGRlIAAABXRUJQVlA4IBYAAAAwAQCdASoEAAEAAkA4JYYAAA==";
 
   const handleCloseSnackbar = () => setSnackbarState({ open: false, message: "", severity: "" });
 
