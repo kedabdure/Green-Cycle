@@ -6,17 +6,20 @@ const UserSchema = new Schema(
   {
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
+    phone: { type: String },
     password: { type: String, required: true },
     image: { type: String },
+    streetAddress: { type: String },
+    city: { type: String },
+    country: { type: String },
+    postalCode: { type: String },
   },
   { timestamps: true }
 );
 
-// Use a `pre('save')` hook for password hashing
 UserSchema.pre("save", async function (next) {
   const user = this;
 
-  // Only hash the password if it has been modified (or is new)
   if (!user.isModified("password")) return next();
 
   try {
@@ -28,7 +31,6 @@ UserSchema.pre("save", async function (next) {
   }
 });
 
-// Create and export the User model
 const User = models.User || model("User", UserSchema);
 
 export default User;

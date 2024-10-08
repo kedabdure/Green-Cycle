@@ -9,18 +9,20 @@ import Image from "next/image";
 import Button from "../components/Button";
 import { CircularProgress, Snackbar, Alert, Stack, IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import PhoneInput from 'react-phone-number-input';
+import 'react-phone-number-input/style.css';
 import axios from "axios";
 
 import userProfileImage from '../public/user-profile.webp';
 
 const ProfileWrapper = styled.div`
-  padding-top: 70px;
+  padding: 70px 0;
   min-height: 100vh;
 `;
 
 const Title = styled.h1`
-  font-size: 1.5rem;
-  margin: 40px 0 10px 0;
+  font-size: 2rem;
+  margin: 30px 0 10px 0;
   font-weight: 600;
   text-align: center;
 
@@ -31,51 +33,75 @@ const Title = styled.h1`
 
 const Container = styled.div`
   margin: 0 auto;
-  width: 90%; // Make it responsive
-  max-width: 500px; // Set max-width
+  width: 90%;
+  max-width: 500px;
   display: flex;
-  flex-direction: column; // Stack vertically
-  align-items: center; // Center items
+  flex-direction: column;
+  align-items: center;
   gap: 10px;
 
   @media screen and (min-width: 768px) {
-    flex-direction: row; // Change to row on larger screens
+    flex-direction: row;
+    align-items: normal;
   }
 `;
 
 const Input = styled.input`
   display: block;
+  box-sizing: border-box;
   width: 100%;
   padding: 0.75rem;
   margin: 0.6rem 0;
   border: 1px solid #ddd;
   border-radius: 10px;
+  transition: border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
 
   &:disabled {
     background-color: #f3f3f3;
   }
 
   &:focus {
-    border-color: #333;
+  border-color: #344394;
+  box-shadow: 0px 0px 0px 4px rgba(63, 81, 181, 0.15);
     &::placeholder {
       color: #333;
     }
   }
 `;
 
+const PhoneInputWrapper = styled(PhoneInput)`
+  display: flex;
+  width: 100%;
+  padding: 0.75rem;
+  margin: 0.6rem 0;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  transition: box-shadow 0.2s ease;
+
+  &:disabled {
+    background-color: #f3f3f3;
+  }
+
+  &:focus {
+    border-color: #344394;
+    box-shadow: 0px 0px 0px 4px rgba(63, 81, 181, 0.15);
+  }
+`;
+
 const ImageWrapper = styled.div`
   width: 100%;
-  max-width: 110px; // Set max width
+  max-width: 110px;
   background-color: #eee;
   display: flex;
   flex-direction: column;
   gap: 3px;
-  align-items: center; // Center the image and button
+  align-items: left;
+  justify-content: flex-start;
 `;
 
 const StyledForm = styled.form`
   flex-grow: 1;
-  width: 100%; // Make form full width
+  width: 100%;
 `;
 
 const StyledImage = styled(Image)`
@@ -121,16 +147,21 @@ export default function Account() {
   const { data: session, status } = useSession();
   const [username, setUsername] = useState("");
   const [imageUrl, setImageUrl] = useState(session?.user?.image || "");
+  const [email, setEmail] = useState(session?.user?.email || "");
+  const [phone, setPhone] = useState("");
+  const [streetAddress, setStreetAddress] = useState("");
+  const [city, setCity] = useState("");
+  const [country, setCountry] = useState("");
+  const [postalCode, setPostalCode] = useState("");
   const [saving, setSaving] = useState(false);
   const [snackbarState, setSnackbarState] = useState({ open: false, message: "", severity: "" });
   const [uploading, setUploading] = useState(false);
-
-  const email = session?.user?.email;
 
   useEffect(() => {
     if (status === "authenticated") {
       setUsername(session?.user?.name || "");
       setImageUrl(session?.user?.image || "");
+      setEmail(session?.user?.email || "");
     }
   }, [session, status]);
 
@@ -142,10 +173,25 @@ export default function Account() {
 
   async function handleSave(event) {
     event.preventDefault();
+
+    // Validate input fields
+    if (!username || !phone || !streetAddress || !city || !country || !postalCode) {
+      setSnackbarState({
+        open: true,
+        message: "Please fill in all required fields!",
+        severity: "error",
+      });
+      return;
+    }
+
+    console.log({ username, email, phone, streetAddress, city, country, postalCode });
+
     setSaving(true);
 
     try {
-      await axios.put("/api/profile", { name: username, email, image: imageUrl });
+      const res = await axios.put("/api/profile", { name: username, email, image: imageUrl, phone, streetAddress, city, country, postalCode });
+      console.log(res.data);
+
       setSnackbarState({
         open: true,
         message: "Profile updated successfully!",
@@ -254,13 +300,68 @@ export default function Account() {
             </ImageWrapper>
 
             <StyledForm onSubmit={handleSave}>
+              {/* username */}
               <Input
                 type="text"
                 name="username"
                 value={username}
                 onChange={(ev) => setUsername(ev.target.value)}
+                placeholder="Username"
               />
-              <Input type="email" name="email" placeholder="Email" value={email} disabled />
+
+              {/* password */}
+              <Input
+                type="email"
+                name="email"
+                placeholder="Email"
+                value={email}
+                disabled
+              />
+
+              {/* phone */}
+              <PhoneInputWrapper
+                label="Phone Number"
+                name="phone"
+                placeholder="Enter phone number"
+                defaultCountry="ET"
+                international
+                value={phone}
+                onChange={setPhone}
+                countryCallingCodeEditable={false}
+              />
+
+              {/* street address */}
+              <Input
+                type="text"
+                name="streetAddress"
+                placeholder="Street Address"
+                value={streetAddress}
+                onChange={(ev) => setStreetAddress(ev.target.value)}
+              />
+              <Input
+                type="text"
+                name="city"
+                placeholder="City"
+                value={city}
+                onChange={(ev) => setCity(ev.target.value)}
+              />
+              <div style={{ display: 'flex', gap: '20px' }}>
+                <Input
+                  type="text"
+                  name="country"
+                  placeholder="Country"
+                  value={country}
+                  onChange={(ev) => setCountry(ev.target.value)}
+                />
+                <Input
+                  type="text"
+                  name="postalCode"
+                  placeholder="Postal Code"
+                  value={postalCode}
+                  onChange={(ev) => setPostalCode(ev.target.value)}
+                />
+              </div>
+
               <Button
                 $primary
                 type="submit"
