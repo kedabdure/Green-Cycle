@@ -106,8 +106,8 @@ export default function ProductBox({ _id, title, price, images, properties, cate
         <PropertiesWrapper>
           {
             <React.Fragment>
-              {properties.RAM && <Property>RAM: {properties.RAM}GB</Property>}
-              {properties.storage && <Property>storage: {properties.storage}GB</Property>}
+              {properties.RAM && <Property>RAM: {properties.RAM}</Property>}
+              {properties.Storage && <Property>Storage: {properties.Storage}</Property>}
               {properties.SIM && <Property>{properties.SIM} SIM</Property>}
               {properties.Core && <Property>Core {properties.Core}</Property>}
               {properties.Gen && <Property>{properties.Gen} Gen</Property>}

@@ -75,7 +75,7 @@ const Input = styled.input`
 const PhoneInputWrapper = styled(PhoneInput)`
   display: flex;
   width: 100%;
-  height: 50px;
+  height: 50px !important;
   margin: .1rem 0 .8rem 0;
   padding: 0.75rem;
   border: 1px solid #c4c4c4;
@@ -116,7 +116,7 @@ const StyledForm = styled.form`
 
 const StyledImage = styled(Image)`
   width: 100%;
-  height: 100px;
+  height: auto;
   object-fit: cover;
   border-radius: 10px;
 `;
@@ -154,7 +154,7 @@ const StyledFileInput = styled.input`
 
 export default function Account() {
   const router = useRouter();
-  const { data: session, status, update } = useSession();
+  const { data: session, status } = useSession();
   const [username, setUsername] = useState("");
   const [imageUrl, setImageUrl] = useState(session?.user?.image || "");
   const [email, setEmail] = useState(session?.user?.email || "");
@@ -186,12 +186,13 @@ export default function Account() {
           console.error("Error fetching profile:", error);
           setSnackbarState({
             open: true,
-            message: `Error fetching profile: ${error.message}`,
+            message: "Oops! Something went wrong while fetching your profile. Please try again later.",
             severity: "error",
           });
         });
     }
   }, [session, status]);
+
 
   if (status === "loading") return "Loading...";
   if (status === "unauthenticated") {
@@ -206,16 +207,6 @@ export default function Account() {
 
     try {
       const res = await axios.put("/api/profile", { name: username, email, image: imageUrl, phone, streetAddress, city, country, postalCode });
-
-      // const updatedSession = await update({
-      //   ...session,
-      //   user: {
-      //     ...session.user,
-      //     name: res.data.user.name,
-      //     image: res.data.user.image,
-      //   },
-      // });
-
       setSnackbarState({
         open: true,
         message: "Profile updated successfully!",
@@ -313,6 +304,11 @@ export default function Account() {
                   blurDataURL={defaultBlurDataURL}
                   loading="lazy"
                   placeholder="blur"
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = userProfileImage;
+                  }}
+
                 />
               </div>
               <StyledLabel>
@@ -329,7 +325,7 @@ export default function Account() {
               <Input
                 type="text"
                 name="username"
-                value={username}
+                value={username || ""}
                 onChange={(ev) => setUsername(ev.target.value)}
                 placeholder="Username"
               />
@@ -340,7 +336,7 @@ export default function Account() {
                 type="email"
                 name="email"
                 placeholder="Email"
-                value={email}
+                value={email || ""}
                 disabled
               />
 
@@ -351,7 +347,7 @@ export default function Account() {
                 placeholder="Enter phone number"
                 defaultCountry="ET"
                 international
-                value={phone}
+                value={phone || ""}
                 onChange={setPhone}
                 countryCallingCodeEditable={false}
               />
@@ -362,8 +358,8 @@ export default function Account() {
                 type="text"
                 name="streetAddress"
                 placeholder="Street Address"
-                value={streetAddress}
-                onChange={(ev) => setStreetAddress(ev.target.value)}
+                value={streetAddress || ""}
+                onChange={(ev) => setStreetAddress(ev.target.value || "")}
               />
 
               <StyledInputLabel>City</StyledInputLabel>
@@ -371,29 +367,29 @@ export default function Account() {
                 type="text"
                 name="city"
                 placeholder="City"
-                value={city}
+                value={city || ""}
                 onChange={(ev) => setCity(ev.target.value)}
               />
 
-              <div style={{display: 'flex', gap: '10px', margin: '0', padding: 0 }}>
-                <div style={{ width: "60%"}}>
+              <div style={{ display: 'flex', gap: '10px', margin: '0', padding: 0 }}>
+                <div style={{ width: "60%" }}>
                   <StyledInputLabel>Country</StyledInputLabel>
                   <Input
                     type="text"
                     name="country"
                     placeholder="Country"
-                    value={country}
+                    value={country || ""}
                     onChange={(ev) => setCountry(ev.target.value)}
                     style={{ marginTop: 0 }}
                   />
                 </div>
-                <div style={{ width: "40%"}}>
+                <div style={{ width: "40%" }}>
                   <StyledInputLabel>postalCode</StyledInputLabel>
                   <Input
                     type="text"
                     name="postalCode"
                     placeholder="Postal Code"
-                    value={postalCode}
+                    value={postalCode || ""}
                     onChange={(ev) => setPostalCode(ev.target.value)}
                     style={{ marginTop: 0 }}
                   />

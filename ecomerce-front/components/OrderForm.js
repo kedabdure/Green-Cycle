@@ -72,7 +72,6 @@ export default function TableOrderForm({ handleSubmit }) {
     if (formErrors[name]) setFormErrors({ ...formErrors, [name]: '' });
   };
 
-
   function handleSubmitForm(e) {
     e.preventDefault();
     const isValid = validate(formValues);
@@ -104,7 +103,7 @@ export default function TableOrderForm({ handleSubmit }) {
             id="firstName"
             name="firstName"
             type="text"
-            value={ existingFirstName || formValues.firstName}
+            value={formValues.firstName}
             onChange={handleChange}
             required
             size="small"
@@ -119,7 +118,7 @@ export default function TableOrderForm({ handleSubmit }) {
             id="lastName"
             name="lastName"
             type="text"
-            value={ existingLastName || formValues.lastName}
+            value={formValues.lastName}
             onChange={handleChange}
             required
             size="small"
@@ -154,7 +153,7 @@ export default function TableOrderForm({ handleSubmit }) {
             name="email"
             type="email"
             placeholder="example@gmail.com"
-            value={ session?.user?.email || formValues.email}
+            value={formValues.email}
             onChange={handleChange}
             required
             size="small"
