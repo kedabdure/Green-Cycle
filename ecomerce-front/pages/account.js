@@ -93,6 +93,11 @@ const PhoneInputWrapper = styled(PhoneInput)`
   }
 `;
 
+const StyledInputLabel = styled.label`
+  font-size: 0.9rem;
+  font-weight: 300;
+`;
+
 const ImageWrapper = styled.div`
   width: 100%;
   max-width: 110px;
@@ -320,7 +325,7 @@ export default function Account() {
 
             <StyledForm onSubmit={handleSave}>
               {/* username */}
-              <label>Full name</label>
+              <StyledInputLabel>Full name</StyledInputLabel>
               <Input
                 type="text"
                 name="username"
@@ -330,7 +335,7 @@ export default function Account() {
               />
 
               {/* password */}
-              <label>Email</label>
+              <StyledInputLabel>Email</StyledInputLabel>
               <Input
                 type="email"
                 name="email"
@@ -340,9 +345,8 @@ export default function Account() {
               />
 
               {/* phone */}
-              <label>Phone number</label>
+              <StyledInputLabel>Phone number</StyledInputLabel>
               <PhoneInputWrapper
-                label="Phone Number"
                 name="phone"
                 placeholder="Enter phone number"
                 defaultCountry="ET"
@@ -353,7 +357,7 @@ export default function Account() {
               />
 
               {/* street address */}
-              <label>Street address</label>
+              <StyledInputLabel>Street address</StyledInputLabel>
               <Input
                 type="text"
                 name="streetAddress"
@@ -362,7 +366,7 @@ export default function Account() {
                 onChange={(ev) => setStreetAddress(ev.target.value)}
               />
 
-              <label>City</label>
+              <StyledInputLabel>City</StyledInputLabel>
               <Input
                 type="text"
                 name="city"
@@ -373,7 +377,7 @@ export default function Account() {
 
               <div style={{display: 'flex', gap: '10px', margin: '0', padding: 0 }}>
                 <div style={{ width: "60%"}}>
-                  <label>Country</label>
+                  <StyledInputLabel>Country</StyledInputLabel>
                   <Input
                     type="text"
                     name="country"
@@ -384,7 +388,7 @@ export default function Account() {
                   />
                 </div>
                 <div style={{ width: "40%"}}>
-                  <label>postalCode</label>
+                  <StyledInputLabel>postalCode</StyledInputLabel>
                   <Input
                     type="text"
                     name="postalCode"
