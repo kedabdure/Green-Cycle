@@ -17,8 +17,8 @@ const ColumnWrapper = styled.div`
   display: grid;
   gap: 40px;
   grid-template-columns: 1fr;
-  @media screen and (min-width: 768px) {
-    grid-template-columns: 1.3fr .7fr;
+  @media screen and (min-width: 850px) {
+    grid-template-columns: 1.2fr .8fr;
     gap: 30px;
   }
   margin-top: 100px;
@@ -28,7 +28,7 @@ const ColumnWrapper = styled.div`
 const Box = styled.div`
   background-color: #fff;
   border-radius: 10px;
-  padding: 30px 15px;
+  padding: 30px 10px;
   box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
   @media screen and (min-width: 768px) {
     padding: 40px 25px;
@@ -81,7 +81,7 @@ const QuantityWrapper = styled.div`
   align-items: center;
   gap: 5px;
 
-  @media screen and (min-width: 768px) {
+  @media screen and (min-width: 550px) {
     flex-direction: row;
   }
 `;
