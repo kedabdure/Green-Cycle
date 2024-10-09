@@ -54,6 +54,7 @@ export const authOptions = {
       if (user) {
         token.id = user._id;
         token.email = user.email;
+        token.name = user.name;
       }
       return token;
     },
@@ -61,9 +62,15 @@ export const authOptions = {
       if (token) {
         session.user.id = token.id;
         session.user.email = token.email;
+        session.user.name = token.name;
       }
       return session;
     }
+  },
+  events: {
+    async updateUser(message) {
+      console.log("User was updated:", message);
+    },
   },
 };
 

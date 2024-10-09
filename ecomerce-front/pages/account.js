@@ -22,7 +22,7 @@ const ProfileWrapper = styled.div`
 
 const Title = styled.h1`
   font-size: 2rem;
-  margin: 30px 0 10px 0;
+  margin: 30px 0 30px 0;
   font-weight: 600;
   text-align: center;
 
@@ -33,16 +33,17 @@ const Title = styled.h1`
 
 const Container = styled.div`
   margin: 0 auto;
-  width: 90%;
+  width: 100%;
   max-width: 500px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
+  gap: 20px;
 
   @media screen and (min-width: 768px) {
     flex-direction: row;
     align-items: normal;
+    margin: 0 auto;
   }
 `;
 
@@ -50,10 +51,12 @@ const Input = styled.input`
   display: block;
   box-sizing: border-box;
   width: 100%;
+  height: 50px;
+  margin: .1rem 0 .8rem 0;
   padding: 0.75rem;
-  margin: 0.6rem 0;
-  border: 1px solid #ddd;
+  border: 1px solid #c4c4c4;
   border-radius: 10px;
+  font-size: .95rem;
   transition: border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
 
   &:disabled {
@@ -61,7 +64,7 @@ const Input = styled.input`
   }
 
   &:focus {
-  border-color: #344394;
+  // border-color: #344394;
   box-shadow: 0px 0px 0px 4px rgba(63, 81, 181, 0.15);
     &::placeholder {
       color: #333;
@@ -72,10 +75,12 @@ const Input = styled.input`
 const PhoneInputWrapper = styled(PhoneInput)`
   display: flex;
   width: 100%;
+  height: 50px;
+  margin: .1rem 0 .8rem 0;
   padding: 0.75rem;
-  margin: 0.6rem 0;
-  border: 1px solid #ddd;
+  border: 1px solid #c4c4c4;
   border-radius: 10px;
+  font-size: .95rem;
   transition: box-shadow 0.2s ease;
 
   &:disabled {
@@ -144,7 +149,7 @@ const StyledFileInput = styled.input`
 
 export default function Account() {
   const router = useRouter();
-  const { data: session, status } = useSession();
+  const { data: session, status, update } = useSession();
   const [username, setUsername] = useState("");
   const [imageUrl, setImageUrl] = useState(session?.user?.image || "");
   const [email, setEmail] = useState(session?.user?.email || "");
@@ -162,6 +167,24 @@ export default function Account() {
       setUsername(session?.user?.name || "");
       setImageUrl(session?.user?.image || "");
       setEmail(session?.user?.email || "");
+
+      axios.get("/api/profile")
+        .then((res) => {
+          const { phone, streetAddress, city, country, postalCode } = res.data;
+          setPhone(phone);
+          setStreetAddress(streetAddress);
+          setCity(city);
+          setCountry(country);
+          setPostalCode(postalCode);
+        })
+        .catch((error) => {
+          console.error("Error fetching profile:", error);
+          setSnackbarState({
+            open: true,
+            message: `Error fetching profile: ${error.message}`,
+            severity: "error",
+          });
+        });
     }
   }, [session, status]);
 
@@ -174,23 +197,19 @@ export default function Account() {
   async function handleSave(event) {
     event.preventDefault();
 
-    // Validate input fields
-    if (!username || !phone || !streetAddress || !city || !country || !postalCode) {
-      setSnackbarState({
-        open: true,
-        message: "Please fill in all required fields!",
-        severity: "error",
-      });
-      return;
-    }
-
-    console.log({ username, email, phone, streetAddress, city, country, postalCode });
-
     setSaving(true);
 
     try {
       const res = await axios.put("/api/profile", { name: username, email, image: imageUrl, phone, streetAddress, city, country, postalCode });
-      console.log(res.data);
+
+      // const updatedSession = await update({
+      //   ...session,
+      //   user: {
+      //     ...session.user,
+      //     name: res.data.user.name,
+      //     image: res.data.user.image,
+      //   },
+      // });
 
       setSnackbarState({
         open: true,
@@ -255,12 +274,12 @@ export default function Account() {
         <Center>
           <Title>Profile</Title>
 
-          <Stack padding="1rem" spacing={2}>
+          <Stack padding="0" marginTop="0" spacing={2}>
             <Snackbar
               open={snackbarState.open}
               autoHideDuration={6000}
               onClose={handleCloseSnackbar}
-              anchorOrigin={{ vertical: "top", horizontal: "right" }}
+              anchorOrigin={{ vertical: "top", horizontal: "left" }}
             >
               <Alert
                 onClose={handleCloseSnackbar}
@@ -301,6 +320,7 @@ export default function Account() {
 
             <StyledForm onSubmit={handleSave}>
               {/* username */}
+              <label>Full name</label>
               <Input
                 type="text"
                 name="username"
@@ -310,6 +330,7 @@ export default function Account() {
               />
 
               {/* password */}
+              <label>Email</label>
               <Input
                 type="email"
                 name="email"
@@ -319,6 +340,7 @@ export default function Account() {
               />
 
               {/* phone */}
+              <label>Phone number</label>
               <PhoneInputWrapper
                 label="Phone Number"
                 name="phone"
@@ -331,6 +353,7 @@ export default function Account() {
               />
 
               {/* street address */}
+              <label>Street address</label>
               <Input
                 type="text"
                 name="streetAddress"
@@ -338,6 +361,8 @@ export default function Account() {
                 value={streetAddress}
                 onChange={(ev) => setStreetAddress(ev.target.value)}
               />
+
+              <label>City</label>
               <Input
                 type="text"
                 name="city"
@@ -345,21 +370,30 @@ export default function Account() {
                 value={city}
                 onChange={(ev) => setCity(ev.target.value)}
               />
-              <div style={{ display: 'flex', gap: '20px' }}>
-                <Input
-                  type="text"
-                  name="country"
-                  placeholder="Country"
-                  value={country}
-                  onChange={(ev) => setCountry(ev.target.value)}
-                />
-                <Input
-                  type="text"
-                  name="postalCode"
-                  placeholder="Postal Code"
-                  value={postalCode}
-                  onChange={(ev) => setPostalCode(ev.target.value)}
-                />
+
+              <div style={{display: 'flex', gap: '10px', margin: '0', padding: 0 }}>
+                <div style={{ width: "60%"}}>
+                  <label>Country</label>
+                  <Input
+                    type="text"
+                    name="country"
+                    placeholder="Country"
+                    value={country}
+                    onChange={(ev) => setCountry(ev.target.value)}
+                    style={{ marginTop: 0 }}
+                  />
+                </div>
+                <div style={{ width: "40%"}}>
+                  <label>postalCode</label>
+                  <Input
+                    type="text"
+                    name="postalCode"
+                    placeholder="Postal Code"
+                    value={postalCode}
+                    onChange={(ev) => setPostalCode(ev.target.value)}
+                    style={{ marginTop: 0 }}
+                  />
+                </div>
               </div>
 
               <Button
@@ -368,9 +402,10 @@ export default function Account() {
                 disabled={saving}
                 style={{
                   width: "100%",
-                  padding: "0.5rem",
+                  padding: "0.7rem",
+                  marginTop: "1rem",
                   borderRadius: 10,
-                  fontSize: ".9rem",
+                  fontSize: ".95rem",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",

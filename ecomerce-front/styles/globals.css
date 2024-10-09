@@ -6,9 +6,9 @@
 }
 
 input:-webkit-autofill {
-  -webkit-box-shadow: 0 0 0 50px #fff inset;
-  box-shadow: transparent;
-  -webkit-text-fill-color: #1c2229 !important;
+  -webkit-box-shadow: 0 0 0 1000px white inset !important;
+  box-shadow: 0 0 0 1000px white inset !important;
+  -webkit-text-fill-color: #111 !important;
 }
 
 /* Root container for the PhoneInput */
@@ -24,9 +24,9 @@ input:-webkit-autofill {
   /* transition: border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out; */
 }
 
-.PhoneInput:hover {
+/* .PhoneInput:hover {
   border-color: #111;
-}
+} */
 
 /* Input field styling */
 .PhoneInputInput {
