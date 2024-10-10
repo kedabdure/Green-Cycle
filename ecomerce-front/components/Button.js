@@ -4,7 +4,6 @@ import { primary } from "../lib/colors";
 export const ButtonStyle = css`
   border: 0;
   padding: 5px 12px;
-  border-radius: 5px;
   cursor: pointer;
   display: inline-flex;
   align-items: center;

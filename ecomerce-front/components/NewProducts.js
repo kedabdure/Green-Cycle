@@ -19,13 +19,15 @@ const ProductsGrid = styled.div`
   }
 `;
 
+const newArrivals = true;
+
 export default function NewProducts({ newProducts }) {
   return (
     <Center>
       <Title>New Arrivals</Title>
       <ProductsGrid>
         {newProducts.map((product) => (
-          <ProductBox key={product._id} {...product} />
+          <ProductBox key={product._id} {...product} badge={newArrivals} />
         ))}
       </ProductsGrid>
     </Center>

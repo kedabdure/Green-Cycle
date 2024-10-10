@@ -6,6 +6,7 @@ import CartIcon from "./icons/CartIcon";
 import ButtonLink from "./ButtonLink";
 import { CartContext } from "./CartContext";
 import FlyingBtn from "./FlyingButton";
+import CustomFlyingButton from "./FlyingButton";
 
 const Bg = styled.div`
   background-color: #222;
@@ -87,15 +88,15 @@ export default function Featured({ product }) {
               <Desc>{product.description}</Desc>
               <ButtonWrapper>
                 <ButtonLink $white $outline href={"/product/" + product._id}>Read more</ButtonLink>
-                <FlyingBtn
-                  $white
-                  $outline
+                <CustomFlyingButton
+                  filled
+                  outline
                   url={product.images[0]}
                   productID={product._id}
                 >
                   <CartIcon />
                   Add to cart
-                </FlyingBtn>
+                </CustomFlyingButton>
               </ButtonWrapper>
             </div>
           </Column>

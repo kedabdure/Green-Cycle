@@ -5,7 +5,7 @@ import "../styles/globals.css";
 
 const GlobalStyles = createGlobalStyle`
   body {
-    background-color: #eee;
+    background-color: #f1f1f1;
     padding: 0;
     margin: 0;
     font-family: 'Poppins', sans-serif; /* The font family is now available globally */

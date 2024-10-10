@@ -101,7 +101,6 @@ const StyledInputLabel = styled.label`
 const ImageWrapper = styled.div`
   width: 100%;
   max-width: 110px;
-  background-color: #eee;
   display: flex;
   flex-direction: column;
   gap: 3px;
