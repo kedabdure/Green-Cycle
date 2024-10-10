@@ -8,6 +8,8 @@ import BarsIcon from "./icons/Bars";
 import CartIcon from "./icons/CartIcon";
 import Close from "./icons/Close";
 import { signIn, useSession, signOut } from "next-auth/react";
+import Image from "next/image";
+import { Router, useRouter } from 'next/router';
 
 
 const StyledHeader = styled.header`
@@ -190,8 +192,6 @@ const OutlinedButton = styled.div`
   padding: 8px 0;
   text-align: center;
   font-size: 1rem;
-  // background-color: #fb8122;
-  // border: 1px solid #fb8122;
   border: none;
   border-radius: 4px;
   color: #ccc;
@@ -204,17 +204,36 @@ const OutlinedButton = styled.div`
 const LogoutWrapper = styled.div`
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 15px;
   color: #ccc;
   font-size: 1rem;
 `;
 
+const StyledSpan = styled.span`
+  width: 33px;
+  height: 33px;
+  font-size: 1rem;
+  color: #fff;
+  background: linear-gradient(145deg, #ff8a00, #e52e71, #00c6ff);
+  padding: 2px;
+  border-radius: 50%;
+`;
+
+const StyledImage = styled(Image)`
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  margin: 0 auto;
+  }
+`;
 export default function Header() {
   const { cartProducts } = useContext(CartContext);
   const [mobileNavActive, setMobileNavActive] = useState(false);
+  const router = useRouter()
 
   const { data: session, status } = useSession();
-  const username = session?.user?.name.split(" ")[0];
+  const nameFirstChar = session?.user?.name.split(" ")[0][0].toUpperCase();
+  const image = session?.user?.image;
 
   return (
     <StyledHeader>
@@ -228,8 +247,8 @@ export default function Header() {
             <NavLink href={"/"}>Home</NavLink>
             <NavLink href={"/products"}>All products</NavLink>
             <NavLink href={"/categories"}>Categories</NavLink>
-            <NavLink href={"/account"}>Account</NavLink>
-
+            <NavLink href={"/about"}>About</NavLink>
+            {mobileNavActive && <NavLink href={"/account"}>Account</NavLink>}
             {/* Mobile Buttons */}
             <MobileButtons>
               {session && status === "authenticated" && (
@@ -269,9 +288,9 @@ export default function Header() {
               )}
               {session && status === "authenticated" && (
                 <LogoutWrapper>
-                  <p>
-                    hello, {username}
-                  </p>
+                  <StyledSpan onClick={() => router.push('/account')}>
+                    {image ? <StyledImage src={image} width={30} height={30} alt="profile" /> : nameFirstChar}
+                  </StyledSpan>
                   <Button onClick={() => signOut()}>logout</Button>
                 </LogoutWrapper>
               )}

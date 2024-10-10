@@ -249,7 +249,7 @@ export default function Account() {
         console.error("Upload error:", error);
         setSnackbarState({
           open: true,
-          message: `Upload failed: ${error.message}`,
+          message: `Upload failed. Please try again later!`,
           severity: "error",
         });
       } finally {
