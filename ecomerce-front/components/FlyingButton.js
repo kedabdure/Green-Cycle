@@ -1,15 +1,20 @@
-import React, { useContext, useRef } from 'react';
-import { Button } from '@mui/material';
+import React, { useContext } from 'react';
+import { Button, Box } from '@mui/material';
 import styled from '@emotion/styled';
 import FlyingButton from 'updated-react-flying-item';
 import { CartContext } from './CartContext';
 
-const StyledButton = styled(Button)`
+const StyledButton = styled(Box)`
   border: none;
   font-family: 'Poppins', sans-serif;
   font-weight: 500;
   text-transform: none;
   height: 38.5px;
+  display: flex;
+  align-items: center;
+  padding: 0 15px;
+  cursor: pointer;
+  transition: all 0.3s ease;
 
   svg {
     height: 16px;
@@ -21,6 +26,11 @@ const StyledButton = styled(Button)`
     `
     background-color: transparent;
     color: #000;
+
+    &:hover {
+      background-color: #000;
+      color: #fff;
+    }
   `}
 
   ${({ filled }) =>
@@ -31,27 +41,21 @@ const StyledButton = styled(Button)`
   `}
 `;
 
-// Main Component
 export default function CustomFlyingButton({
   children,
   url,
   outline,
   filled,
   productID,
-  ...rest
 }) {
   const { addProduct } = useContext(CartContext);
-  const flyingButtonRef = useRef(null);
-
   const handleAddToCart = (e) => {
     addProduct(productID);
-    flyingButtonRef.current?.click();
   };
 
   return (
     <div style={{ position: 'relative', display: 'inline-block' }}>
       <FlyingButton
-        ref={flyingButtonRef}
         src={url}
         targetTop="2%"
         targetLeft="88%"
@@ -63,8 +67,8 @@ export default function CustomFlyingButton({
           30% { transform: scale(1.2); }
           40% { transform: scale(1.1); }
           50% { transform: scale(1.0); }
-          60% { transform: scale(0.4); }
-          70% { transform: scale(0.3); }
+          60% { transform: scale(0.8); }
+          70% { transform: scale(0.4); }
           80% { transform: scale(0.2); }
           100% { transform: scale(0.1); }
         `}
@@ -83,7 +87,6 @@ export default function CustomFlyingButton({
         <StyledButton
           variant="contained"
           onClick={handleAddToCart}
-          {...rest}
           outline={outline}
           filled={filled}
         >

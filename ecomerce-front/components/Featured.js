@@ -89,7 +89,7 @@ export default function Featured({ product }) {
               <ButtonWrapper>
                 <ButtonLink $white $outline href={"/product/" + product._id}>Read more</ButtonLink>
                 <CustomFlyingButton
-                  filled
+                  filled='true'
                   outline
                   url={product.images[0]}
                   productID={product._id}

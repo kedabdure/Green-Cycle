@@ -4,44 +4,39 @@ import styled from 'styled-components';
 import axios from 'axios';
 import jsPDF from 'jspdf';
 import { CartContext } from '../components/CartContext';
+import {
+  Container,
+  Paper,
+  Typography,
+  Button,
+  Grid,
+  Divider,
+} from '@mui/material';
 
-const Container = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  background-color: #f4f4f9;
+// Styled Components
+const StyledPaper = styled(Paper)`
   padding: 20px;
-`;
-
-const Card = styled.div`
-  background: #ffffff;
-  padding: 30px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   border-radius: 10px;
-  width: 80%;
+  background: #ffffff; /* White background for the receipt */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  width: 90%;
   max-width: 600px;
+  margin: 20px auto;
+`;
+
+const ReceiptHeader = styled(Typography)`
+  color: #ff5722; /* Vibrant color for the title */
+  font-size: 1.5rem !important;
+  font-weight: 800 !important;
+
   text-align: center;
-`;
-
-const Title = styled.h1`
-  font-size: 2em;
-  color: #333333;
-  margin-bottom: 20px;
-`;
-
-const OrderDetails = styled.div`
-  text-align: left;
-  margin-bottom: 20px;
-  p {
-    margin: 5px 0;
-  }
+  margin-bottom: 15px;
 `;
 
 const LineItemsContainer = styled.div`
   margin: 20px 0;
-  background: #f9f9f9;
-  padding: 15px;
+  background: rgba(240, 240, 240, 0.8); /* Light gray background for line items */
+  padding: 10px;
   border-radius: 5px;
 `;
 
@@ -49,33 +44,23 @@ const LineItem = styled.div`
   display: flex;
   justify-content: space-between;
   padding: 5px 0;
-  border-bottom: 1px solid #eaeaea;
-`;
-
-const ItemDetail = styled.span`
-  font-size: 0.9em;
-  color: #555;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 `;
 
 const TotalPrice = styled.p`
   font-weight: bold;
-  font-size: 1.2em;
-  color: #0070f3;
+  font-size: 1.3em;
+  color: #ff5722; /* Color for the total price */
+  margin: 10px 0;
 `;
 
-const Button = styled.button`
-  background-color: #0070f3;
-  color: white;
-  padding: 12px 20px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 1em;
-  margin-top: 15px;
-
-  &:hover {
-    background-color: #005bb5;
-  }
+const StyledButton = styled(Button)`
+  margin: 10px 0 20px 0 !important;
+  width: 100%;
+  max-width: 200px;
+  font-size: .9em;
+  text-transform: none !important;
+  margin-right: 10px !important;
 `;
 
 export default function OrderSummary() {
@@ -104,7 +89,8 @@ export default function OrderSummary() {
 
   // Calculate the total price of all items
   const calculateTotalPrice = () => {
-    return order.line_items.reduce((total, item) => total + item.quantity * item.price_data.amount, 0);
+    if (!order || !order.line_items) return 0;
+    return order.line_items.reduce((total, item) => total + (item.quantity * item.price_data.amount), 0);
   };
 
   // Generate PDF for download
@@ -137,41 +123,47 @@ export default function OrderSummary() {
     doc.save(`Order-${order.tx_ref}.pdf`);
   };
 
-  if (loading) return <p>Loading...</p>;
-  if (!order) return <p>No order found.</p>;
+  if (loading) return <Typography variant="h6">Loading...</Typography>;
+  if (!order) return <Typography variant="h6">No order found.</Typography>;
 
   return (
     <Container>
-      <Card>
-        <Title>Order Summary</Title>
-        <OrderDetails>
-          <p><strong>Order ID:</strong> {order._id}</p>
-          <p><strong>Transaction Reference:</strong> {order.tx_ref}</p>
-          <p><strong>Status:</strong> {order.paid ? 'Paid' : 'Pending'}</p>
-          <p><strong>Customer:</strong> {order.firstName} {order.lastName}</p>
-          <p><strong>Phone:</strong> {order.phone}</p>
-          <p><strong>Email:</strong> {order.email}</p>
-          <p><strong>Country:</strong> {order.country}</p>
-          <p><strong>City:</strong> {order.city}</p>
-          <p><strong>Sub-City:</strong> {order.subCity}</p>
-          <p><strong>Wereda:</strong> {order.wereda}</p>
-          <p><strong>Street Address:</strong> {order.streetAddress}</p>
-        </OrderDetails>
+      <StyledPaper elevation={3}>
+        <ReceiptHeader gutterBottom>Order Summary</ReceiptHeader>
+        <Divider style={{ marginBottom: '20px' }} />
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <Typography sx={{ fontSize: '.95rem', mb: '.3rem'}}>Order ID: {order._id}</Typography>
+            <Typography sx={{ fontSize: '.95rem', mb: '.3rem'}}>Transaction Reference: {order.tx_ref}</Typography>
+            <Typography sx={{ fontSize: '.95rem', mb: '.3rem'}}>Status: {order.paid ? 'Paid' : 'Pending'}</Typography>
+            <Typography sx={{ fontSize: '.95rem', mb: '.3rem'}}>Customer: {order.firstName} {order.lastName}</Typography>
+            <Typography sx={{ fontSize: '.95rem', mb: '.3rem'}}>Phone: {order.phone}</Typography>
+            <Typography sx={{ fontSize: '.95rem', mb: '.3rem'}}>Email: {order.email}</Typography>
+            <Typography sx={{ fontSize: '.95rem', mb: '.3rem'}}>Country: {order.country}</Typography>
+            <Typography sx={{ fontSize: '.95rem', mb: '.3rem'}}>City: {order.city}</Typography>
+            <Typography sx={{ fontSize: '.95rem', mb: '.3rem'}}>Sub-City: {order.subCity}</Typography>
+            <Typography sx={{ fontSize: '.95rem', mb: '.3rem'}}>Street Address: {order.streetAddress}</Typography>
+          </Grid>
+        </Grid>
         <LineItemsContainer>
-          <h3>Order Details</h3>
+          <Typography variant="h5" gutterBottom>Order Details</Typography>
           {order.line_items.map((item, index) => (
             <LineItem key={index}>
-              <ItemDetail><strong>{item.price_data.product_data.name}</strong></ItemDetail>
-              <ItemDetail>Qty: {item.quantity}</ItemDetail>
-              <ItemDetail>Price: {item.price_data.amount} ETB</ItemDetail>
-              <ItemDetail>Total: {item.quantity * item.price_data.amount} ETB</ItemDetail>
+              <span><strong>{item.price_data.product_data.name}</strong></span>
+              <span>Qty: {item.quantity}</span>
+              <span>Price: {item.price_data.amount} ETB</span>
+              <span>Total: {item.quantity * item.price_data.amount} ETB</span>
             </LineItem>
           ))}
         </LineItemsContainer>
         <TotalPrice>Total Price: {calculateTotalPrice()} ETB</TotalPrice>
-        <Button onClick={downloadReceipt}>Download Receipt</Button>
-        <Button onClick={() => router.push('/')}>Go to Home</Button>
-      </Card>
+        <StyledButton variant="contained" color="primary" onClick={downloadReceipt}>
+          Download Receipt
+        </StyledButton>
+        <StyledButton variant="outlined" color="secondary" onClick={() => router.push('/')}>
+          Go to Home
+        </StyledButton>
+      </StyledPaper>
     </Container>
   );
 }
