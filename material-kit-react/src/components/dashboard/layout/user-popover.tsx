@@ -24,31 +24,18 @@ export interface UserPopoverProps {
 }
 
 export function UserPopover({ anchorEl, onClose, open }: UserPopoverProps): React.JSX.Element {
-  const { checkSession, user, error } = useUser();
-
+  const { checkSession, user } = useUser();
   const router = useRouter();
 
   const name = user?.name || '';
   const email = user?.email || '';
-  const image = user?.image || '';
-
 
   const handleSignOut = React.useCallback(async (): Promise<void> => {
     try {
-      const res = await signOut();
-      console.log("signout: " + res)
-
-      // if (res?.) {
-      //   logger.error('Sign out error', error);
-      //   return;
-      // }
-
-      // Refresh the auth state
+      await signOut();
       await checkSession?.();
 
-      // UserProvider, for this case, will not refresh the router and we need to do it manually
       router.refresh();
-      // After refresh, AuthGuard will handle the redirect
     } catch (err) {
       logger.error('Sign out error', err);
     }
@@ -63,9 +50,9 @@ export function UserPopover({ anchorEl, onClose, open }: UserPopoverProps): Reac
       slotProps={{ paper: { sx: { width: '240px' } } }}
     >
       <Box sx={{ p: '16px 20px ' }}>
-        <Typography variant="subtitle1">Sofia Rivers</Typography>
+        <Typography variant="subtitle1">{name}</Typography>
         <Typography color="text.secondary" variant="body2">
-          sofia.rivers@devias.io
+          {email}
         </Typography>
       </Box>
       <Divider />

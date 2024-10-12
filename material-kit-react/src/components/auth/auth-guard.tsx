@@ -2,10 +2,8 @@
 
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
-import Alert from '@mui/material/Alert';
 
 import { paths } from '@/paths';
-import { logger } from '@/lib/default-logger';
 import { useUser } from '@/hooks/use-user';
 
 export interface AuthGuardProps {
@@ -14,7 +12,7 @@ export interface AuthGuardProps {
 
 export function AuthGuard({ children }: AuthGuardProps): React.JSX.Element | null {
   const router = useRouter();
-  const { user, error, isLoading } = useUser();
+  const { user, isLoading } = useUser();
   const [isChecking, setIsChecking] = React.useState<boolean>(true);
 
   const checkPermissions = async (): Promise<void> => {
@@ -22,7 +20,7 @@ export function AuthGuard({ children }: AuthGuardProps): React.JSX.Element | nul
       return;
     }
 
-    if (error || !user) {
+    if (!user) {
       router.replace(paths.auth.signIn);
       return;
     }
@@ -34,15 +32,10 @@ export function AuthGuard({ children }: AuthGuardProps): React.JSX.Element | nul
     checkPermissions().catch(() => {
       // noop
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- Expected
-  }, [user, error, isLoading]);
+  }, [user, isLoading]);
 
   if (isChecking) {
     return null;
-  }
-
-  if (error) {
-    return <Alert color="error">{error}</Alert>;
   }
 
   return <React.Fragment>{children}</React.Fragment>;

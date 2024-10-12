@@ -24,7 +24,6 @@ const options = {
         password: { label: 'Password', type: 'password' },
       },
       async authorize(credentials) {
-        // Validate credentials
         if (!credentials?.email || !credentials.password) {
           throw new Error('Email and password are required!');
         }
@@ -45,7 +44,6 @@ const options = {
             password: adminPassword,
             role: 'super_admin',
           });
-          console.log('Super admin created successfully!');
         }
 
         const admin = (await Admin.findOne({ email })) as {
@@ -94,25 +92,50 @@ callbacks: {
         token.email = user.email;
         token.image = user.image;
         token.role = user.role;
-        console.log('JWT Callback - Updated Token with User Info:', token);
+      } else {
+        await mongooseConnect();
+        const dbUser = await Admin.findById(token.id);
+        if (dbUser) {
+          token.email = dbUser.email;
+          token.name = dbUser.name;
+          token.image = dbUser.image;
+        }
       }
       return token;
     },
 
     async session({ session, token }: { session: any; token: any }) {
-      console.log('Session Callback - Token:', token);
-
       session.id = token.id;
       session.name = token.name;
       session.email = token.email;
       session.image = token.image;
       session.role = token.role;
 
-      console.log('Session Callback - Session:', session); // Debugging
       return session;
     },
   },
-  debug: process.env.NODE_ENV === 'development',
+  events: {
+    async updateUser({ user }: { user: any }) {
+      console.log("User was updated:", user);
+
+      await updateUserToken(user._id, user.email, user.name, user.image);
+    },
+  },
+
+  // debug: process.env.NODE_ENV === 'development',
+};
+
+async function updateUserToken(userId: string, email: string, name: string, image: string) {
+  await mongooseConnect();
+  const user = await Admin.findById(userId);
+
+  if (user) {
+    user.email = email;
+    user.name = name;
+    user.image = image;
+
+    await user.save();
+  }
 };
 
 export const GET = NextAuth(options);

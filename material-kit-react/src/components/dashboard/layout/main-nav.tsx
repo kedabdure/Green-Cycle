@@ -16,16 +16,13 @@ import { usePopover } from '@/hooks/use-popover';
 
 import { MobileNav } from './mobile-nav';
 import { UserPopover } from './user-popover';
-import { useSession } from 'next-auth/react';
+import { useUser } from '@/hooks/use-user';
 
 
 export function MainNav(): React.JSX.Element {
   const [openNav, setOpenNav] = React.useState<boolean>(false);
-  const {data: session, status} = useSession()
-
-  console.log(session)
-
   const userPopover = usePopover<HTMLDivElement>();
+  const {user} = useUser();
 
   return (
     <React.Fragment>
@@ -75,7 +72,7 @@ export function MainNav(): React.JSX.Element {
             <Avatar
               onClick={userPopover.handleOpen}
               ref={userPopover.anchorRef}
-              src="/assets/avatar.png"
+              src={user?.image || '/assets/avatar.png'}
               sx={{ cursor: 'pointer' }}
             />
           </Stack>

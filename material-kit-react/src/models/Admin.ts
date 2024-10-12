@@ -11,6 +11,9 @@ interface IAdmin extends Document {
   email: string;
   password: string;
   image?: string;
+  phone?: string;
+  city?: string;
+  country?: string;
   role: string;
   isPasswordValid(password: string): Promise<boolean>;
 }

@@ -18,8 +18,10 @@ export interface UserProviderProps {
   children: React.ReactNode;
 }
 
+
+// USER PROVIDER
 export function UserProvider({ children }: UserProviderProps): React.JSX.Element {
-  const { data: session, status } = useSession();
+  const { data: session, status, update } = useSession();
 
   const [state, setState] = React.useState<{ user: User | null; error: string | null; isLoading: boolean }>({
     user: null,
@@ -57,7 +59,7 @@ export function UserProvider({ children }: UserProviderProps): React.JSX.Element
     });
   }, [status]);
 
-  return <UserContext.Provider value={{ ...state, checkSession }}>{children}</UserContext.Provider>;
+  return <UserContext.Provider value={{ ...state, checkSession, }}>{children}</UserContext.Provider>;
 }
 
 export const UserConsumer = UserContext.Consumer;
