@@ -34,31 +34,40 @@ const accountDetailsSchema = z.object({
 type FormValues = z.infer<typeof accountDetailsSchema>;
 
 export function AccountDetailsForm(): React.JSX.Element {
-  const { user, updateUser } = useUser();
+  const { user, updateUser, adminInfo } = useUser();
   const [snackbarState, setSnackbarState] = useState<{ open: boolean; message: string; severity: 'error' | 'warning' | 'info' | 'success' | undefined }>({ open: false, message: "", severity: undefined });
 
-  const initialFormData: FormValues = {
+  const [isUpdating, setIsUpdating] = useState(false);
+  const [formData, setFormData] = useState<FormValues>({
     firstName: user?.name?.split(' ')[0] || '',
     lastName: user?.name?.split(' ')[1] || '',
     email: user?.email || '',
-    phone: typeof user?.phone === 'string' ? user.phone : '',
-    city: typeof user?.city === 'string' ? user.city : '',
-    country: typeof user?.country === 'string' ? user.country : '',
-  };
+    phone: '',
+    city: '',
+    country: '',
+  });
 
-  const [isUpdating, setIsUpdating] = useState(false)
-  const [formData, setFormData] = useState<FormValues>(initialFormData);
   const [errors, setErrors] = useState<Partial<FormValues>>({});
+
+  // Update formData whenever adminInfo changes
+  useEffect(() => {
+    if (adminInfo) {
+      setFormData((prev) => ({
+        ...prev,
+        phone: adminInfo.phone || '',
+        city: adminInfo.city || '',
+        country: adminInfo.country || '',
+      }));
+    }
+  }, [adminInfo]);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
     setIsUpdating(true);
 
     // VALIDATE
@@ -66,13 +75,12 @@ export function AccountDetailsForm(): React.JSX.Element {
 
     if (!result.success) {
       const formErrors = result.error.formErrors.fieldErrors;
-      setIsUpdating(false)
+      setIsUpdating(false);
       setErrors(
         Object.fromEntries(
           Object.entries(formErrors).map(([key, value]) => [key, value?.[0]])
         ) as Partial<FormValues>
       );
-
       return;
     }
 
@@ -81,7 +89,7 @@ export function AccountDetailsForm(): React.JSX.Element {
     try {
       const response = await axios.put('/api/admin', formData);
       if (response.status !== 200) {
-        setIsUpdating(false)
+        setIsUpdating(false);
         setSnackbarState({
           severity: "error",
           message: "Failed to update profile!",
@@ -89,7 +97,7 @@ export function AccountDetailsForm(): React.JSX.Element {
         });
         throw new Error('Failed to update profile');
       }
-      setIsUpdating(false)
+      setIsUpdating(false);
       setSnackbarState({
         severity: "success",
         message: "Profile updated successfully!",
@@ -101,16 +109,14 @@ export function AccountDetailsForm(): React.JSX.Element {
       }
     } catch (error) {
       console.error('Error updating profile:', error);
-      setIsUpdating(false)
+      setIsUpdating(false);
     }
   };
 
   const handleCloseSnackbar = () => setSnackbarState({ open: false, message: "", severity: undefined });
 
-
   return (
     <form onSubmit={handleSubmit}>
-
       <Card>
         <Stack padding="0" marginTop="0" spacing={2}>
           <Snackbar
