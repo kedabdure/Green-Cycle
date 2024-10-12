@@ -13,7 +13,6 @@ const UserSchema = new Schema(
     city: { type: String },
     country: { type: String },
     postalCode: { type: String },
-    isAdmin: {type: Boolean, default: false}
   },
   { timestamps: true }
 );
@@ -28,7 +27,7 @@ UserSchema.pre("save", async function (next) {
     user.password = await bcrypt.hash(user.password, salt);
     next();
   } catch (err) {
-    return next(err);
+    return next(err as Error);
   }
 });
 

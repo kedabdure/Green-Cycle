@@ -24,12 +24,15 @@ function noop(): void {
 
 export interface Customer {
   id: string;
-  avatar: string;
+  image: string;
   name: string;
   email: string;
-  address: { city: string; state: string; country: string; street: string };
   phone: string;
+  streetAddress: string;
+  city: string;
+  country: string;
   createdAt: Date;
+  updatedAt?: Date;
 }
 
 interface CustomersTableProps {
@@ -75,8 +78,8 @@ export function CustomersTable({
               </TableCell>
               <TableCell>Name</TableCell>
               <TableCell>Email</TableCell>
-              <TableCell>Location</TableCell>
               <TableCell>Phone</TableCell>
+              <TableCell>Location</TableCell>
               <TableCell>Signed Up</TableCell>
             </TableRow>
           </TableHead>
@@ -85,7 +88,7 @@ export function CustomersTable({
               const isSelected = selected?.has(row.id);
 
               return (
-                <TableRow hover key={row.id} selected={isSelected}>
+                <TableRow hover key={row.email} selected={isSelected}>
                   <TableCell padding="checkbox">
                     <Checkbox
                       checked={isSelected}
@@ -100,13 +103,13 @@ export function CustomersTable({
                   </TableCell>
                   <TableCell>
                     <Stack sx={{ alignItems: 'center' }} direction="row" spacing={2}>
-                      <Avatar src={row.avatar} />
+                      <Avatar src={row.image} />
                       <Typography variant="subtitle2">{row.name}</Typography>
                     </Stack>
                   </TableCell>
                   <TableCell>{row.email}</TableCell>
                   <TableCell>
-                    {row.address.city}, {row.address.state}, {row.address.country}
+                    {row.streetAddress}, {row.city}, {row.country}
                   </TableCell>
                   <TableCell>{row.phone}</TableCell>
                   <TableCell>{dayjs(row.createdAt).format('MMM D, YYYY')}</TableCell>
@@ -114,6 +117,7 @@ export function CustomersTable({
               );
             })}
           </TableBody>
+
         </Table>
       </Box>
       <Divider />
