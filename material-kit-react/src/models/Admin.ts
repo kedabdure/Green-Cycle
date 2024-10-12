@@ -24,6 +24,9 @@ const AdminSchema = new Schema<IAdmin>(
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     image: { type: String, default: '' },
+    phone: {type: String, default: ''},
+    city: {type: String, default: ''},
+    country: {type: String, default: ''},
     role: {
       type: String,
       enum: [ROLES.ADMIN, ROLES.SUPER_ADMIN],

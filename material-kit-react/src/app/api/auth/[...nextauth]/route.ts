@@ -96,6 +96,7 @@ callbacks: {
         await mongooseConnect();
         const dbUser = await Admin.findById(token.id);
         if (dbUser) {
+          token.email = dbUser._id;
           token.email = dbUser.email;
           token.name = dbUser.name;
           token.image = dbUser.image;
@@ -121,8 +122,6 @@ callbacks: {
       await updateUserToken(user._id, user.email, user.name, user.image);
     },
   },
-
-  // debug: process.env.NODE_ENV === 'development',
 };
 
 async function updateUserToken(userId: string, email: string, name: string, image: string) {

@@ -34,7 +34,7 @@ const accountDetailsSchema = z.object({
 type FormValues = z.infer<typeof accountDetailsSchema>;
 
 export function AccountDetailsForm(): React.JSX.Element {
-  const { user } = useUser();
+  const { user, updateUser } = useUser();
   const [snackbarState, setSnackbarState] = useState<{ open: boolean; message: string; severity: 'error' | 'warning' | 'info' | 'success' | undefined }>({ open: false, message: "", severity: undefined });
 
   const initialFormData: FormValues = {
@@ -49,10 +49,6 @@ export function AccountDetailsForm(): React.JSX.Element {
   const [isUpdating, setIsUpdating] = useState(false)
   const [formData, setFormData] = useState<FormValues>(initialFormData);
   const [errors, setErrors] = useState<Partial<FormValues>>({});
-
-  console.log("user id: "+user?.id)
-  console.log(user)
-
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -99,7 +95,10 @@ export function AccountDetailsForm(): React.JSX.Element {
         message: "Profile updated successfully!",
         open: true,
       });
-      console.log('Profile updated successfully');
+
+      if (updateUser) {
+        await updateUser(formData);
+      }
     } catch (error) {
       console.error('Error updating profile:', error);
       setIsUpdating(false)
@@ -172,6 +171,7 @@ export function AccountDetailsForm(): React.JSX.Element {
                   onChange={handleInputChange}
                   label="Email address"
                   name="email"
+                  disabled
                   error={Boolean(errors.email)}
                 />
                 {errors.email && <p>{errors.email}</p>}
