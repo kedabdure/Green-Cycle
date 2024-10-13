@@ -8,21 +8,16 @@ import { Upload as UploadIcon } from '@phosphor-icons/react/dist/ssr/Upload';
 
 import { config } from '@/config';
 import { ProductsFilters } from '@/components/dashboard/product/products-filters';
-import { ProductInterface, ProductsTable } from '@/components/dashboard/product/products-table';
+import { ProductsTable } from '@/components/dashboard/product/products-table';
 import { mongooseConnect } from '@/lib/mongoose';
 import { Product } from '@/models/Product';
 
-// Metadata can still be defined for the page
 export const metadata = { title: `Products | Dashboard | ${config.site.name}` };
 
 export default async function Page(): Promise<React.JSX.Element> {
   await mongooseConnect();
   const products = await Product.find();
   const productsData = JSON.parse(JSON.stringify(products));
-
-  const page = 0;
-  const rowsPerPage = 5;
-  const paginatedProducts = applyPagination(productsData, page, rowsPerPage);
 
   return (
     <Stack spacing={3}>
@@ -45,16 +40,7 @@ export default async function Page(): Promise<React.JSX.Element> {
         </div>
       </Stack>
       <ProductsFilters />
-      <ProductsTable
-        count={paginatedProducts.length}
-        page={page}
-        rows={paginatedProducts}
-        rowsPerPage={rowsPerPage}
-      />
+      <ProductsTable rows={productsData} />
     </Stack>
   );
-}
-
-function applyPagination(rows: ProductInterface[], page: number, rowsPerPage: number): ProductInterface[] {
-  return rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 }

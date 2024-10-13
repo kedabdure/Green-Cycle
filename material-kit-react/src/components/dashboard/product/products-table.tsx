@@ -15,7 +15,6 @@ import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
 import dayjs from 'dayjs';
-
 import { useSelection } from '@/hooks/use-selection';
 import Image from 'next/image';
 
@@ -35,26 +34,35 @@ export interface ProductInterface {
 }
 
 interface ProductsTableProps {
-  count?: number;
-  page?: number;
   rows?: ProductInterface[];
-  rowsPerPage?: number;
 }
 
-export function ProductsTable({
-  count = 0,
-  rows = [],
-  page = 0,
-  rowsPerPage = 0,
-}: ProductsTableProps): React.JSX.Element {
+export function ProductsTable({ rows = [] }: ProductsTableProps): React.JSX.Element {
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+
   const rowIds = React.useMemo(() => {
     return rows.map((product) => product._id);
   }, [rows]);
 
   const { selectAll, deselectAll, selectOne, deselectOne, selected } = useSelection(rowIds);
-
   const selectedSome = (selected?.size ?? 0) > 0 && (selected?.size ?? 0) < rows.length;
   const selectedAll = rows.length > 0 && selected?.size === rows.length;
+
+  const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
+  function applyPagination(rows: ProductInterface[], page: number, rowsPerPage: number): ProductInterface[] {
+    return rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+  }
+
+  const paginatedRows = applyPagination(rows, page, rowsPerPage);
 
   return (
     <Card>
@@ -76,15 +84,12 @@ export function ProductsTable({
                 />
               </TableCell>
               <TableCell>Title</TableCell>
-              <TableCell>Description</TableCell>
               <TableCell>Price</TableCell>
-              {/* <TableCell>Category</TableCell> */}
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.map((row) => {
+            {paginatedRows.map((row) => {
               const isSelected = selected?.has(row._id);
-
               return (
                 <TableRow hover key={row._id} selected={isSelected}>
                   <TableCell padding="checkbox">
@@ -101,31 +106,26 @@ export function ProductsTable({
                   </TableCell>
                   <TableCell>
                     <Stack sx={{ alignItems: 'center' }} direction="row" spacing={2}>
-                      <Image src={row.images[0]} width={80} height={80} alt={'Product photo'} />
+                      <Image src={row.images[0]} width={60} height={60} alt={'Product photo'} />
                       <Typography variant="subtitle2">{row.title}</Typography>
                     </Stack>
                   </TableCell>
-                  <TableCell>{row.description}</TableCell>
+                  {/* <TableCell>{row.description}</TableCell> */}
                   <TableCell>{row.price}</TableCell>
-                  {/* <TableCell>
-                    {row.category}
-                  </TableCell> */}
                 </TableRow>
               );
             })}
           </TableBody>
-
         </Table>
       </Box>
       <Divider />
       <TablePagination
         component="div"
-        count={count}
-        onPageChange={noop}
-        onRowsPerPageChange={noop}
+        count={rows.length}
         page={page}
+        onPageChange={handleChangePage}
         rowsPerPage={rowsPerPage}
-        rowsPerPageOptions={[5, 10, 25]}
+        onRowsPerPageChange={handleChangeRowsPerPage}
       />
     </Card>
   );
