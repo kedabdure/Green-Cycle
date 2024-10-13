@@ -17,39 +17,38 @@ import Typography from '@mui/material/Typography';
 import dayjs from 'dayjs';
 
 import { useSelection } from '@/hooks/use-selection';
+import Image from 'next/image';
 
 function noop(): void {
   // do nothing
 }
 
-export interface Customer {
+export interface ProductInterface {
   _id: string;
-  image: string;
-  name: string;
-  email: string;
-  phone: string;
-  streetAddress: string;
-  city: string;
-  country: string;
-  createdAt: Date;
+  title: string;
+  description?: string;
+  price: number;
+  images: string[];
+  category: string;
+  properties: Record<string, unknown>;
   updatedAt?: Date;
 }
 
-interface CustomersTableProps {
+interface ProductsTableProps {
   count?: number;
   page?: number;
-  rows?: Customer[];
+  rows?: ProductInterface[];
   rowsPerPage?: number;
 }
 
-export function CustomersTable({
+export function ProductsTable({
   count = 0,
   rows = [],
   page = 0,
   rowsPerPage = 0,
-}: CustomersTableProps): React.JSX.Element {
+}: ProductsTableProps): React.JSX.Element {
   const rowIds = React.useMemo(() => {
-    return rows.map((customer) => customer._id);
+    return rows.map((product) => product._id);
   }, [rows]);
 
   const { selectAll, deselectAll, selectOne, deselectOne, selected } = useSelection(rowIds);
@@ -76,11 +75,10 @@ export function CustomersTable({
                   }}
                 />
               </TableCell>
-              <TableCell>Name</TableCell>
-              <TableCell>Email</TableCell>
-              <TableCell>Phone</TableCell>
-              <TableCell>Location</TableCell>
-              <TableCell>Signed Up</TableCell>
+              <TableCell>Title</TableCell>
+              <TableCell>Description</TableCell>
+              <TableCell>Price</TableCell>
+              {/* <TableCell>Category</TableCell> */}
             </TableRow>
           </TableHead>
           <TableBody>
@@ -103,16 +101,15 @@ export function CustomersTable({
                   </TableCell>
                   <TableCell>
                     <Stack sx={{ alignItems: 'center' }} direction="row" spacing={2}>
-                      <Avatar src={row.image} />
-                      <Typography variant="subtitle2">{row.name}</Typography>
+                      <Image src={row.images[0]} width={80} height={80} alt={'Product photo'} />
+                      <Typography variant="subtitle2">{row.title}</Typography>
                     </Stack>
                   </TableCell>
-                  <TableCell>{row.email}</TableCell>
-                  <TableCell>{row.phone}</TableCell>
-                  <TableCell>
-                    {row.streetAddress}, {row.city},<br></br> {row.country}
-                  </TableCell>
-                  <TableCell>{dayjs(row.createdAt).format('MMM D, YYYY')}</TableCell>
+                  <TableCell>{row.description}</TableCell>
+                  <TableCell>{row.price}</TableCell>
+                  {/* <TableCell>
+                    {row.category}
+                  </TableCell> */}
                 </TableRow>
               );
             })}
