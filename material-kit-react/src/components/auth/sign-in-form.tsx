@@ -35,7 +35,7 @@ export function SignInForm(): React.JSX.Element {
 
   const [showPassword, setShowPassword] = React.useState<boolean>();
   const [isPending, setIsPending] = React.useState<boolean>(false);
-  const [serverError, setServerError] = React.useState<string | null>(null);  // Server error handling
+  const [serverError, setServerError] = React.useState<string | null>(null);
 
   const {
     control,
@@ -55,8 +55,8 @@ export function SignInForm(): React.JSX.Element {
       });
 
       if (res?.error) {
-        setError('root', { type: 'server', message: res.error });
-        setServerError(res.error);
+        setError('root', { type: 'server', message: "Check your connection. and try again!" });
+        setServerError("Check your connection. and try again!");
         setIsPending(false);
         return;
       }
@@ -136,16 +136,6 @@ export function SignInForm(): React.JSX.Element {
           </Button>
         </Stack>
       </form>
-      <Alert color="warning">
-        Use{' '}
-        <Typography component="span" sx={{ fontWeight: 700 }} variant="inherit">
-          admin@gmail.com
-        </Typography>{' '}
-        with password{' '}
-        <Typography component="span" sx={{ fontWeight: 700 }} variant="inherit">
-          admin1234
-        </Typography>
-      </Alert>
     </Stack>
   );
 }

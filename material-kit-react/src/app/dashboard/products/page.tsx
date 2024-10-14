@@ -11,6 +11,7 @@ import { ProductsFilters } from '@/components/dashboard/product/products-filters
 import { ProductsTable } from '@/components/dashboard/product/products-table';
 import { mongooseConnect } from '@/lib/mongoose';
 import { Product } from '@/models/Product';
+import Link from 'next/link';
 
 export const metadata = { title: `Products | Dashboard | ${config.site.name}` };
 
@@ -35,7 +36,9 @@ export default async function Page(): Promise<React.JSX.Element> {
         </Stack>
         <div>
           <Button startIcon={<PlusIcon fontSize="var(--icon-fontSize-md)" />} variant="contained">
-            Add
+            <Link href={'/dashboard/products/new'}>
+              Add
+            </Link>
           </Button>
         </div>
       </Stack>

@@ -1,7 +1,6 @@
 'use client';
 
 import * as React from 'react';
-import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Checkbox from '@mui/material/Checkbox';
@@ -16,6 +15,7 @@ import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
 import dayjs from 'dayjs';
 import { useSelection } from '@/hooks/use-selection';
+import ProductOptions from './products-actions';
 import Image from 'next/image';
 
 function noop(): void {
@@ -58,11 +58,16 @@ export function ProductsTable({ rows = [] }: ProductsTableProps): React.JSX.Elem
     setPage(0);
   };
 
+  // PAGINATION
   function applyPagination(rows: ProductInterface[], page: number, rowsPerPage: number): ProductInterface[] {
     return rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
   }
-
   const paginatedRows = applyPagination(rows, page, rowsPerPage);
+
+  // FORMATE PRICE
+  const formatePrice = (price: number): string => {
+    return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  }
 
   return (
     <Card>
@@ -85,6 +90,7 @@ export function ProductsTable({ rows = [] }: ProductsTableProps): React.JSX.Elem
               </TableCell>
               <TableCell>Title</TableCell>
               <TableCell>Price</TableCell>
+              <TableCell>Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -111,7 +117,10 @@ export function ProductsTable({ rows = [] }: ProductsTableProps): React.JSX.Elem
                     </Stack>
                   </TableCell>
                   {/* <TableCell>{row.description}</TableCell> */}
-                  <TableCell>{row.price}</TableCell>
+                  <TableCell>{formatePrice(row.price)} ETB</TableCell>
+                  <TableCell>
+                    <ProductOptions />
+                  </TableCell>
                 </TableRow>
               );
             })}
