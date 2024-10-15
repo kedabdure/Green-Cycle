@@ -17,7 +17,8 @@ export const metadata = { title: `Products | Dashboard | ${config.site.name}` };
 
 export default async function Page(): Promise<React.JSX.Element> {
   await mongooseConnect();
-  const products = await Product.find();
+
+  const products = await Product.find().sort({ updatedAt: -1 });
   const productsData = JSON.parse(JSON.stringify(products));
 
   return (
@@ -36,7 +37,14 @@ export default async function Page(): Promise<React.JSX.Element> {
         </Stack>
         <div>
           <Button startIcon={<PlusIcon fontSize="var(--icon-fontSize-md)" />} variant="contained">
-            <Link href={'/dashboard/products/new'}>
+            <Link
+            href={'/dashboard/products/new'}
+            style={{
+              textDecoration: 'none',
+              fontSize: '1rem',
+              color: '#f1f1f1'
+            }}
+            >
               Add
             </Link>
           </Button>

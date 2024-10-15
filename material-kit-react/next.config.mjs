@@ -1,22 +1,19 @@
-import { hostname } from 'os';
-
 /** @type {import('next').NextConfig} */
-const config = {
+const nextConfig = {
   reactStrictMode: true,
   images: {
     remotePatterns: [
       {
         protocol: 'https',
         hostname: 'i.imgur.com',
-        pathname: '/*'
       },
       {
         protocol: 'https',
         hostname: 'ik.imagekit.io',
-        pathname: '/*'
-      }
+        pathname: '/gfpycoip3/ecommerce/products/**',
+      },
     ],
   },
 };
 
-export default config;
+export default nextConfig;

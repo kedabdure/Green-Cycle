@@ -1,27 +1,32 @@
-import { NextResponse } from "next/server";
-import { mongooseConnect } from "@/lib/mongoose";
-import { Product } from "@/models/Product";
+import { NextResponse } from 'next/server';
+import { Product } from '@/models/Product';
 
-interface reqBody {
-  title: string;
-  description: string;
-  price: number;
-  images: string[];
-  category: string;
-  properties: any;
+import { mongooseConnect } from '@/lib/mongoose';
+
+// GET request handler
+export async function GET(req: Request) {
+  await mongooseConnect();
+
+  const url = new URL(req.url);
+  const id = url.searchParams.get('id');
+
+  if (id) {
+    const product = await Product.findOne({ _id: id });
+    return NextResponse.json(product);
+  } else {
+    const products = await Product.find();
+    return NextResponse.json(products);
+  }
 }
 
-export default async function POST(req: { type: any, body: reqBody }) {
-  const { title, description, price, images, category, properties } = req.body;
+// POST request handler
+export async function POST(req: Request) {
+  await mongooseConnect();
 
-  // Validate required fields
-  if (!title || !category || !price || !images.length) {
-    return NextResponse.json({ message: "Please fill in all required fields: Product name, category, price, and at least one image." }, { status: 400 });
-  }
+  const body = await req.json();
+  const { title, description, price, images, category, properties } = body;
 
-  // Save product to database
-try {  await mongooseConnect();
-  const productDocs = await Product.create({
+  const productDoc = await Product.create({
     title,
     description,
     price,
@@ -30,11 +35,32 @@ try {  await mongooseConnect();
     properties,
   });
 
-  if (!productDocs) {
-    return NextResponse.json({ message: "Unable to save product." }, { status: 500 });
-  } else {
-    return NextResponse.json(productDocs, { status: 200 });
-  }} catch (error) {
-    return NextResponse.json({ message: "Something went wrong. Please try again." }, { status: 500 });
-  };
+  return NextResponse.json(productDoc);
+}
+
+// PUT request handler
+export async function PUT(req: Request) {
+  await mongooseConnect();
+
+  const body = await req.json();
+  const { title, description, price, images, category, properties, _id } = body;
+
+  await Product.updateOne({ _id }, { title, description, price, images, category, properties });
+
+  return NextResponse.json({ success: true });
+}
+
+// DELETE request handler
+export async function DELETE(req: Request) {
+  await mongooseConnect();
+
+  const url = new URL(req.url);
+  const id = url.searchParams.get('id');
+
+  if (id) {
+    await Product.deleteOne({ _id: id });
+    return NextResponse.json({ success: true });
+  }
+
+  return NextResponse.json({ success: false, error: 'No ID provided' }, { status: 400 });
 }

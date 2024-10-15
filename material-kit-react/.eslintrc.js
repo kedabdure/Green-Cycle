@@ -12,7 +12,8 @@ module.exports = {
     require.resolve('@vercel/style-guide/eslint/next'),
   ],
   parserOptions: {
-    project,
+    "project": "./tsconfig.json",
+    "tsconfigRootDir": "./"
   },
   settings: {
     'import/resolver': {

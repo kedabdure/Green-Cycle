@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
 import { ReactSortable } from "react-sortablejs";
 import { CameraPlus as CameraPlusIcon } from "@phosphor-icons/react";
@@ -55,6 +56,8 @@ export default function ProductForm({
   const [price, setPrice] = useState(existingPrice || "");
   const [images, setImages] = useState<string[]>(existingImages || []);
   const [isUploading, setIsUploading] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const router = useRouter();
 
 
   useEffect(() => {
@@ -73,6 +76,7 @@ export default function ProductForm({
   // SAVE PRODUCT TO DATABASE
   async function saveProduct(ev: React.FormEvent<HTMLFormElement>) {
     ev.preventDefault();
+    setIsSaving(true);
 
     if (!title || !category || !price || !images.length) {
       Swal.fire({
@@ -101,7 +105,9 @@ export default function ProductForm({
         icon: "success",
         confirmButtonText: "OK",
       });
+      router.push("/dashboard/products");
     } catch (error) {
+      setIsSaving(false);
       const errorMessage = (error as any).response?.status === 500
         ? "Server error: Unable to save product."
         : (error as any).message === "Network Error"
@@ -114,6 +120,8 @@ export default function ProductForm({
         icon: "error",
         confirmButtonText: "OK",
       });
+    } finally {
+      setIsSaving(false);
     }
   }
 
@@ -155,12 +163,12 @@ export default function ProductForm({
     setImages(newImages);
   }
 
-
   // REMOVE IMAGE
   function removeImage(link: string) {
     setImages(images.filter((img) => img !== link));
   }
 
+  // SET PRODUCT PROPERTY
   function setProductProp(propName: string, value: string) {
     setProductProperties((prev) => ({
       ...prev,
@@ -178,13 +186,9 @@ export default function ProductForm({
     }
   }
 
-
-
   return (
     <form onSubmit={saveProduct}>
-      <Typography variant="h6" gutterBottom>
-        Product Form
-      </Typography>
+      <Typography variant="h4" mb="1rem">Product Form</Typography>
 
       {/* PRODUCT NAME */}
       <TextField
@@ -246,7 +250,7 @@ export default function ProductForm({
             style={{ display: "flex", flexWrap: "wrap", gap: 1 }}
           >
             {images.map((link) => (
-              <Box key={link} sx={{ position: "relative", width: 96, height: 96 }}>
+              <Box key={link} sx={{ position: "relative", width: 96, height: 96, mr: "10px" }}>
                 <Paper
                   sx={{
                     position: "relative",
@@ -339,8 +343,8 @@ export default function ProductForm({
         required
       />
 
-      <Button variant="contained" color="primary" type="submit" sx={{ mt: 3 }} disabled={isUploading}>
-        Save
+      <Button variant="contained" color="primary" type="submit" sx={{ mt: 3 }} disabled={isUploading || isSaving}>
+        {isSaving ? <CircularProgress size={18} /> : "Save"}
       </Button>
     </form>
   );

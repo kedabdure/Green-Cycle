@@ -112,10 +112,27 @@ export function ProductsTable({ rows = [] }: ProductsTableProps): React.JSX.Elem
                   </TableCell>
                   <TableCell>
                     <Stack sx={{ alignItems: 'center' }} direction="row" spacing={2}>
-                      <Image src={row.images[0]} width={60} height={60} alt={'Product photo'} />
+                      <Box
+                        sx={{
+                          width: { xs: 40, sm: 50, md: 60 },
+                          height: { xs: 40, sm: 50, md: 60 },
+                          position: 'relative',
+                        }}
+                      >
+                        <Image
+                          src={row.images[0]}
+                          fill
+                          alt="Product photo"
+                          sizes="(max-width: 600px) 40px, (max-width: 900px) 50px, 60px"
+                          placeholder="blur"
+                          blurDataURL={`${row.images[0]}?tr=w-10,h-10,bl`}
+                          style={{objectFit: "contain"}}
+                        />
+                      </Box>
                       <Typography variant="subtitle2">{row.title}</Typography>
                     </Stack>
                   </TableCell>
+
                   {/* <TableCell>{row.description}</TableCell> */}
                   <TableCell>{formatePrice(row.price)} ETB</TableCell>
                   <TableCell>
@@ -136,6 +153,6 @@ export function ProductsTable({ rows = [] }: ProductsTableProps): React.JSX.Elem
         rowsPerPage={rowsPerPage}
         onRowsPerPageChange={handleChangeRowsPerPage}
       />
-    </Card>
+    </Card >
   );
 }
