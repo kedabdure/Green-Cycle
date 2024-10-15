@@ -1,6 +1,5 @@
 "use client";
 
-import { ImageKitProvider, IKUpload } from "imagekitio-next";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
@@ -20,6 +19,7 @@ import {
   CircularProgress,
   Paper,
 } from "@mui/material";
+
 
 interface ProductFormProps {
   _id?: string;
@@ -56,6 +56,7 @@ export default function ProductForm({
   const [images, setImages] = useState<string[]>(existingImages || []);
   const [isUploading, setIsUploading] = useState(false);
 
+
   useEffect(() => {
     fetchCategories();
   }, []);
@@ -69,6 +70,7 @@ export default function ProductForm({
     }
   }
 
+  // SAVE PRODUCT TO DATABASE
   async function saveProduct(ev: React.FormEvent<HTMLFormElement>) {
     ev.preventDefault();
 
@@ -115,6 +117,8 @@ export default function ProductForm({
     }
   }
 
+
+  // UPLOAD IMAGES TO IMAGEKIT AND GET URLS
   async function uploadImages(ev: React.ChangeEvent<HTMLInputElement>) {
     const files = ev.target.files;
     if (!files || files.length === 0) return;
@@ -130,8 +134,9 @@ export default function ProductForm({
           "Content-Type": "multipart/form-data",
         },
       });
-      setImages((prev) => [...prev, res.data.url]);
+      setImages((prev) => [...prev, ...res.data.urls]);
     } catch (error) {
+      setIsUploading(false);
       console.error("Upload Error:", error);
       Swal.fire({
         title: "Error",
@@ -144,10 +149,14 @@ export default function ProductForm({
     }
   }
 
+
+  // UPDATE IMAGES ORDER
   function updateImagesOrder(newImages: string[] | any) {
     setImages(newImages);
   }
 
+
+  // REMOVE IMAGE
   function removeImage(link: string) {
     setImages(images.filter((img) => img !== link));
   }
@@ -159,6 +168,7 @@ export default function ProductForm({
     }));
   }
 
+  // GET PROPERTIES TO FILL BASED ON SELECTED CATEGORY
   const propertiesToFill: { name: string; values: string[] }[] = [];
   if (categories.length && category) {
     let currentCategory = categories.find((cat) => cat._id === category);
@@ -168,12 +178,15 @@ export default function ProductForm({
     }
   }
 
+
+
   return (
     <form onSubmit={saveProduct}>
       <Typography variant="h6" gutterBottom>
         Product Form
       </Typography>
 
+      {/* PRODUCT NAME */}
       <TextField
         label="Product Name"
         variant="outlined"
@@ -184,6 +197,7 @@ export default function ProductForm({
         required
       />
 
+      {/* CATEGORY */}
       <FormControl fullWidth margin="normal">
         <InputLabel>Category</InputLabel>
         <Select
@@ -201,6 +215,7 @@ export default function ProductForm({
         </Select>
       </FormControl>
 
+      {/* PRODUCT PROPERTIES */}
       {propertiesToFill.length > 0 &&
         propertiesToFill.map((prop) => (
           <FormControl fullWidth margin="normal" key={prop.name}>
@@ -217,61 +232,67 @@ export default function ProductForm({
               ))}
             </Select>
           </FormControl>
-        ))}
+        ))
+      }
 
-      <Typography sx={{ mt: 2 }}>Photos</Typography>
+
+      {/* PRODUCT PHOTO */}
+      <Typography sx={{ m: '15px 0 5px 0', color: '#666' }}>Photos</Typography>
       <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, mb: 2 }}>
-        <ReactSortable
-          list={images.map((img) => ({ id: img, img }))}
-          setList={(newState) => updateImagesOrder(newState.map((item) => item.img))}
-          style={{ display: "flex", flexWrap: "wrap", gap: 1 }}
-        >
-          {images.map((link) => (
-            <Box key={link} sx={{ position: "relative", width: 96, height: 96 }}>
-              <Paper
-                sx={{
-                  position: "relative",
-                  width: "100%",
-                  height: "100%",
-                  padding: 1,
-                  borderRadius: 1,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  boxShadow: 1,
-                  backgroundColor: "white",
-                }}
-              >
-                <img
-                  src={link}
-                  alt="Product Image"
-                  style={{ width: "100%", height: "100%", borderRadius: 2 }}
-                />
-                <IconButton
-                  onClick={() => removeImage(link)}
+        <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, mb: 2 }}>
+          <ReactSortable
+            list={images.map((img) => ({ id: img, img }))}
+            setList={(newState) => updateImagesOrder(newState.map((item) => item.img))}
+            style={{ display: "flex", flexWrap: "wrap", gap: 1 }}
+          >
+            {images.map((link) => (
+              <Box key={link} sx={{ position: "relative", width: 96, height: 96 }}>
+                <Paper
                   sx={{
-                    position: "absolute",
-                    top: 1,
-                    right: 1,
-                    color: "white",
-                    backgroundColor: "red",
-                    opacity: 0.8,
-                    padding: ".2rem",
-                    "&:hover": { opacity: 1, color: "crimson" },
+                    position: "relative",
+                    width: "100%",
+                    height: "100%",
+                    padding: 1,
+                    borderRadius: 1,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    boxShadow: 1,
+                    backgroundColor: "white",
                   }}
                 >
-                  <Delete size={16} />
-                </IconButton>
-              </Paper>
-            </Box>
-          ))}
-        </ReactSortable>
+                  <img
+                    src={link}
+                    alt="Product Image"
+                    style={{ width: "100%", height: "100%", borderRadius: 2 }}
+                  />
+                  <IconButton
+                    onClick={() => removeImage(link)}
+                    sx={{
+                      position: "absolute",
+                      top: 1,
+                      right: 1,
+                      color: "white",
+                      backgroundColor: "red",
+                      opacity: 0.8,
+                      padding: ".2rem",
+                      "&:hover": { opacity: 1, color: "crimson" },
+                    }}
+                  >
+                    <Delete size={16} />
+                  </IconButton>
+                </Paper>
+              </Box>
+            ))}
+          </ReactSortable>
+        </Box>
+
 
         {isUploading && (
           <Box
             sx={{
               height: 96,
-              width: 90,
+              width: 80,
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center'
@@ -294,6 +315,8 @@ export default function ProductForm({
         </label>
       </Box>
 
+
+      {/* PRODUCT DESCRIPTION */}
       <TextField
         label="Description"
         variant="outlined"
@@ -305,6 +328,7 @@ export default function ProductForm({
         onChange={(ev) => setDescription(ev.target.value)}
       />
 
+      {/* PRODUCT PRICE */}
       <TextField
         label="Price (USD)"
         variant="outlined"
@@ -315,7 +339,7 @@ export default function ProductForm({
         required
       />
 
-      <Button variant="contained" color="primary" type="submit" sx={{ mt: 3 }}>
+      <Button variant="contained" color="primary" type="submit" sx={{ mt: 3 }} disabled={isUploading}>
         Save
       </Button>
     </form>

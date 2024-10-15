@@ -34,76 +34,78 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     const headers = Object.fromEntries(req.headers.entries());
     const bb = busboy({ headers });
 
-    let fileBuffer: Buffer | null = null;
-    let fileName: string = '';
-    let mimeType: string = '';
+    const files: { fileBuffer: Buffer; fileName: string; mimeType: string }[] = [];
 
-    // Handle the 'file' event when a file is found in the form
+    // Handle the 'file' event when files are found in the form
     bb.on('file', (name, file, info) => {
-      const { filename, mimeType: fileMimeType } = info;
-      fileName = filename;
-      mimeType = fileMimeType;
+      const { filename, mimeType } = info;
 
-      // Collect the file content in chunks to form a buffer
       const chunks: Buffer[] = [];
       file.on('data', (data: Buffer) => {
         chunks.push(data);
       });
 
       file.on('close', () => {
-        // Concatenate all the chunks into a single buffer
-        fileBuffer = Buffer.concat(chunks);
+        files.push({
+          fileBuffer: Buffer.concat(chunks),
+          fileName: filename,
+          mimeType,
+        });
       });
     });
 
+    // Handle the 'field' event if there are any form fields
     bb.on('field', (name, val) => {
       console.log(`Field [${name}]: value: ${val}`);
     });
 
     // Handle the end of the form processing
     const bbPromise = new Promise<void>((resolve, reject) => {
-      bb.on('close', () => {
-        resolve();
-      });
+      bb.on('close', resolve);
+      bb.on('error', reject);
 
-      bb.on('error', (err) => {
-        reject(err);
-      });
-
-      // Convert Next.js's ReadableStream into Node's Readable stream
       const readableStream = Readable.from(req.body as any);
       readableStream.pipe(bb);
     });
 
     await bbPromise;
 
-    // Check if fileBuffer is populated
-    if (fileBuffer) {
-      // Upload the file to ImageKit
-      const result: ImageKitUploadResponse = await imagekit.upload({
-        file: fileBuffer, // Pass the binary buffer
-        fileName, // Original file name
-        folder: '/ecommerce/products', // Specify your folder in ImageKit
-      });
+    // If no files are found in the request, return a 400 error
+    if (!files.length) {
+      return NextResponse.json({ message: 'No files found in the request.' }, { status: 400 });
+    }
 
-      // Generate a URL with transformation options (resize, etc.)
-      const url = imagekit.url({
+    // Upload all files to ImageKit concurrently
+    const uploadPromises = files.map(({ fileBuffer, fileName }) =>
+      imagekit.upload({
+        file: fileBuffer,
+        fileName, // Use the original file name
+        folder: '/ecommerce/products', // Specify your folder in ImageKit
+      })
+    );
+
+    // Wait for all file uploads to finish
+    const uploadResults: ImageKitUploadResponse[] = await Promise.all(uploadPromises);
+
+    // Generate URLs with transformations for each uploaded file
+    const urls = uploadResults.map(result =>
+      imagekit.url({
         src: result.url,
         transformation: [
           {
-            height: "500",
-            width: "500",
+            height: '500',
+            width: '500',
           },
         ],
-      });
+      })
+    );
 
-      // Return the URL of the uploaded file
-      return NextResponse.json({ message: 'Upload successful!', url }, { status: 200 });
-    } else {
-      return NextResponse.json({ message: 'No file found in the request.' }, { status: 400 });
-    }
+    console.log("urls", urls);
+
+    // Return the URLs of the uploaded files
+    return NextResponse.json({ message: 'Upload successful!', urls }, { status: 200 });
   } catch (err) {
-    console.error('Error uploading image:', err);
+    console.error('Error uploading images:', err);
     return NextResponse.json({ message: 'Upload failed', error: (err as Error).message }, { status: 500 });
   }
 }
