@@ -1,8 +1,7 @@
 "use client";
 
 import { ImageKitProvider, IKUpload } from "imagekitio-next";
-import { SetStateAction, useEffect, useState } from "react";
-import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { ReactSortable } from "react-sortablejs";
@@ -21,39 +20,64 @@ import {
   CircularProgress,
   Paper,
 } from "@mui/material";
-import Image from "next/image";
 
-export default function ProductForm() {
-  const [title, setTitle] = useState<string>('');
-  const [categories, setCategories] = useState<any[]>([]);
-  const [category, setCategory] = useState<string>('');
-  const [description, setDescription] = useState<string>('');
-  const [productProperties, setProductProperties] = useState<Record<string, string>>({});
-  const [price, setPrice] = useState<string>('');
-  const [images, setImages] = useState<string[]>([]);
-  const [isUploading, setIsUploading] = useState<boolean>(false);
-  // const router = useRouter();
+interface ProductFormProps {
+  _id?: string;
+  title?: string;
+  category?: string;
+  description?: string;
+  price?: string;
+  images?: string[];
+  properties?: Record<string, string>;
+}
+
+interface Category {
+  _id: string;
+  name: string;
+  properties: { name: string; values: string[] }[];
+  parent?: Category;
+}
+
+export default function ProductForm({
+  _id,
+  title: existingTitle = "",
+  category: existingCategory = "",
+  description: existingDescription = "",
+  price: existingPrice = "",
+  images: existingImages = [],
+  properties: assignedProperties = {},
+}: ProductFormProps) {
+  const [title, setTitle] = useState(existingTitle || "");
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [category, setCategory] = useState(existingCategory || "");
+  const [description, setDescription] = useState(existingDescription || "");
+  const [productProperties, setProductProperties] = useState<Record<string, string>>(assignedProperties || {});
+  const [price, setPrice] = useState(existingPrice || "");
+  const [images, setImages] = useState<string[]>(existingImages || []);
+  const [isUploading, setIsUploading] = useState(false);
 
   useEffect(() => {
     fetchCategories();
   }, []);
 
-  function fetchCategories() {
-    axios.get('/api/categories').then(result => {
+  async function fetchCategories() {
+    try {
+      const result = await axios.get("/api/categories");
       setCategories(result.data);
-    });
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+    }
   }
 
   async function saveProduct(ev: React.FormEvent<HTMLFormElement>) {
     ev.preventDefault();
 
-    // Validate required fields
     if (!title || !category || !price || !images.length) {
       Swal.fire({
-        title: 'Validation Error',
-        text: 'Please fill in all required fields: Product name, category, price, and at least one image.',
-        icon: 'error',
-        confirmButtonText: 'OK',
+        title: "Validation Error",
+        text: "Please fill in all required fields: Product name, category, price, and at least one image.",
+        icon: "error",
+        confirmButtonText: "OK",
       });
       return;
     }
@@ -68,71 +92,64 @@ export default function ProductForm() {
     };
 
     try {
-      await axios.post('/api/products', data);
+      await axios.post("/api/products", data);
       Swal.fire({
-        title: 'Success',
-        text: 'Product created successfully!',
-        icon: 'success',
-        confirmButtonText: 'OK',
+        title: "Success",
+        text: "Product created successfully!",
+        icon: "success",
+        confirmButtonText: "OK",
       });
-      // router.push('/products');
-    } catch (error: any) {
-      let errorMessage = 'Something went wrong. Please try again.';
-      if (error.response && error.response.status === 500) {
-        errorMessage = 'Server error: Unable to save product.';
-      } else if (error.message === 'Network Error') {
-        errorMessage = 'Network error: Please check your internet connection.';
-      }
+    } catch (error) {
+      const errorMessage = (error as any).response?.status === 500
+        ? "Server error: Unable to save product."
+        : (error as any).message === "Network Error"
+          ? "Network error: Please check your internet connection."
+          : "Something went wrong. Please try again.";
 
       Swal.fire({
-        title: 'Error',
+        title: "Error",
         text: errorMessage,
-        icon: 'error',
-        confirmButtonText: 'OK',
+        icon: "error",
+        confirmButtonText: "OK",
       });
     }
   }
 
-  // Product Images
   async function uploadImages(ev: React.ChangeEvent<HTMLInputElement>) {
-    const files = ev.target?.files;
-    if (files && files.length > 0) {
-      setIsUploading(true);
+    const files = ev.target.files;
+    if (!files || files.length === 0) return;
 
-      const data = new FormData();
+    setIsUploading(true);
 
-      for (const file of Array.from(files)) {
-        data.append('file', file);
-      }
-      try {
-        const res = await axios.post('/api/productUpload', data, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        });
+    const data = new FormData();
+    Array.from(files).forEach((file) => data.append("file", file));
 
-        setImages((prev) => [...prev, res.data.url]);
-
-      } catch (error) {
-        console.error("Upload Error:", error);
-        Swal.fire({
-          title: 'Error',
-          text: 'Failed to upload images. Please try again.',
-          icon: 'error',
-          confirmButtonText: 'OK',
-        });
-      } finally {
-        setIsUploading(false);
-      }
+    try {
+      const res = await axios.post("/api/productUpload", data, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      setImages((prev) => [...prev, res.data.url]);
+    } catch (error) {
+      console.error("Upload Error:", error);
+      Swal.fire({
+        title: "Error",
+        text: "Failed to upload images. Please try again.",
+        icon: "error",
+        confirmButtonText: "OK",
+      });
+    } finally {
+      setIsUploading(false);
     }
   }
 
-  function updateImagesOrder(images: any[]) {
-    setImages(images);
+  function updateImagesOrder(newImages: string[] | any) {
+    setImages(newImages);
   }
 
   function removeImage(link: string) {
-    setImages(images.filter(img => img !== link));
+    setImages(images.filter((img) => img !== link));
   }
 
   function setProductProp(propName: string, value: string) {
@@ -142,16 +159,12 @@ export default function ProductForm() {
     }));
   }
 
-  const propertiesToFill = [];
-  if (categories.length > 0 && category) {
-    let catInfo = categories.find(({ _id }: { _id: string }) => _id === category);
-    if (catInfo) {
-      propertiesToFill.push(...catInfo.properties);
-      while (catInfo?.parent?._id) {
-        const parentCat = categories.find(({ _id }: { _id: string }) => _id === catInfo.parent._id);
-        propertiesToFill.push(...parentCat.properties);
-        catInfo = parentCat;
-      }
+  const propertiesToFill: { name: string; values: string[] }[] = [];
+  if (categories.length && category) {
+    let currentCategory = categories.find((cat) => cat._id === category);
+    while (currentCategory) {
+      propertiesToFill.push(...currentCategory.properties);
+      currentCategory = currentCategory.parent;
     }
   }
 
@@ -167,18 +180,20 @@ export default function ProductForm() {
         fullWidth
         margin="normal"
         value={title}
-        onChange={ev => setTitle(ev.target.value)}
+        onChange={(ev) => setTitle(ev.target.value)}
+        required
       />
 
       <FormControl fullWidth margin="normal">
         <InputLabel>Category</InputLabel>
         <Select
           value={category}
-          onChange={ev => setCategory(ev.target.value)}
+          onChange={(ev) => setCategory(ev.target.value)}
           label="Category"
+          required
         >
           <MenuItem value="">Uncategorized</MenuItem>
-          {categories.map(category => (
+          {categories.map((category) => (
             <MenuItem key={category._id} value={category._id}>
               {category.name}
             </MenuItem>
@@ -186,75 +201,63 @@ export default function ProductForm() {
         </Select>
       </FormControl>
 
-      {/* Product Properties */}
-      {propertiesToFill.length > 0 && propertiesToFill.map(p => (
-        <FormControl fullWidth margin="normal" key={p.name}>
-          <InputLabel>{p.name[0].toUpperCase() + p.name.substring(1)}</InputLabel>
-          <Select
-            value={productProperties[p.name]}
-            onChange={ev => setProductProp(p.name, ev.target.value)}
-            label={p.name[0].toUpperCase() + p.name.substring(1)}
-          >
-            {p.values.map((v: string) => (
-              <MenuItem key={v} value={v}>{v}</MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-      ))}
+      {propertiesToFill.length > 0 &&
+        propertiesToFill.map((prop) => (
+          <FormControl fullWidth margin="normal" key={prop.name}>
+            <InputLabel>{prop.name.charAt(0).toUpperCase() + prop.name.slice(1)}</InputLabel>
+            <Select
+              value={productProperties[prop.name] || ""}
+              onChange={(ev) => setProductProp(prop.name, ev.target.value)}
+              label={prop.name.charAt(0).toUpperCase() + prop.name.slice(1)}
+            >
+              {prop.values.map((value) => (
+                <MenuItem key={value} value={value}>
+                  {value}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        ))}
 
-      {/* Image Upload Section */}
-      <Typography color="#666" sx={{ mt: '10px' }}>Photos</Typography>
-      <Box
-        sx={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'flex-start',
-          flexWrap: 'wrap',
-          gap: 1,
-          mb: 2
-        }}>
+      <Typography sx={{ mt: 2 }}>Photos</Typography>
+      <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, mb: 2 }}>
         <ReactSortable
-          list={images}
-          setList={updateImagesOrder}
-          style={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}
+          list={images.map((img) => ({ id: img, img }))}
+          setList={(newState) => updateImagesOrder(newState.map((item) => item.img))}
+          style={{ display: "flex", flexWrap: "wrap", gap: 1 }}
         >
-          {!!images?.length && images.map(link => (
-            <Box key={link} sx={{ position: 'relative', width: 96, height: 96, margin: 1 }}>
-              {/* Replace <div> with MUI's Paper component for better styling */}
+          {images.map((link) => (
+            <Box key={link} sx={{ position: "relative", width: 96, height: 96 }}>
               <Paper
                 sx={{
-                  position: 'relative',
-                  width: '100%',
-                  height: '100%',
+                  position: "relative",
+                  width: "100%",
+                  height: "100%",
                   padding: 1,
                   borderRadius: 1,
-                  border: '1px solid',
-                  borderColor: 'grey.300',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
                   boxShadow: 1,
-                  backgroundColor: 'white',
+                  backgroundColor: "white",
                 }}
               >
                 <img
                   src={link}
                   alt="Product Image"
-                  style={{ width: '100%', height: '100%', borderRadius: 2 }}
+                  style={{ width: "100%", height: "100%", borderRadius: 2 }}
                 />
-                {/* Remove Button */}
                 <IconButton
                   onClick={() => removeImage(link)}
                   sx={{
-                    position: 'absolute',
+                    position: "absolute",
                     top: 1,
                     right: 1,
+                    color: "white",
+                    backgroundColor: "red",
                     opacity: 0.8,
                     padding: ".2rem",
-                    color: 'white',
-                    backgroundColor: 'red',
-                    transition: 'all 0.3s ease-in-out',
-                    '&:hover': { opacity: 1, color: 'crimson' },
+                    "&:hover": { opacity: 1, color: "crimson" },
                   }}
                 >
                   <Delete size={16} />
@@ -265,33 +268,31 @@ export default function ProductForm() {
         </ReactSortable>
 
         {isUploading && (
-          <Box sx={{ height: 96, width: 96, display: 'flex', alignItems: 'center' }}>
+          <Box
+            sx={{
+              height: 96,
+              width: 90,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}
+          >
             <CircularProgress />
           </Box>
+
         )}
 
         <label>
           <Button
             variant="outlined"
             component="label"
-            sx={{
-              width: 96,
-              height: 96,
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}
+            sx={{ width: 96, height: 96, display: "flex", justifyContent: "center", alignItems: "center" }}
           >
-            <CameraPlusIcon size={32} fontWeight='400' />
-            <input
-              type="file"
-              hidden
-              onChange={uploadImages}
-            />
+            <CameraPlusIcon size={32} />
+            <input type="file" multiple hidden onChange={uploadImages} />
           </Button>
         </label>
       </Box>
-
 
       <TextField
         label="Description"
@@ -301,28 +302,22 @@ export default function ProductForm() {
         rows={4}
         margin="normal"
         value={description}
-        onChange={ev => setDescription(ev.target.value)}
+        onChange={(ev) => setDescription(ev.target.value)}
       />
 
       <TextField
-        label="Price (in USD)"
-        type="number"
+        label="Price (USD)"
         variant="outlined"
         fullWidth
         margin="normal"
         value={price}
-        onChange={ev => setPrice(ev.target.value)}
+        onChange={(ev) => setPrice(ev.target.value)}
+        required
       />
 
-      <Button
-        type="submit"
-        variant="contained"
-        color="primary"
-        className="mt-4"
-        disabled={isUploading}
-      >
+      <Button variant="contained" color="primary" type="submit" sx={{ mt: 3 }}>
         Save
       </Button>
-    </form >
+    </form>
   );
 }
