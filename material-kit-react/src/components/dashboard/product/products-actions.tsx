@@ -1,3 +1,5 @@
+"use client"
+
 import * as React from 'react';
 import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
@@ -6,17 +8,46 @@ import { Pencil as PencilIcon } from '@phosphor-icons/react/dist/ssr/Pencil';
 import { Trash as TrashIcon } from '@phosphor-icons/react/dist/ssr/Trash';
 import { DotsThreeVertical as MoreVertIcon } from '@phosphor-icons/react/dist/ssr/DotsThreeVertical';
 import { Typography } from '@mui/material';
+import { useRouter } from 'next/navigation';
+import axios from 'axios';
 
 const ITEM_HEIGHT = 48;
 
-export default function ProductOptions() {
+interface ProductOptionsProps {
+  productId: string;
+}
+
+export default function ProductOptions({ productId }: ProductOptionsProps) {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
+  const router = useRouter();
+
+  console.log(productId)
+
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleEdit = () => {
+    router.push(`/dashboard/products/edit/${productId}`);
+    handleClose();
+  };
+
+  const handleDelete = async () => {
+    try {
+      const res = await axios.delete(`/api/products?id=${productId}`)
+      if (res.status === 200) {
+        router.push('/dashboard/products');
+      } else {
+        console.error('Failed to delete the product');
+      }
+    } catch (error) {
+      console.error('An error occurred while deleting the product:', error);
+    }
+    handleClose();
   };
 
   return (
@@ -46,13 +77,17 @@ export default function ProductOptions() {
           },
         }}
       >
-        <MenuItem onClick={handleClose}>
+        <MenuItem onClick={handleEdit}>
           <PencilIcon size={17} />
-          <Typography ml='3px' fontSize='.9rem'>Edit</Typography>
+          <Typography ml="3px" fontSize=".9rem">
+            Edit
+          </Typography>
         </MenuItem>
-        <MenuItem onClick={handleClose}>
-          <TrashIcon size={17} color='red'/>
-          <Typography ml='3px' fontSize='.9rem' color='red'>Delete</Typography>
+        <MenuItem onClick={handleDelete}>
+          <TrashIcon size={17} color="red" />
+          <Typography ml="3px" fontSize=".9rem" color="red">
+            Delete
+          </Typography>
         </MenuItem>
       </Menu>
     </div>

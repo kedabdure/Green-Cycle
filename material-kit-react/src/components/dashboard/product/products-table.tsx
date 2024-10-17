@@ -136,7 +136,7 @@ export function ProductsTable({ rows = [] }: ProductsTableProps): React.JSX.Elem
                   {/* <TableCell>{row.description}</TableCell> */}
                   <TableCell>{formatePrice(row.price)} ETB</TableCell>
                   <TableCell>
-                    <ProductOptions />
+                    <ProductOptions productId={row._id}/>
                   </TableCell>
                 </TableRow>
               );
