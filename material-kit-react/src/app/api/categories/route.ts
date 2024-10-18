@@ -24,11 +24,14 @@ export async function POST(request: Request) {
   return NextResponse.json(categoryDoc, { status: 201 });
 }
 
+// UPDATE category
 export async function PUT(request: Request) {
   await mongooseConnect();
-  const { name, parentCategory, properties, _id } = await request.json();
+  const { name, parentCategory, properties } = await request.json();
+  const { searchParams } = new URL(request.url);
+  const id = searchParams.get('id');
 
-  const categoryDoc = await Category.updateOne({ _id }, {
+  const categoryDoc = await Category.updateOne({ _id: id }, {
     name,
     parent: parentCategory || undefined,
     properties,
@@ -43,5 +46,5 @@ export async function DELETE(request: Request) {
   const _id = searchParams.get('_id');
 
   await Category.deleteOne({ _id });
-  return NextResponse.json('ok');
+  return NextResponse.json({ message: 'Category deleted' }, { status: 200 });
 }

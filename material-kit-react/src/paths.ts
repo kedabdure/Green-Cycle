@@ -8,6 +8,7 @@ export const paths = {
       edit: '/dashboard/products/edit',
       new: '/dashboard/products/new',
     },
+    categories: '/dashboard/categories',
     account: '/dashboard/account',
     customers: '/dashboard/customers',
     integrations: '/dashboard/integrations',
