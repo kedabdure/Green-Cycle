@@ -2,21 +2,22 @@
 
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { JSONParser } from "formidable/parsers";
+import ProductForm from "@/components/dashboard/product/product-form";
+import Spinner from "@/components/loader/spinner";
+import { Typography } from "@mui/material";
 
 export default function ProductOptions({ params }: { params: { editId: string } }) {
   const { editId } = params;
-  const [product, setProduct] = useState<any>({});
+  const [productInfo, setProductInfo] = useState<any>(null);
 
-  // parse the product to object
-  console.log(product.title);
 
   useEffect(() => {
-     const getProduct = async () => {
+    const getProduct = async () => {
+      if (!editId) return;
       try {
         const res = await axios.get(`/api/products?id=${editId}`);
         if (res.status === 200) {
-          setProduct(res.data);
+          setProductInfo(res.data);
         } else {
           console.error("Failed to fetch the product");
         }
@@ -28,10 +29,15 @@ export default function ProductOptions({ params }: { params: { editId: string } 
     getProduct();
   }, [editId]);
 
-
   return (
     <div>
-      <h1>test</h1>
+      <Typography variant="h4" mb="1rem">Edit Product</Typography>
+      {!productInfo && (
+        <Spinner />
+      )}
+      {productInfo && (
+        <ProductForm {...productInfo} />
+      )}
     </div>
   );
 }

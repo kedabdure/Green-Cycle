@@ -21,7 +21,6 @@ import {
   Paper,
 } from "@mui/material";
 
-
 interface ProductFormProps {
   _id?: string;
   title?: string;
@@ -41,12 +40,12 @@ interface Category {
 
 export default function ProductForm({
   _id,
-  title: existingTitle = "",
-  category: existingCategory = "",
-  description: existingDescription = "",
-  price: existingPrice = "",
-  images: existingImages = [],
-  properties: assignedProperties = {},
+  title: existingTitle,
+  category: existingCategory,
+  description: existingDescription,
+  price: existingPrice,
+  images: existingImages,
+  properties: assignedProperties,
 }: ProductFormProps) {
   const [title, setTitle] = useState(existingTitle || "");
   const [categories, setCategories] = useState<Category[]>([]);
@@ -58,7 +57,6 @@ export default function ProductForm({
   const [isUploading, setIsUploading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const router = useRouter();
-
 
   useEffect(() => {
     fetchCategories();
@@ -81,10 +79,16 @@ export default function ProductForm({
     if (!title || !category || !price || !images.length) {
       Swal.fire({
         title: "Validation Error",
-        text: "Please fill in all required fields: Product name, category, price, and at least one image.",
+        text: `Please fill in all required fields:
+          ${title ? '' : 'Product name,'}
+          ${category ? '' : 'category,'}
+          ${price ? '' : 'price,'}
+          ${images ? '' : 'and at least one image.,'}
+        `,
         icon: "error",
         confirmButtonText: "OK",
       });
+      setIsSaving(false);
       return;
     }
 
@@ -98,21 +102,34 @@ export default function ProductForm({
     };
 
     try {
-      await axios.post("/api/products", data);
-      Swal.fire({
-        title: "Success",
-        text: "Product created successfully!",
-        icon: "success",
-        confirmButtonText: "OK",
-      });
+      if (_id) {
+        // EDITING EXISTING PRODUCT
+        await axios.put(`/api/products`, data);
+        Swal.fire({
+          title: "Success",
+          text: "Product updated successfully!",
+          icon: "success",
+          confirmButtonText: "OK",
+        });
+      } else {
+        // CREATING NEW PRODUCT
+        await axios.post("/api/products", data);
+        Swal.fire({
+          title: "Success",
+          text: "Product created successfully!",
+          icon: "success",
+          confirmButtonText: "OK",
+        });
+      }
       router.push("/dashboard/products");
     } catch (error) {
       setIsSaving(false);
-      const errorMessage = (error as any).response?.status === 500
-        ? "Server error: Unable to save product."
-        : (error as any).message === "Network Error"
-          ? "Network error: Please check your internet connection."
-          : "Something went wrong. Please try again.";
+      const errorMessage =
+        (error as any).response?.status === 500
+          ? "Server error: Unable to save product."
+          : (error as any).message === "Network Error"
+            ? "Network error: Please check your internet connection."
+            : "Something went wrong. Please try again.";
 
       Swal.fire({
         title: "Error",
@@ -124,7 +141,6 @@ export default function ProductForm({
       setIsSaving(false);
     }
   }
-
 
   // UPLOAD IMAGES TO IMAGEKIT AND GET URLS
   async function uploadImages(ev: React.ChangeEvent<HTMLInputElement>) {
@@ -157,7 +173,6 @@ export default function ProductForm({
     }
   }
 
-
   // UPDATE IMAGES ORDER
   function updateImagesOrder(newImages: string[] | any) {
     setImages(newImages);
@@ -188,8 +203,6 @@ export default function ProductForm({
 
   return (
     <form onSubmit={saveProduct}>
-      <Typography variant="h4" mb="1rem">Product Form</Typography>
-
       {/* PRODUCT NAME */}
       <TextField
         label="Product Name"
@@ -204,19 +217,23 @@ export default function ProductForm({
       {/* CATEGORY */}
       <FormControl fullWidth margin="normal">
         <InputLabel>Category</InputLabel>
-        <Select
-          value={category}
-          onChange={(ev) => setCategory(ev.target.value)}
-          label="Category"
-          required
-        >
-          <MenuItem value="">Uncategorized</MenuItem>
-          {categories.map((category) => (
-            <MenuItem key={category._id} value={category._id}>
-              {category.name}
-            </MenuItem>
-          ))}
-        </Select>
+        {categories.length > 0 ? (
+          <Select
+            value={category || ""}
+            onChange={(ev) => setCategory(ev.target.value)}
+            label="Category"
+            required
+          >
+            <MenuItem value="">Uncategorized</MenuItem>
+            {categories.length > 0  && categories.map((category) => (
+              <MenuItem key={category._id} value={category._id}>
+                {category.name}
+              </MenuItem>
+            ))}
+          </Select>
+        ) : (
+          <p>Loading categories...</p>
+        )}
       </FormControl>
 
       {/* PRODUCT PROPERTIES */}
@@ -236,89 +253,112 @@ export default function ProductForm({
               ))}
             </Select>
           </FormControl>
-        ))
-      }
-
+        ))}
 
       {/* PRODUCT PHOTO */}
-      <Typography sx={{ m: '15px 0 5px 0', color: '#666' }}>Photos</Typography>
+      <Typography sx={{ m: "15px 0 5px 0", color: "#666" }}>Photos</Typography>
       <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, mb: 2 }}>
-        <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, mb: 2 }}>
-          <ReactSortable
-            list={images.map((img) => ({ id: img, img }))}
-            setList={(newState) => updateImagesOrder(newState.map((item) => item.img))}
-            style={{ display: "flex", flexWrap: "wrap", gap: 1 }}
-          >
-            {images.map((link) => (
-              <Box key={link} sx={{ position: "relative", width: 96, height: 96, mr: "10px" }}>
-                <Paper
+      </Box>
+      <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, mb: 2 }}>
+        <ReactSortable
+          list={images.map((img) => ({ id: img, img }))}
+          setList={(newState) => updateImagesOrder(newState.map((item) => item.img))}
+          style={{ display: "flex", flexWrap: "wrap", gap: 1 }}
+        >
+          {images.map((link) => (
+            <Box key={link} sx={{ position: "relative", width: 96, height: 96, mr: "10px" }}>
+              <Paper
+                sx={{
+                  position: "relative",
+                  width: "100%",
+                  height: "100%",
+                  padding: 1,
+                  borderRadius: 1,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  boxShadow: 1,
+                  backgroundColor: "white",
+                }}
+              >
+                <img
+                  src={link}
+                  alt="Product Image"
+                  style={{ width: "100%", height: "100%", borderRadius: 2 }}
+                />
+                <IconButton
+                  onClick={() => removeImage(link)}
                   sx={{
-                    position: "relative",
-                    width: "100%",
-                    height: "100%",
-                    padding: 1,
-                    borderRadius: 1,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    boxShadow: 1,
-                    backgroundColor: "white",
+                    position: "absolute",
+                    top: 1,
+                    right: 1,
+                    color: "white",
+                    backgroundColor: "red",
+                    opacity: 0.8,
+                    padding: ".2rem",
+                    borderRadius: "50%",
+                    fontSize: 18,
+                    transition: "background-color 0.3s ease",
                   }}
                 >
-                  <img
-                    src={link}
-                    alt="Product Image"
-                    style={{ width: "100%", height: "100%", borderRadius: 2 }}
-                  />
-                  <IconButton
-                    onClick={() => removeImage(link)}
-                    sx={{
-                      position: "absolute",
-                      top: 1,
-                      right: 1,
-                      color: "white",
-                      backgroundColor: "red",
-                      opacity: 0.8,
-                      padding: ".2rem",
-                      "&:hover": { opacity: 1, color: "crimson" },
-                    }}
-                  >
-                    <Delete size={16} />
-                  </IconButton>
-                </Paper>
-              </Box>
-            ))}
-          </ReactSortable>
-        </Box>
-
+                  <Delete size={16} />
+                </IconButton>
+              </Paper>
+            </Box>
+          ))}
+        </ReactSortable>
 
         {isUploading && (
-          <Box
+          <CircularProgress
+            size={60}
             sx={{
+              width: 96,
               height: 96,
-              width: 80,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center'
+              color: "#1976d2",
+              padding: 0,
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
             }}
-          >
-            <CircularProgress />
-          </Box>
-
+          />
         )}
 
-        <label>
-          <Button
-            variant="outlined"
-            component="label"
-            sx={{ width: 96, height: 96, display: "flex", justifyContent: "center", alignItems: "center" }}
+        <label htmlFor="upload-photo">
+          <input
+            style={{ display: "none" }}
+            id="upload-photo"
+            name="upload-photo"
+            type="file"
+            multiple
+            onChange={uploadImages}
+          />
+          <IconButton
+            component="span"
+            sx={{
+              width: 96,
+              height: 96,
+              borderRadius: 1,
+              backgroundColor: "#f0f0f0",
+              boxShadow: 1,
+              transition: "background-color 0.3s ease",
+              "&:hover": { backgroundColor: "#e0e0e0" },
+            }}
           >
-            <CameraPlusIcon size={32} />
-            <input type="file" multiple hidden onChange={uploadImages} />
-          </Button>
+            <CameraPlusIcon size={40} />
+          </IconButton>
         </label>
       </Box>
 
+      {/* PRODUCT PRICE */}
+      <TextField
+        label="Product Price (USD)"
+        variant="outlined"
+        fullWidth
+        margin="normal"
+        value={price}
+        onChange={(ev) => setPrice(ev.target.value)}
+        required
+      />
 
       {/* PRODUCT DESCRIPTION */}
       <TextField
@@ -332,20 +372,32 @@ export default function ProductForm({
         onChange={(ev) => setDescription(ev.target.value)}
       />
 
-      {/* PRODUCT PRICE */}
-      <TextField
-        label="Price (USD)"
-        variant="outlined"
-        fullWidth
-        margin="normal"
-        value={price}
-        onChange={(ev) => setPrice(ev.target.value)}
-        required
-      />
+      {/* SUBMIT / CANCEL BUTTONS */}
+      <Box sx={{ display: "flex", gap: 2, mt: 2 }}>
+        <Button
+          variant="contained"
+          color="primary"
+          type="submit"
+          disabled={isSaving}
+          sx={{ display: "flex", alignItems: "center", gap: 1 }}
+        >
+          {isSaving ? (
+            <CircularProgress size={24} color="inherit" />
+          ) : _id ? (
+            "Update Product"
+          ) : (
+            "Create Product"
+          )}
+        </Button>
 
-      <Button variant="contained" color="primary" type="submit" sx={{ mt: 3 }} disabled={isUploading || isSaving}>
-        {isSaving ? <CircularProgress size={18} /> : "Save"}
-      </Button>
+        <Button
+          variant="outlined"
+          color="secondary"
+          onClick={() => router.push("/dashboard/products")}
+        >
+          Cancel
+        </Button>
+      </Box>
     </form>
   );
 }

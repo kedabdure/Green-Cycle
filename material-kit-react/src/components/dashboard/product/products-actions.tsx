@@ -22,8 +22,6 @@ export default function ProductOptions({ productId }: ProductOptionsProps) {
   const open = Boolean(anchorEl);
   const router = useRouter();
 
-  console.log(productId)
-
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
