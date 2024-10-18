@@ -1,163 +1,160 @@
 "use client";
 
-import * as React from 'react';
-import type { Metadata } from 'next';
-import Grid from '@mui/material/Unstable_Grid2';
-import dayjs from 'dayjs';
-import { useQuery, useMutation } from '@tanstack/react-query';
+import * as React from "react";
+import Grid from "@mui/material/Unstable_Grid2";
+import { useQuery } from "@tanstack/react-query";
+import dayjs from "dayjs";
+import axios from "axios";
+
+import { TotalProducts } from "@/components/dashboard/overview/total-products";
+import { LatestOrders } from "@/components/dashboard/overview/latest-orders";
+import { LatestProducts } from "@/components/dashboard/overview/latest-products";
+import { Sales } from "@/components/dashboard/overview/sales";
+import { TasksProgress } from "@/components/dashboard/overview/tasks-progress";
+import { TotalCustomers } from "@/components/dashboard/overview/total-customers";
+import { TotalProfit } from "@/components/dashboard/overview/total-profit";
+import { Traffic } from "@/components/dashboard/overview/traffic";
+
+import { ProductProps } from "@/types/product";
+import { OrderProps } from "@/types/order";
+import { CustomerProps } from "@/types/customer";
+
+// Fetch products from API
+const fetchProducts = async (): Promise<ProductProps[]> => {
+  const { data } = await axios.get("/api/products");
+  return data;
+};
+
+// Fetch customers from API
+const fetchCustomers = async (): Promise<CustomerProps[]> => {
+  const { data } = await axios.get("/api/customers");
+  return data;
+};
+
+// Fetch orders from API
+const fetchOrders = async (): Promise<OrderProps[]> => {
+  const { data } = await axios.get("/api/orders");
+  return data;
+};
 
 
-import { config } from '@/config';
-import { TotalProducts } from '@/components/dashboard/overview/total-products';
-import { LatestOrders } from '@/components/dashboard/overview/latest-orders';
-import { LatestProducts } from '@/components/dashboard/overview/latest-products';
-import { Sales } from '@/components/dashboard/overview/sales';
-import { TasksProgress } from '@/components/dashboard/overview/tasks-progress';
-import { TotalCustomers } from '@/components/dashboard/overview/total-customers';
-import { TotalProfit } from '@/components/dashboard/overview/total-profit';
-import { Traffic } from '@/components/dashboard/overview/traffic';
-import { ProductProps } from '@/types/product';
-import axios from 'axios';
-
-// export const metadata = { title: `Overview | Dashboard | ${config.site.name}` } satisfies Metadata;
-
-export default function Page(): React.JSX.Element {
-  // Fetch products from API using React Query
-  const productsQuery = useQuery<ProductProps[]>({
-    queryKey: ['products'],
-    queryFn: async () => {
-      const res = await axios.get('/api/products');
-      return res.data;
-    },
+export default function DashboardPage(): React.JSX.Element {
+  // FETCH DATA USING REACT QUERY
+  const { data: products = [], isLoading: isLoadingProducts, isError: isErrorProducts } = useQuery({
+    queryKey: ["products"],
+    queryFn: fetchProducts,
   });
 
-  // Handle loading and error states
-  if (productsQuery.isLoading) return <div>Loading...</div>;
-  if (productsQuery.isError) return <div>Error: {productsQuery.error.message}</div>;
-  const products = productsQuery.data ?? [];
+  const { data: customers = [], isLoading: isLoadingCustomers, isError: isErrorCustomers } = useQuery({
+    queryKey: ["customers"],
+    queryFn: fetchCustomers,
+  });
 
-  const customersQuery = useQuery({
-    queryKey: ['customers'],
-    queryFn: async () => {
-      const res = await axios.get('/api/customers');
-      return res.data;
-    },
-  })
+  const { data: orders = [], isLoading: isLoadingOrders, isError: isErrorOrders } = useQuery({
+    queryKey: ["orders"],
+    queryFn: fetchOrders,
+  });
 
-  if(customersQuery.isLoading) return <div>Loading...</div>
-  if(customersQuery.isError) return <div>Error: {customersQuery.error.message}</div>
-  const customers = customersQuery.data ?? [];
+  // HANDLE LOADING AND ERROR STATES
+  if (isLoadingProducts || isLoadingCustomers || isLoadingOrders) return <div>Loading...</div>;
+  if (isErrorProducts || isErrorCustomers || isErrorOrders) return <div>Error fetching data.</div>;
 
+
+  // TOTAL SALE
+  const totalSales = orders.reduce((acc, order) => {
+    const lineItemTotal = order.line_items.reduce((sum: number, item: { quantity: number; price_data: { amount: number; }; }) => {
+      return sum + item.quantity * item.price_data.amount;
+    }, 0);
+    return acc + lineItemTotal;
+  }, 0).toFixed(2);
+
+
+  // TASKS PROGRESS
+  const completedTasks = orders.filter((order) => order.paid).length;
+  const totalTasks = orders.length;
+  const tasksProgress = (completedTasks / totalTasks) * 100
+
+  // TOTAL PRODUCTS
+  const totalProductsNow = products.length;
+  const totalProductsLastMonth = products.filter((product) => dayjs(product.updatedAt).isAfter(dayjs().subtract(1, "month"))).length;
+  const diffProducts = ((totalProductsNow - totalProductsLastMonth) / totalProductsLastMonth * 100).toFixed(1);
+  const trendProducts = parseFloat(diffProducts) > 0 ? "up" : "down";
+
+
+  // TOTAL CUSTOMERS
+  const totalCustomersNow = customers.length;
+  const totalCustomersLastMonth = customers.filter((customer) => dayjs(customer.createdAt).isAfter(dayjs().subtract(1, "month"))).length;
+  const diffCustomers = ((totalCustomersNow + 1 - totalCustomersLastMonth) / totalCustomersLastMonth * 100).toFixed(1);
+  const trendCustomers = parseFloat(diffCustomers) > 0 ? "up" : "down";
+
+
+  console.log(diffProducts, trendProducts, totalProductsLastMonth, totalProductsNow);
   return (
     <Grid container spacing={3}>
+      {/* TOTAL PRODUCTS */}
       <Grid lg={3} sm={6} xs={12}>
-        <TotalProducts diff={12} trend="up" sx={{ height: '100%' }} value={products.length.toString()} />
-      </Grid>
-      <Grid lg={3} sm={6} xs={12}>
-        <TotalCustomers diff={16} trend="down" sx={{ height: '100%' }} value={customers?.length.toString()} />
-      </Grid>
-      <Grid lg={3} sm={6} xs={12}>
-        <TasksProgress sx={{ height: '100%' }} value={75.5} />
-      </Grid>
-      <Grid lg={3} sm={6} xs={12}>
-        <TotalProfit sx={{ height: '100%' }} value="$15k" />
-      </Grid>
-      <Grid lg={8} xs={12}>
-        <Sales
-          chartSeries={[
-            { name: 'This year', data: [18, 16, 5, 8, 3, 14, 14, 16, 17, 19, 18, 20] },
-            { name: 'Last year', data: [12, 11, 4, 6, 2, 9, 9, 10, 11, 12, 13, 13] },
-          ]}
-          sx={{ height: '100%' }}
+        <TotalProducts
+          diff={diffProducts + 2}
+          trend={trendProducts}
+          sx={{ height: "100%" }}
+          value={products.length.toString()}
         />
       </Grid>
-      <Grid lg={4} md={6} xs={12}>
-        <Traffic chartSeries={[63, 15, 22]} labels={['Desktop', 'Tablet', 'Phone']} sx={{ height: '100%' }} />
+
+      {/* TOTAL CUSTOMERS */}
+      <Grid lg={3} sm={6} xs={12}>
+        <TotalCustomers
+          diff={diffCustomers}
+          trend={trendCustomers}
+          sx={{ height: "100%" }}
+          value={customers.length.toString()}
+        />
       </Grid>
-      <Grid lg={4} md={6} xs={12}>
+
+      {/* TASKS PROGRESS */}
+      <Grid lg={3} sm={6} xs={12}>
+        <TasksProgress sx={{ height: "100%" }} value={tasksProgress} />
+      </Grid>
+
+      {/* TOTAL SALE */}
+      <Grid lg={3} sm={6} xs={12}>
+        <TotalProfit sx={{ height: "100%" }} value={`${totalSales}`} />
+      </Grid>
+
+      {/* TRAFFIC DISTRIBUTION */}
+      <Grid md={6} xs={12}>
+        <Traffic
+          chartSeries={[63, 15, 22]}
+          labels={["Desktop", "Tablet", "Phone"]}
+          sx={{ height: "100%" }}
+        />
+      </Grid>
+
+      {/* LATEST PRODUCTS */}
+      <Grid md={6} xs={12}>
         <LatestProducts
-          products={[
-            {
-              id: 'PRD-005',
-              name: 'Soja & Co. Eucalyptus',
-              image: '/assets/product-5.png',
-              updatedAt: dayjs().subtract(18, 'minutes').subtract(5, 'hour').toDate(),
-            },
-            {
-              id: 'PRD-004',
-              name: 'Necessaire Body Lotion',
-              image: '/assets/product-4.png',
-              updatedAt: dayjs().subtract(41, 'minutes').subtract(3, 'hour').toDate(),
-            },
-            {
-              id: 'PRD-003',
-              name: 'Ritual of Sakura',
-              image: '/assets/product-3.png',
-              updatedAt: dayjs().subtract(5, 'minutes').subtract(3, 'hour').toDate(),
-            },
-            {
-              id: 'PRD-002',
-              name: 'Lancome Rouge',
-              image: '/assets/product-2.png',
-              updatedAt: dayjs().subtract(23, 'minutes').subtract(2, 'hour').toDate(),
-            },
-            {
-              id: 'PRD-001',
-              name: 'Erbology Aloe Vera',
-              image: '/assets/product-1.png',
-              updatedAt: dayjs().subtract(10, 'minutes').toDate(),
-            },
-          ]}
-          sx={{ height: '100%' }}
+          products={products.slice(0, 5).map((product: ProductProps) => ({
+            id: product._id ?? '',
+            name: product.title ?? 'Unknown',
+            image: product?.images?.[0] ?? '',
+            updatedAt: dayjs(product.updatedAt).toDate(),
+          }))}
+          sx={{ height: "100%" }}
         />
       </Grid>
-      <Grid lg={8} md={12} xs={12}>
+
+      {/* LATEST ORDERS */}
+      <Grid xs={12}>
         <LatestOrders
-          orders={[
-            {
-              id: 'ORD-007',
-              customer: { name: 'Ekaterina Tankova' },
-              amount: 30.5,
-              status: 'pending',
-              createdAt: dayjs().subtract(10, 'minutes').toDate(),
-            },
-            {
-              id: 'ORD-006',
-              customer: { name: 'Cao Yu' },
-              amount: 25.1,
-              status: 'delivered',
-              createdAt: dayjs().subtract(10, 'minutes').toDate(),
-            },
-            {
-              id: 'ORD-004',
-              customer: { name: 'Alexa Richardson' },
-              amount: 10.99,
-              status: 'refunded',
-              createdAt: dayjs().subtract(10, 'minutes').toDate(),
-            },
-            {
-              id: 'ORD-003',
-              customer: { name: 'Anje Keizer' },
-              amount: 96.43,
-              status: 'pending',
-              createdAt: dayjs().subtract(10, 'minutes').toDate(),
-            },
-            {
-              id: 'ORD-002',
-              customer: { name: 'Clarke Gillebert' },
-              amount: 32.54,
-              status: 'delivered',
-              createdAt: dayjs().subtract(10, 'minutes').toDate(),
-            },
-            {
-              id: 'ORD-001',
-              customer: { name: 'Adam Denisov' },
-              amount: 16.76,
-              status: 'delivered',
-              createdAt: dayjs().subtract(10, 'minutes').toDate(),
-            },
-          ]}
-          sx={{ height: '100%' }}
+          orders={orders.map((order: OrderProps) => ({
+            id: order._id,
+            customer: { name: order.firstName + " " + order.lastName },
+            location: order.city + ", " + order.country,
+            amount: order.line_items.amount,
+            status: order.paid ? "delivered" : "pending",
+            createdAt: dayjs(order.createdAt).toDate(),
+          }))}
+          sx={{ height: "100%" }}
         />
       </Grid>
     </Grid>

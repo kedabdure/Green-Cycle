@@ -13,19 +13,26 @@ export interface TotalProfitProps {
 }
 
 export function TotalProfit({ value, sx }: TotalProfitProps): React.JSX.Element {
+
+  const formateNumber = (value: any) => {
+    const formattedValue = value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    return formattedValue;
+  }
   return (
     <Card sx={sx}>
       <CardContent>
-        <Stack direction="row" sx={{ alignItems: 'flex-start', justifyContent: 'space-between' }} spacing={3}>
-          <Stack spacing={1}>
+        <Stack direction="column" spacing={3}>
+          <Stack spacing={3} direction="row"  sx={{ alignItems: 'flex-start', justifyContent: 'space-between' }}>
             <Typography color="text.secondary" variant="overline">
-              Total Profit
+              Total Sale
             </Typography>
-            <Typography variant="h4">{value}</Typography>
+            <Avatar sx={{ backgroundColor: 'var(--mui-palette-primary-main)', height: '56px', width: '56px' }}>
+              <ReceiptIcon fontSize="var(--icon-fontSize-lg)" />
+            </Avatar>
           </Stack>
-          <Avatar sx={{ backgroundColor: 'var(--mui-palette-primary-main)', height: '56px', width: '56px' }}>
-            <ReceiptIcon fontSize="var(--icon-fontSize-lg)" />
-          </Avatar>
+          <Typography variant="h5">
+            {formateNumber(value)} <Typography component="span" fontSize="1rem" color="text.secondary">ETB</Typography>
+          </Typography>
         </Stack>
       </CardContent>
     </Card>

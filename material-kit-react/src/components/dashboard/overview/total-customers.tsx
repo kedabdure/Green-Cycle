@@ -10,7 +10,7 @@ import { ArrowUp as ArrowUpIcon } from '@phosphor-icons/react/dist/ssr/ArrowUp';
 import { Users as UsersIcon } from '@phosphor-icons/react/dist/ssr/Users';
 
 export interface TotalCustomersProps {
-  diff?: number;
+  diff?: number | any;
   trend: 'up' | 'down';
   sx?: SxProps;
   value: string;

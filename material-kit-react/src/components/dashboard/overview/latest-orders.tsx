@@ -22,6 +22,7 @@ const statusMap = {
 } as const;
 
 export interface Order {
+  location: string;
   id: string;
   customer: { name: string };
   amount: number;
@@ -43,8 +44,8 @@ export function LatestOrders({ orders = [], sx }: LatestOrdersProps): React.JSX.
         <Table sx={{ minWidth: 800 }}>
           <TableHead>
             <TableRow>
-              <TableCell>Order</TableCell>
               <TableCell>Customer</TableCell>
+              <TableCell>Location</TableCell>
               <TableCell sortDirection="desc">Date</TableCell>
               <TableCell>Status</TableCell>
             </TableRow>
@@ -55,8 +56,8 @@ export function LatestOrders({ orders = [], sx }: LatestOrdersProps): React.JSX.
 
               return (
                 <TableRow hover key={order.id}>
-                  <TableCell>{order.id}</TableCell>
                   <TableCell>{order.customer.name}</TableCell>
+                  <TableCell>{order.location}</TableCell>
                   <TableCell>{dayjs(order.createdAt).format('MMM D, YYYY')}</TableCell>
                   <TableCell>
                     <Chip color={color} label={label} size="small" />
