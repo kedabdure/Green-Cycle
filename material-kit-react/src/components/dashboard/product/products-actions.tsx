@@ -10,6 +10,7 @@ import { DotsThreeVertical as MoreVertIcon } from '@phosphor-icons/react/dist/ss
 import { Typography } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
+import Swal from 'sweetalert2';
 
 const ITEM_HEIGHT = 48;
 
@@ -35,12 +36,26 @@ export default function ProductOptions({ productId }: ProductOptionsProps) {
   };
 
   const handleDelete = async () => {
+    if (!window.confirm('Are you sure you want to delete this product?')) {
+      return;
+    }
     try {
       const res = await axios.delete(`/api/products?id=${productId}`)
       if (res.status === 200) {
-        router.push('/dashboard/products');
+        router.refresh();
+        Swal.fire({
+          title: "success",
+          text: "Product deleted successfully!",
+          icon: "success",
+          confirmButtonText: "OK",
+        });
       } else {
-        console.error('Failed to delete the product');
+        Swal.fire({
+          title: "error",
+          text: "Failed to delete the product!",
+          icon: "error",
+          confirmButtonText: "OK",
+        });
       }
     } catch (error) {
       console.error('An error occurred while deleting the product:', error);

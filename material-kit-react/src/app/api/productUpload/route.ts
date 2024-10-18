@@ -3,7 +3,6 @@ import ImageKit from 'imagekit';
 import busboy from 'busboy';
 import { Readable } from 'stream';
 
-
 // INITIALIZE IMAGEKIT
 const imagekit = new ImageKit({
   publicKey: process.env.NEXT_PUBLIC_IMAGEKIT_PUBLIC_KEY || '',
@@ -11,10 +10,38 @@ const imagekit = new ImageKit({
   urlEndpoint: process.env.NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT || '',
 });
 
-
 interface ImageKitUploadResponse {
   url: string;
   fileId: string;
+}
+
+const MAX_RETRIES = 3;
+
+async function retryUpload(
+  fileBuffer: Buffer,
+  fileName: string,
+  retries = MAX_RETRIES
+): Promise<ImageKitUploadResponse> {
+  let attempt = 0;
+  while (attempt < retries) {
+    try {
+      // Try uploading the file
+      const result = await imagekit.upload({
+        file: fileBuffer,
+        fileName,
+        folder: '/ecommerce/products',
+      });
+      return result;
+    } catch (error) {
+      attempt++;
+      if (attempt >= retries) {
+        const errorMessage = (error as any).message;
+        throw new Error(`Failed to upload after ${attempt} attempts: ${errorMessage}`);
+      }
+      console.log(`Retrying upload (${attempt}/${retries}) for file: ${fileName}`);
+    }
+  }
+  throw new Error('Unexpected error: upload failed after retries.');
 }
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
@@ -29,8 +56,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
     const files: { fileBuffer: Buffer; fileName: string; mimeType: string }[] = [];
 
-
-    // HANDLE the 'FILE' event when files
+    // HANDLE the 'FILE' event when files are uploaded
     bb.on('file', (name, file, info) => {
       const { filename, mimeType } = info;
 
@@ -47,7 +73,6 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         });
       });
     });
-
 
     // HANDLE the 'FIELD' event if there are any FORM FIELDS
     bb.on('field', (name, val) => {
@@ -67,13 +92,9 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       return NextResponse.json({ message: 'No files found in the request.' }, { status: 400 });
     }
 
-    // UPLOAD ALL FILES to ImageKit CONCURRENTLY
+    // UPLOAD ALL FILES to ImageKit CONCURRENTLY with retry logic
     const uploadPromises = files.map(({ fileBuffer, fileName }) =>
-      imagekit.upload({
-        file: fileBuffer,
-        fileName,
-        folder: '/ecommerce/products',
-      })
+      retryUpload(fileBuffer, fileName)
     );
 
     // WAIT for all file UPLOADS TO FINISH

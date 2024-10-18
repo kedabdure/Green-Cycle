@@ -35,19 +35,22 @@ export async function POST(req: Request) {
     properties,
   });
 
-  return NextResponse.json(productDoc);
+  return NextResponse.json(productDoc, { status: 201 });
 }
 
 // PUT request handler
 export async function PUT(req: Request) {
   await mongooseConnect();
 
+  const url = new URL(req.url);
+  const _id = url.searchParams.get('id');
+
   const body = await req.json();
-  const { title, description, price, images, category, properties, _id } = body;
+  const { title, description, price, images, category, properties } = body;
 
   await Product.updateOne({ _id }, { title, description, price, images, category, properties });
 
-  return NextResponse.json({ success: true });
+  return NextResponse.json({ status: 200 });
 }
 
 // DELETE request handler

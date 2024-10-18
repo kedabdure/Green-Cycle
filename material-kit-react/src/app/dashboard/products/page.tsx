@@ -38,12 +38,12 @@ export default async function Page(): Promise<React.JSX.Element> {
         <div>
           <Button startIcon={<PlusIcon fontSize="var(--icon-fontSize-md)" />} variant="contained">
             <Link
-            href={'/dashboard/products/new'}
-            style={{
-              textDecoration: 'none',
-              fontSize: '1rem',
-              color: '#f1f1f1'
-            }}
+              href={'/dashboard/products/new'}
+              style={{
+                textDecoration: 'none',
+                fontSize: '1rem',
+                color: '#f1f1f1'
+              }}
             >
               Add
             </Link>
@@ -51,7 +51,9 @@ export default async function Page(): Promise<React.JSX.Element> {
         </div>
       </Stack>
       <ProductsFilters />
-      <ProductsTable rows={productsData} />
+      {productsData.length > 0 && (
+        <ProductsTable rows={productsData} />
+      )}
     </Stack>
   );
 }

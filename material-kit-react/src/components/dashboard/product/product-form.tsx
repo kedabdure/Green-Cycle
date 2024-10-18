@@ -20,6 +20,7 @@ import {
   CircularProgress,
   Paper,
 } from "@mui/material";
+import { FadeLoader } from "react-spinners";
 
 interface ProductFormProps {
   _id?: string;
@@ -104,24 +105,43 @@ export default function ProductForm({
     try {
       if (_id) {
         // EDITING EXISTING PRODUCT
-        await axios.put(`/api/products`, data);
-        Swal.fire({
-          title: "Success",
-          text: "Product updated successfully!",
-          icon: "success",
-          confirmButtonText: "OK",
-        });
+        const res = await axios.put(`/api/products?id=${_id}`, data);
+        if (res.status === 200) {
+          Swal.fire({
+            title: "Success",
+            text: "Product updated successfully!",
+            icon: "success",
+            confirmButtonText: "OK",
+          });
+          router.push("/dashboard/products");
+        } else {
+          Swal.fire({
+            title: "Error",
+            text: "Failed to update product. Please try again.",
+            icon: "error",
+            confirmButtonText: "OK",
+          });
+        }
       } else {
         // CREATING NEW PRODUCT
-        await axios.post("/api/products", data);
-        Swal.fire({
-          title: "Success",
-          text: "Product created successfully!",
-          icon: "success",
-          confirmButtonText: "OK",
-        });
+        const res = await axios.post("/api/products", data);
+        if (res.status === 201) {
+          Swal.fire({
+            title: "Success",
+            text: "Product created successfully!",
+            icon: "success",
+            confirmButtonText: "OK",
+          });
+          router.push("/dashboard/products");
+        } else {
+          Swal.fire({
+            title: "Error",
+            text: "Failed to create product. Please try again.",
+            icon: "error",
+            confirmButtonText: "OK",
+          });
+        };
       }
-      router.push("/dashboard/products");
     } catch (error) {
       setIsSaving(false);
       const errorMessage =
@@ -217,23 +237,21 @@ export default function ProductForm({
       {/* CATEGORY */}
       <FormControl fullWidth margin="normal">
         <InputLabel>Category</InputLabel>
-        {categories.length > 0 ? (
-          <Select
-            value={category || ""}
-            onChange={(ev) => setCategory(ev.target.value)}
-            label="Category"
-            required
-          >
-            <MenuItem value="">Uncategorized</MenuItem>
-            {categories.length > 0  && categories.map((category) => (
-              <MenuItem key={category._id} value={category._id}>
-                {category.name}
-              </MenuItem>
-            ))}
-          </Select>
-        ) : (
-          <p>Loading categories...</p>
-        )}
+        <Select
+          value={categories.length > 0 ? category : ""}
+          onChange={(ev) => setCategory(ev.target.value)}
+          label="Category"
+          required
+        >
+          <MenuItem value="">Uncategorized</MenuItem>
+          {categories.length > 0 ? (categories.map((category) => (
+            <MenuItem key={category._id} value={category._id}>
+              {category.name}
+            </MenuItem>
+          ))) : (
+            <MenuItem disabled>Loading...</MenuItem>
+          )}
+        </Select>
       </FormControl>
 
       {/* PRODUCT PROPERTIES */}
@@ -309,18 +327,9 @@ export default function ProductForm({
         </ReactSortable>
 
         {isUploading && (
-          <CircularProgress
-            size={60}
-            sx={{
-              width: 96,
-              height: 96,
-              color: "#1976d2",
-              padding: 0,
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          />
+          <Box sx={{ width: 96, height: 96, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <FadeLoader />
+          </Box>
         )}
 
         <label htmlFor="upload-photo">
@@ -353,10 +362,16 @@ export default function ProductForm({
       <TextField
         label="Product Price (USD)"
         variant="outlined"
+        type="number"
         fullWidth
         margin="normal"
         value={price}
-        onChange={(ev) => setPrice(ev.target.value)}
+        onChange={(ev) => {
+          const value = parseFloat(ev.target.value);
+          if (value >= 0 || ev.target.value === "") {
+            setPrice(ev.target.value);
+          }
+        }}
         required
       />
 
