@@ -16,7 +16,7 @@ export interface BudgetProps {
   value: string;
 }
 
-export function Budget({ diff, trend, sx, value }: BudgetProps): React.JSX.Element {
+export function TotalProducts({ diff, trend, sx, value }: BudgetProps): React.JSX.Element {
   const TrendIcon = trend === 'up' ? ArrowUpIcon : ArrowDownIcon;
   const trendColor = trend === 'up' ? 'var(--mui-palette-success-main)' : 'var(--mui-palette-error-main)';
 
@@ -27,7 +27,7 @@ export function Budget({ diff, trend, sx, value }: BudgetProps): React.JSX.Eleme
           <Stack direction="row" sx={{ alignItems: 'flex-start', justifyContent: 'space-between' }} spacing={3}>
             <Stack spacing={1}>
               <Typography color="text.secondary" variant="overline">
-                Budget
+                Total Products
               </Typography>
               <Typography variant="h4">{value}</Typography>
             </Stack>

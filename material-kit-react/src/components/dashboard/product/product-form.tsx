@@ -7,6 +7,8 @@ import Swal from "sweetalert2";
 import { ReactSortable } from "react-sortablejs";
 import { CameraPlus as CameraPlusIcon } from "@phosphor-icons/react";
 import { Trash as Delete } from "@phosphor-icons/react";
+import { ProductProps } from "@/types/product";
+import { CategoryProps } from "@/types/category";
 import {
   TextField,
   Select,
@@ -22,23 +24,6 @@ import {
 } from "@mui/material";
 import { FadeLoader } from "react-spinners";
 
-interface ProductFormProps {
-  _id?: string;
-  title?: string;
-  category?: string;
-  description?: string;
-  price?: string;
-  images?: string[];
-  properties?: Record<string, string>;
-}
-
-interface Category {
-  _id: string;
-  name: string;
-  properties: { name: string; values: string[] }[];
-  parent?: Category;
-}
-
 export default function ProductForm({
   _id,
   title: existingTitle,
@@ -47,9 +32,9 @@ export default function ProductForm({
   price: existingPrice,
   images: existingImages,
   properties: assignedProperties,
-}: ProductFormProps) {
+}: ProductProps) {
   const [title, setTitle] = useState(existingTitle || "");
-  const [categories, setCategories] = useState<Category[]>([]);
+  const [categories, setCategories] = useState<CategoryProps[]>([]);
   const [category, setCategory] = useState(existingCategory || "");
   const [description, setDescription] = useState(existingDescription || "");
   const [productProperties, setProductProperties] = useState<Record<string, string>>(assignedProperties || {});
@@ -236,11 +221,11 @@ export default function ProductForm({
 
       {/* CATEGORY */}
       <FormControl fullWidth margin="normal">
-        <InputLabel>Category</InputLabel>
+        <InputLabel>CategoryProps</InputLabel>
         <Select
           value={categories.length > 0 ? category : ""}
           onChange={(ev) => setCategory(ev.target.value)}
-          label="Category"
+          label="CategoryProps"
           required
         >
           <MenuItem value="">Uncategorized</MenuItem>
