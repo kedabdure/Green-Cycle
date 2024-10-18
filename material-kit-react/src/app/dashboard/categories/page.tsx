@@ -41,14 +41,17 @@ export default function Categories() {
   const [properties, setProperties] = useState<{ name: string; values: string }[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [createCategory, setCreateCategory] = useState<boolean>(false);
+  const [isFetching, setIsFetching] = useState<boolean>(false);
 
   useEffect(() => {
     fetchCategories();
   }, []);
 
   const fetchCategories = async () => {
+    setIsFetching(true);
     const result = await axios.get('/api/categories');
     setCategories(result.data);
+    setIsFetching(false);
   };
 
   const saveCategory = async (ev: React.FormEvent) => {
@@ -255,50 +258,54 @@ export default function Categories() {
             Categories
           </Typography>
           <Box mt={2}>
-            <Button variant="contained" color="primary" onClick={() => setCreateCategory(true)}>
+            <Button variant="contained" color="primary" sx={{ fontSize: ".95rem" }} onClick={() => setCreateCategory(true)}>
               Create Category
             </Button>
           </Box>
-
-          <Box mt={3}>
-            <TableContainer component={Paper}>
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Category Name</TableCell>
-                    <TableCell>Parent Category</TableCell>
-                    <TableCell align="right">Actions</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {categories.map((category) => (
-                    <TableRow key={category._id}>
-                      <TableCell>{category.name}</TableCell>
-                      <TableCell>{category?.parent?.name || 'None'}</TableCell>
-                      <TableCell align="right">
-                        <Button
-                          onClick={() => editCategory(category)}
-                          variant="outlined"
-                          size="small"
-                        >
-                          Edit
-                        </Button>
-                        <Button
-                          onClick={() => handleDelete(category)}
-                          variant="contained"
-                          color="secondary"
-                          size="small"
-                          sx={{ ml: 1 }}
-                        >
-                          Delete
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
+          {isFetching ? (<Box mt={5} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <CircularProgress size={64} />
           </Box>
+          ) : (
+            <Box mt={3}>
+              <TableContainer component={Paper}>
+                <Table>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Category Name</TableCell>
+                      <TableCell>Parent Category</TableCell>
+                      <TableCell align="right">Actions</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {categories.map((category) => (
+                      <TableRow key={category._id}>
+                        <TableCell>{category.name}</TableCell>
+                        <TableCell>{category?.parent?.name || 'None'}</TableCell>
+                        <TableCell align="right">
+                          <Button
+                            onClick={() => editCategory(category)}
+                            variant="outlined"
+                            size="small"
+                          >
+                            Edit
+                          </Button>
+                          <Button
+                            onClick={() => handleDelete(category)}
+                            variant="contained"
+                            color="secondary"
+                            size="small"
+                            sx={{ ml: 1 }}
+                          >
+                            Delete
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </Box>
+          )}
         </Stack>
       )}
     </Container>
