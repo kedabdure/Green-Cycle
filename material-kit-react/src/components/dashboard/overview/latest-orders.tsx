@@ -71,6 +71,7 @@ export function LatestOrders({ orders = [], sx }: LatestOrdersProps): React.JSX.
       <Divider />
       <CardActions sx={{ justifyContent: 'flex-end' }}>
         <Button
+          href="/dashboard/orders"
           color="inherit"
           endIcon={<ArrowRightIcon fontSize="var(--icon-fontSize-md)" />}
           size="small"

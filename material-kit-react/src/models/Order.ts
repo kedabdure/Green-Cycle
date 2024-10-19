@@ -14,6 +14,7 @@ const OrderSchema = new Schema(
     streetAddress: String,
     paid: Boolean,
     tx_ref: String,
+    status: { type: String, default: "Pending" },
   },
   {
     timestamps: true,

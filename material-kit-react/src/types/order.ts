@@ -12,6 +12,7 @@ export interface OrderProps {
   streetAddress?: string;
   paid?: boolean;
   tx_ref?: string;
+  status: string;
   createdAt?: Date;
   updatedAt?: Date;
 }

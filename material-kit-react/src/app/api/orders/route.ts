@@ -39,21 +39,21 @@ export async function GET(req: Request) {
   }
 }
 
-// Update an order by ID (PUT)
+// UPDATE AN ORDER BY ID (PUT)
 export async function PUT(req: Request) {
   try {
     await mongooseConnect();
     const url = new URL(req.url);
-    const id = url.searchParams.get("id"); // Get the order ID from the query parameters
+    const id = url.searchParams.get("id");
 
     if (!id) {
       return NextResponse.json({ message: "Order ID is required" }, { status: 400 });
     }
 
-    const data = await req.json(); // Get the updated data from the request body
+    const data = await req.json();
 
     const updatedOrder = await Order.findByIdAndUpdate(id, data, {
-      new: true, // Return the updated document
+      new: true,
     });
 
     if (!updatedOrder) {
@@ -71,7 +71,7 @@ export async function DELETE(req: Request) {
   try {
     await mongooseConnect();
     const url = new URL(req.url);
-    const id = url.searchParams.get("id"); // Get the order ID from the query parameters
+    const id = url.searchParams.get("id");
 
     if (!id) {
       return NextResponse.json({ message: "Order ID is required" }, { status: 400 });
