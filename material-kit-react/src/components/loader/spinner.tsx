@@ -1,5 +1,5 @@
 import { Box } from "@mui/material";
-import { ClimbingBoxLoader } from "react-spinners";
+import { ClimbingBoxLoader, ScaleLoader } from "react-spinners";
 
 export default function Spinner() {
   return (
@@ -12,6 +12,24 @@ export default function Spinner() {
     }}>
       <ClimbingBoxLoader
         color="darkblue"
+      />
+    </Box>
+  );
+}
+
+export function ScaleSpinner() {
+  return (
+    <Box sx={{
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      width: "100%",
+      height: "100% !important",
+    }}>
+      <ScaleLoader
+        color="darkblue"
+        height={48}
+        width={6}
       />
     </Box>
   );

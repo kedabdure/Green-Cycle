@@ -16,7 +16,7 @@ import type { ApexOptions } from 'apexcharts';
 
 import { Chart } from '@/components/core/chart';
 
-const iconMapping = { Desktop: DesktopIcon, Tablet: DeviceTabletIcon, Phone: PhoneIcon } as Record<string, Icon>;
+const iconMapping = { Desktop: DesktopIcon, Mobile: DeviceTabletIcon, Tv: PhoneIcon } as Record<string, Icon>;
 
 export interface TrafficProps {
   chartSeries: number[];

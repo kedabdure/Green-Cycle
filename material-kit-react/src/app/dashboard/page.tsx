@@ -9,15 +9,16 @@ import axios from "axios";
 import { TotalProducts } from "@/components/dashboard/overview/total-products";
 import { LatestOrders } from "@/components/dashboard/overview/latest-orders";
 import { LatestProducts } from "@/components/dashboard/overview/latest-products";
-import { Sales } from "@/components/dashboard/overview/sales";
-import { TasksProgress } from "@/components/dashboard/overview/tasks-progress";
 import { TotalCustomers } from "@/components/dashboard/overview/total-customers";
 import { TotalProfit } from "@/components/dashboard/overview/total-profit";
 import { Traffic } from "@/components/dashboard/overview/traffic";
+import { TasksProgress } from "@/components/dashboard/overview/tasks-progress";
+import { ScaleSpinner } from "@/components/loader/spinner";
 
 import { ProductProps } from "@/types/product";
 import { OrderProps } from "@/types/order";
 import { CustomerProps } from "@/types/customer";
+import { CategoryProps } from "@/types/category";
 
 // Fetch products from API
 const fetchProducts = async (): Promise<ProductProps[]> => {
@@ -37,6 +38,12 @@ const fetchOrders = async (): Promise<OrderProps[]> => {
   return data;
 };
 
+// Fetch categories from API
+const fetchCategories = async (): Promise<CategoryProps[]> => {
+  const { data } = await axios.get("/api/categories");
+  return data;
+}
+
 
 export default function DashboardPage(): React.JSX.Element {
   // FETCH DATA USING REACT QUERY
@@ -55,9 +62,15 @@ export default function DashboardPage(): React.JSX.Element {
     queryFn: fetchOrders,
   });
 
+  const { data: categories = [], isLoading: isLoadingCategories, isError: isErrorCategories} = useQuery({
+    queryKey: ["categories"],
+    queryFn: fetchCategories,
+  })
+
+
   // HANDLE LOADING AND ERROR STATES
-  if (isLoadingProducts || isLoadingCustomers || isLoadingOrders) return <div>Loading...</div>;
-  if (isErrorProducts || isErrorCustomers || isErrorOrders) return <div>Error fetching data.</div>;
+  if (isLoadingProducts || isLoadingCustomers || isLoadingOrders || isLoadingCategories) return <ScaleSpinner />;
+  if (isErrorProducts || isErrorCustomers || isErrorOrders || isErrorCategories) return <div>Error fetching data.</div>;
 
 
   // TOTAL SALE
@@ -74,12 +87,12 @@ export default function DashboardPage(): React.JSX.Element {
   const totalTasks = orders.length;
   const tasksProgress = (completedTasks / totalTasks) * 100
 
+
   // TOTAL PRODUCTS
   const totalProductsNow = products.length;
   const totalProductsLastMonth = products.filter((product) => dayjs(product.updatedAt).isAfter(dayjs().subtract(1, "month"))).length;
   const diffProducts = ((totalProductsNow - totalProductsLastMonth) / totalProductsLastMonth * 100).toFixed(1);
   const trendProducts = parseFloat(diffProducts) > 0 ? "up" : "down";
-
 
   // TOTAL CUSTOMERS
   const totalCustomersNow = customers.length;
@@ -87,8 +100,16 @@ export default function DashboardPage(): React.JSX.Element {
   const diffCustomers = ((totalCustomersNow + 1 - totalCustomersLastMonth) / totalCustomersLastMonth * 100).toFixed(1);
   const trendCustomers = parseFloat(diffCustomers) > 0 ? "up" : "down";
 
+  // TOTAL TRAFFIC DISTRIBUTION
+  const mobileCatId = categories.find((cat) => cat.name === "Mobile")?._id;
+  const pcId = categories.find((cat) => cat.name === "Pc")?._id;
+  const tvId = categories.find((cat) => cat.name === "Tv")?._id;
 
-  console.log(diffProducts, trendProducts, totalProductsLastMonth, totalProductsNow);
+  // calculate the total number of products in each category
+  const mobileNumber = (products.filter((product) => product.category === mobileCatId).length / totalProductsNow )* 100;
+  const pcNumber = (products.filter((product) => product.category === pcId).length / totalProductsNow) * 100;
+  const tvNumber = (products.filter((product) => product.category === tvId).length / totalProductsNow) * 100;
+
   return (
     <Grid container spacing={3}>
       {/* TOTAL PRODUCTS */}
@@ -111,7 +132,7 @@ export default function DashboardPage(): React.JSX.Element {
         />
       </Grid>
 
-      {/* TASKS PROGRESS */}
+      {/* ORDER COMPLETED */}
       <Grid lg={3} sm={6} xs={12}>
         <TasksProgress sx={{ height: "100%" }} value={tasksProgress} />
       </Grid>
@@ -124,8 +145,8 @@ export default function DashboardPage(): React.JSX.Element {
       {/* TRAFFIC DISTRIBUTION */}
       <Grid md={6} xs={12}>
         <Traffic
-          chartSeries={[63, 15, 22]}
-          labels={["Desktop", "Tablet", "Phone"]}
+          chartSeries={[parseFloat(pcNumber.toFixed(2)), parseFloat(mobileNumber.toFixed(2)), parseFloat(tvNumber.toFixed(2))]}
+          labels={["Desktop", "Mobile", "Tv"]}
           sx={{ height: "100%" }}
         />
       </Grid>
