@@ -1,3 +1,5 @@
+"use client";
+
 import * as React from 'react';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
@@ -5,21 +7,33 @@ import Typography from '@mui/material/Typography';
 import { Download as DownloadIcon } from '@phosphor-icons/react/dist/ssr/Download';
 import { Plus as PlusIcon } from '@phosphor-icons/react/dist/ssr/Plus';
 import { Upload as UploadIcon } from '@phosphor-icons/react/dist/ssr/Upload';
+import { useQuery } from '@tanstack/react-query';
+import axios from 'axios';
 
-import { config } from '@/config';
 import { ProductsFilters } from '@/components/dashboard/product/products-filters';
 import { ProductsTable } from '@/components/dashboard/product/products-table';
-import { mongooseConnect } from '@/lib/mongoose';
-import { Product } from '@/models/Product';
 import Link from 'next/link';
+import { ScaleSpinner } from '@/components/loader/spinner';
 
-export const metadata = { title: `Products | Dashboard | ${config.site.name}` };
+const fetchProducts = async () => {
+  const response = await axios.get('/api/products');
+  return response.data;
+}
 
-export default async function Page(): Promise<React.JSX.Element> {
-  await mongooseConnect();
+export default function ProductsPage(): React.JSX.Element {
+  // Fetch products using React Query
+  const { data: products = [], isLoading, isError } = useQuery({
+    queryKey: ["products"],
+    queryFn: fetchProducts,
+  });
 
-  const products = await Product.find().sort({ updatedAt: -1 });
-  const productsData = JSON.parse(JSON.stringify(products));
+  if (isLoading) {
+    return <ScaleSpinner />;
+  }
+
+  if (isError) {
+    return <div>Error loading products</div>;
+  }
 
   return (
     <Stack spacing={3}>
@@ -36,23 +50,26 @@ export default async function Page(): Promise<React.JSX.Element> {
           </Stack>
         </Stack>
         <div>
-          <Button startIcon={<PlusIcon fontSize="var(--icon-fontSize-md)" />} variant="contained">
-            <Link
-              href={'/dashboard/products/new'}
-              style={{
-                textDecoration: 'none',
-                fontSize: '1rem',
-                color: '#f1f1f1'
-              }}
-            >
+          {/* Link wrapped around Button to avoid nesting */}
+          <Link
+            href={'/dashboard/products/new'}
+            style={{ textDecoration: 'none', color: 'inherit' }}
+          >
+            <Button startIcon={<PlusIcon fontSize="var(--icon-fontSize-md)" />} variant="contained">
               Add
-            </Link>
-          </Button>
+            </Button>
+          </Link>
         </div>
       </Stack>
+
+      {/* Search filters */}
       <ProductsFilters />
-      {productsData.length > 0 && (
-        <ProductsTable rows={productsData} />
+
+      {/* Product table */}
+      {products.length > 0 ? (
+        <ProductsTable rows={products} />
+      ) : (
+        <Typography>No products available</Typography>
       )}
     </Stack>
   );

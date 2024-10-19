@@ -23,6 +23,7 @@ import {
   Paper,
 } from "@mui/material";
 import { FadeLoader } from "react-spinners";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function ProductForm({
   _id,
@@ -43,6 +44,7 @@ export default function ProductForm({
   const [isUploading, setIsUploading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const router = useRouter();
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     fetchCategories();
@@ -98,6 +100,7 @@ export default function ProductForm({
             icon: "success",
             confirmButtonText: "OK",
           });
+          queryClient.invalidateQueries({ queryKey: ["products"] });
           router.push("/dashboard/products");
         } else {
           Swal.fire({
@@ -117,6 +120,7 @@ export default function ProductForm({
             icon: "success",
             confirmButtonText: "OK",
           });
+          queryClient.invalidateQueries({ queryKey: ["products"] });
           router.push("/dashboard/products");
         } else {
           Swal.fire({

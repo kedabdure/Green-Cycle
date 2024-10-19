@@ -24,7 +24,7 @@ import {
   Stack,
 } from '@mui/material';
 import { Trash as DeleteIcon } from '@phosphor-icons/react';
-import { set } from 'mongoose';
+import { ScaleSpinner } from '@/components/loader/spinner';
 
 interface Category {
   _id: string;
@@ -254,7 +254,7 @@ export default function Categories() {
 
       {!createCategory && (
         <Stack spacing={2}>
-          <Typography variant="h1" fontSize="2.7rem">
+          <Typography variant="h3" >
             Categories
           </Typography>
           <Box mt={2}>
@@ -263,7 +263,7 @@ export default function Categories() {
             </Button>
           </Box>
           {isFetching ? (<Box mt={5} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <CircularProgress size={64} />
+            <ScaleSpinner />
           </Box>
           ) : (
             <Box mt={3}>

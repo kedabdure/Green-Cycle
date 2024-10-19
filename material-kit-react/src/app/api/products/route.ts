@@ -14,7 +14,7 @@ export async function GET(req: Request) {
     const product = await Product.findOne({ _id: id });
     return NextResponse.json(product);
   } else {
-    const products = await Product.find();
+    const products = await Product.find().sort({ updatedAt: -1 });
     return NextResponse.json(products);
   }
 }

@@ -11,6 +11,7 @@ import { Typography } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import Swal from 'sweetalert2';
+import { useQueryClient } from '@tanstack/react-query';
 
 const ITEM_HEIGHT = 48;
 
@@ -22,6 +23,7 @@ export default function ProductOptions({ productId }: ProductOptionsProps) {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const router = useRouter();
+  const queryClient = useQueryClient();
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -42,7 +44,7 @@ export default function ProductOptions({ productId }: ProductOptionsProps) {
     try {
       const res = await axios.delete(`/api/products?id=${productId}`)
       if (res.status === 200) {
-        router.refresh();
+        queryClient.invalidateQueries({ queryKey: ['products'] });
         Swal.fire({
           title: "success",
           text: "Product deleted successfully!",
