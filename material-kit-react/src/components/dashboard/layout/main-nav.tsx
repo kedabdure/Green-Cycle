@@ -11,18 +11,31 @@ import { Bell as BellIcon } from '@phosphor-icons/react/dist/ssr/Bell';
 import { List as ListIcon } from '@phosphor-icons/react/dist/ssr/List';
 import { MagnifyingGlass as MagnifyingGlassIcon } from '@phosphor-icons/react/dist/ssr/MagnifyingGlass';
 import { Users as UsersIcon } from '@phosphor-icons/react/dist/ssr/Users';
+import { useQuery } from '@tanstack/react-query';
 
 import { usePopover } from '@/hooks/use-popover';
 
 import { MobileNav } from './mobile-nav';
 import { UserPopover } from './user-popover';
 import { useUser } from '@/hooks/use-user';
+import axios from 'axios';
 
 
 export function MainNav(): React.JSX.Element {
   const [openNav, setOpenNav] = React.useState<boolean>(false);
   const userPopover = usePopover<HTMLDivElement>();
-  const {user} = useUser();
+  const { user } = useUser();
+
+  const {data} = useQuery({
+    queryKey: ['admin'],
+    queryFn: async () => {
+      if (!user) {
+        return null;
+      }
+      const res = await axios.get(`/api/admins?email=${user.email}`);
+      return res.data;
+    }
+  });
 
   return (
     <React.Fragment>
@@ -72,7 +85,7 @@ export function MainNav(): React.JSX.Element {
             <Avatar
               onClick={userPopover.handleOpen}
               ref={userPopover.anchorRef}
-              src={user?.image || '/assets/avatar.png'}
+              src={data?.image || '/assets/avatar.png'}
               sx={{ cursor: 'pointer' }}
             />
           </Stack>
