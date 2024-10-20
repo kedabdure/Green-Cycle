@@ -11,11 +11,13 @@ import Typography from '@mui/material/Typography';
 import { GearSix as GearSixIcon } from '@phosphor-icons/react/dist/ssr/GearSix';
 import { SignOut as SignOutIcon } from '@phosphor-icons/react/dist/ssr/SignOut';
 import { User as UserIcon } from '@phosphor-icons/react/dist/ssr/User';
+import { useQueryClient, useQuery } from '@tanstack/react-query';
 
 import { paths } from '@/paths';
 import { logger } from '@/lib/default-logger';
 import { useUser } from '@/hooks/use-user';
 import { signOut } from 'next-auth/react';
+import axios from 'axios';
 
 export interface UserPopoverProps {
   anchorEl: Element | null;
@@ -24,22 +26,30 @@ export interface UserPopoverProps {
 }
 
 export function UserPopover({ anchorEl, onClose, open }: UserPopoverProps): React.JSX.Element {
-  const { checkSession, user } = useUser();
+  const { user } = useUser();
   const router = useRouter();
+  const queryClient = useQueryClient();
 
-  const name = user?.name || '';
   const email = user?.email || '';
 
+  const { data } = useQuery({
+    queryKey: ['admin'],
+    queryFn: async () => {
+      const res = await axios.get(`/api/admins?email=${email}`);
+      return res.data;
+    }
+  })
+
   const handleSignOut = React.useCallback(async (): Promise<void> => {
+    if (!window.confirm('Are you sure you want to sign out?')) {
+      return;
+    }
     try {
       await signOut();
-      await checkSession?.();
-
-      router.refresh();
     } catch (err) {
       logger.error('Sign out error', err);
     }
-  }, [checkSession, router]);
+  }, [router]);
 
   return (
     <Popover
@@ -50,9 +60,9 @@ export function UserPopover({ anchorEl, onClose, open }: UserPopoverProps): Reac
       slotProps={{ paper: { sx: { width: '240px' } } }}
     >
       <Box sx={{ p: '16px 20px ' }}>
-        <Typography variant="subtitle1">{name}</Typography>
+        <Typography variant="subtitle1">{data.name}</Typography>
         <Typography color="text.secondary" variant="body2">
-          {email}
+          {data.email}
         </Typography>
       </Box>
       <Divider />

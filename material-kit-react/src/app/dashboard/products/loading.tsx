@@ -9,7 +9,7 @@ export default function Loading() {
       justifyContent: "center",
       alignItems: "center",
       width: "100%",
-      height: "100% !important",
+      height: "50vh",
     }}>
       <ScaleLoader
         color="darkblue"

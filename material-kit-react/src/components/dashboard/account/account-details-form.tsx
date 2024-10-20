@@ -20,6 +20,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import { useUser } from '@/hooks/use-user';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useQueryClient } from '@tanstack/react-query';
 
 // Zod schema for validation
 const accountDetailsSchema = z.object({
@@ -35,6 +36,7 @@ type FormValues = z.infer<typeof accountDetailsSchema>;
 export function AccountDetailsForm(): React.JSX.Element {
   const { user, updateUser, adminInfo } = useUser();
   const [snackbarState, setSnackbarState] = useState<{ open: boolean; message: string; severity: 'error' | 'warning' | 'info' | 'success' | undefined }>({ open: false, message: "", severity: undefined });
+  const queryClient = useQueryClient();
 
   const [isUpdating, setIsUpdating] = useState(false);
   const [formData, setFormData] = useState<FormValues>({
@@ -101,10 +103,10 @@ export function AccountDetailsForm(): React.JSX.Element {
         message: "Profile updated successfully!",
         open: true,
       });
-
-      if (updateUser) {
-        await updateUser(formData);
-      }
+      queryClient.invalidateQueries({queryKey: ['admin']});
+      // if (updateUser) {
+      //   await updateUser(formData);
+      // }
     } catch (error) {
       console.error('Error updating profile:', error);
       setIsUpdating(false);
