@@ -13,8 +13,8 @@ export default function Loading() {
     }}>
       <ScaleLoader
         color="darkblue"
-        height={48}
-        width={6}
+        height={40}
+        width={5}
       />
     </Box>
   );

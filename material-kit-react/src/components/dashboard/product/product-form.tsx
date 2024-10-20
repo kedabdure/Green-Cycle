@@ -160,9 +160,10 @@ export default function ProductForm({
 
     const data = new FormData();
     Array.from(files).forEach((file) => data.append("file", file));
+    data.append("directory", "/ecommerce/products");
 
     try {
-      const res = await axios.post("/api/productUpload", data, {
+      const res = await axios.post("/api/imageUpload", data, {
         headers: {
           "Content-Type": "multipart/form-data",
         },

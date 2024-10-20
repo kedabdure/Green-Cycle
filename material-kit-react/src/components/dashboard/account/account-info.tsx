@@ -36,7 +36,6 @@ export function AccountInfo(): React.JSX.Element {
     const file = event.target.files?.[0];
     if (file) {
       setSelectedFile(file);
-      console.log('Selected file:', file);
 
       const formData = new FormData();
       formData.append('file', file);
@@ -50,7 +49,6 @@ export function AccountInfo(): React.JSX.Element {
           },
         });
         if (response.status === 200) {
-          console.log(response.data);
           const postData = await axios.put(`/api/admins?email=${data?.email}`, { image: response.data.urls[0] });
           if (postData.status === 200) {
             Swal.fire({

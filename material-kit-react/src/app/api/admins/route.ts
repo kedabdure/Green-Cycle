@@ -68,7 +68,6 @@ export async function PUT(req: Request) {
   }
   try {
     const data = await req.json();
-    console.log(data);
     if (data.password) {
       data.password = await hashPassword(data.password);
     }
