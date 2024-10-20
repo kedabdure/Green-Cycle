@@ -73,7 +73,7 @@ export function CustomersTable({ rows }: CustomersTableProps): React.JSX.Element
               <TableCell>Email</TableCell>
               <TableCell>Phone</TableCell>
               <TableCell>Location</TableCell>
-              <TableCell>Signed Up</TableCell>
+              <TableCell>Status</TableCell>
               <TableCell>Actions</TableCell>
             </TableRow>
           </TableHead>
@@ -98,15 +98,19 @@ export function CustomersTable({ rows }: CustomersTableProps): React.JSX.Element
                   <TableCell>
                     <Stack sx={{ alignItems: 'center' }} direction="row" spacing={2}>
                       <Avatar src={row.image} />
-                      <Typography variant="subtitle2">{row.name}</Typography>
+                      <Typography variant="subtitle2">{row.name}<br />
+                        <Typography variant="caption">{dayjs(row.createdAt).format('MMM D, YYYY')}</Typography>
+                      </Typography>
                     </Stack>
                   </TableCell>
                   <TableCell>{row.email}</TableCell>
                   <TableCell>{row.phone}</TableCell>
                   <TableCell>
-                    {row.streetAddress}, {row.city},<br /> {row.country}
+                    {row.streetAddress}, {row.city},<br /> {row.country}</TableCell>
+                  <TableCell sx={{p: 0}}>
+                    {row.status === 'active' && <span style={{ width: '100px', borderRadius: '25px', color: '#f1f1f1', padding: '4px 10px', backgroundColor: 'green' }}>{row.status}</span>}
+                    {row.status === 'suspended' && <span style={{ width: '100px', borderRadius: '25px', color: '#f1f1f1', padding: '4px 10px', backgroundColor: 'orange' }}>{row.status}</span>}
                   </TableCell>
-                  <TableCell>{dayjs(row.createdAt).format('MMM D, YYYY')}</TableCell>
                   <TableCell>
                     <CustomerOptions customerId={row._id} />
                   </TableCell>

@@ -80,10 +80,6 @@ export function SideNav(): React.JSX.Element {
       <Box component="nav" sx={{ flex: '1 1 auto', p: '12px' }}>
         {renderNavItems({ pathname, items: navItems })}
       </Box>
-      <Divider sx={{ borderColor: 'var(--mui-palette-neutral-700)' }} />
-      <Stack spacing={2} sx={{ p: 3 }}>
-        logout
-      </Stack>
     </Box>
   );
 }
@@ -150,8 +146,6 @@ function NavItem({ disabled, external, href, icon, matcher, pathname, title }: N
               }),
           },
         }}
-
-
       >
         <Box sx={{ alignItems: 'center', display: 'flex', justifyContent: 'center', flex: '0 0 auto' }}>
           {Icon ? (

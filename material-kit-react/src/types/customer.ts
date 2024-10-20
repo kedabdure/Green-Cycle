@@ -7,6 +7,7 @@ export interface Customer {
   streetAddress: string;
   city: string;
   country: string;
+  status: string;
   createdAt: Date;
   updatedAt?: Date;
 }

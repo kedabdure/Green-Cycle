@@ -13,6 +13,7 @@ const UserSchema = new Schema(
     city: { type: String },
     country: { type: String },
     postalCode: { type: String },
+    status: { type: String, default: "active" },
   },
   { timestamps: true }
 );

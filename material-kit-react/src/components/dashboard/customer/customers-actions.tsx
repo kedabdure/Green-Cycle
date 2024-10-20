@@ -6,13 +6,15 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import { Pencil as PencilIcon } from '@phosphor-icons/react/dist/ssr/Pencil';
 import { Trash as TrashIcon } from '@phosphor-icons/react/dist/ssr/Trash';
+import { Pulse } from '@phosphor-icons/react/dist/ssr/Pulse';
 import { DotsThreeVertical as MoreVertIcon } from '@phosphor-icons/react/dist/ssr/DotsThreeVertical';
 import { HandPalm as SuspendIcon } from '@phosphor-icons/react/dist/ssr/HandPalm';
-import { Typography } from '@mui/material';
+import { Divider, Typography } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import { useQueryClient } from '@tanstack/react-query';
+import { Divide } from '@phosphor-icons/react/dist/ssr';
 
 const ITEM_HEIGHT = 48;
 
@@ -29,6 +31,7 @@ export default function CustomerOptions({ customerId }: CustomerOptionsProps) {
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
+
   const handleClose = () => {
     setAnchorEl(null);
   };
@@ -66,12 +69,12 @@ export default function CustomerOptions({ customerId }: CustomerOptionsProps) {
     handleClose();
   };
 
-  const handleSuspend = async () => {
+  const handleSuspend = async (status: string) => {
     if (!window.confirm('Are you sure you want to suspend this customer?')) {
       return;
     }
     try {
-      const res = await axios.patch(`/api/customers/suspend?id=${customerId}`);
+      const res = await axios.put(`/api/customers?id=${customerId}`, { status: `${status}` });
       if (res.status === 200) {
         queryClient.invalidateQueries({ queryKey: ['customers'] });
         Swal.fire({
@@ -127,16 +130,23 @@ export default function CustomerOptions({ customerId }: CustomerOptionsProps) {
             Edit
           </Typography>
         </MenuItem>
+        <MenuItem onClick={() => handleSuspend("active")}>
+          <Pulse size={17} color="green" />
+          <Typography ml="3px" fontSize=".9rem" color="green">
+            Active
+          </Typography>
+        </MenuItem>
+        <MenuItem onClick={() => handleSuspend("suspended")}>
+          <SuspendIcon size={17} color="orange" />
+          <Typography ml="3px" fontSize=".9rem" color="orange">
+            Suspend
+          </Typography>
+        </MenuItem>
+        <Divider />
         <MenuItem onClick={handleDelete}>
           <TrashIcon size={17} color="red" />
           <Typography ml="3px" fontSize=".9rem" color="red">
             Delete
-          </Typography>
-        </MenuItem>
-        <MenuItem onClick={handleSuspend}>
-          <SuspendIcon size={17} color="orange" />
-          <Typography ml="3px" fontSize=".9rem" color="orange">
-            Suspend
           </Typography>
         </MenuItem>
       </Menu>
