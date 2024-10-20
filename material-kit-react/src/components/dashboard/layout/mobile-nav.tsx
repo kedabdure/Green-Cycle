@@ -77,7 +77,7 @@ export function MobileNav({ open, onClose }: MobileNavProps): React.JSX.Element 
               Workspace
             </Typography>
             <Typography color="inherit" variant="subtitle1">
-              Devias
+              Nexaddis
             </Typography>
           </Box>
           <CaretUpDownIcon />
@@ -121,11 +121,11 @@ function NavItem({ disabled, external, href, icon, matcher, pathname, title }: N
       <Box
         {...(href
           ? {
-              component: external ? 'a' : RouterLink,
-              href,
-              target: external ? '_blank' : undefined,
-              rel: external ? 'noreferrer' : undefined,
-            }
+            component: external ? 'a' : RouterLink,
+            href,
+            target: external ? '_blank' : undefined,
+            rel: external ? 'noreferrer' : undefined,
+          }
           : { role: 'button' })}
         sx={{
           alignItems: 'center',
@@ -145,6 +145,14 @@ function NavItem({ disabled, external, href, icon, matcher, pathname, title }: N
             cursor: 'not-allowed',
           }),
           ...(active && { bgcolor: 'var(--NavItem-active-background)', color: 'var(--NavItem-active-color)' }),
+          '&:hover': {
+            ...(active
+              ? {}
+              : {
+                bgcolor: 'var(--NavItem-hover-background)',
+                color: 'var(--NavItem-color)',
+              }),
+          },
         }}
       >
         <Box sx={{ alignItems: 'center', display: 'flex', justifyContent: 'center', flex: '0 0 auto' }}>

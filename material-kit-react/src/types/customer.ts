@@ -1,13 +1,12 @@
-export interface CustomerProps {
+export interface Customer {
+  _id: string;
+  image: string;
   name: string;
   email: string;
-  phone?: string;
-  password: string;
-  image?: string;
-  streetAddress?: string;
-  city?: string;
-  country?: string;
-  postalCode?: string;
-  createdAt?: Date;
+  phone: string;
+  streetAddress: string;
+  city: string;
+  country: string;
+  createdAt: Date;
   updatedAt?: Date;
 }

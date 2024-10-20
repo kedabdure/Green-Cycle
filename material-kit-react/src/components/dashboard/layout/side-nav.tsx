@@ -141,7 +141,17 @@ function NavItem({ disabled, external, href, icon, matcher, pathname, title }: N
             cursor: 'not-allowed',
           }),
           ...(active && { bgcolor: 'var(--NavItem-active-background)', color: 'var(--NavItem-active-color)' }),
+          '&:hover': {
+            ...(active
+              ? {}
+              : {
+                bgcolor: 'var(--NavItem-hover-background)',
+                color: 'var(--NavItem-color)',
+              }),
+          },
         }}
+
+
       >
         <Box sx={{ alignItems: 'center', display: 'flex', justifyContent: 'center', flex: '0 0 auto' }}>
           {Icon ? (

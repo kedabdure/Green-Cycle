@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import ProductForm from "@/components/dashboard/product/product-form";
-import Spinner from "@/components/loader/spinner";
 import { Typography } from "@mui/material";
 
 export default function ProductOptions({ params }: { params: { editId: string } }) {
@@ -32,9 +31,6 @@ export default function ProductOptions({ params }: { params: { editId: string } 
   return (
     <div>
       <Typography variant="h4" mb="1rem">Edit Product</Typography>
-      {!productInfo && (
-        <Spinner />
-      )}
       {productInfo && (
         <ProductForm {...productInfo} />
       )}

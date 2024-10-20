@@ -15,47 +15,40 @@ import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
 import dayjs from 'dayjs';
-
+import CustomerOptions from '@/components/dashboard/customer/customers-actions';
 import { useSelection } from '@/hooks/use-selection';
-
-function noop(): void {
-  // do nothing
-}
-
-export interface Customer {
-  _id: string;
-  image: string;
-  name: string;
-  email: string;
-  phone: string;
-  streetAddress: string;
-  city: string;
-  country: string;
-  createdAt: Date;
-  updatedAt?: Date;
-}
+import { Customer } from '@/types/customer';
 
 interface CustomersTableProps {
-  count?: number;
-  page?: number;
-  rows?: Customer[];
-  rowsPerPage?: number;
+  rows: Customer[];
 }
 
-export function CustomersTable({
-  count = 0,
-  rows = [],
-  page = 0,
-  rowsPerPage = 0,
-}: CustomersTableProps): React.JSX.Element {
-  const rowIds = React.useMemo(() => {
-    return rows.map((customer) => customer._id);
-  }, [rows]);
+export function CustomersTable({ rows }: CustomersTableProps): React.JSX.Element {
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+
+  const rowIds = React.useMemo(() => rows.map((customer) => customer._id), [rows]);
 
   const { selectAll, deselectAll, selectOne, deselectOne, selected } = useSelection(rowIds);
 
   const selectedSome = (selected?.size ?? 0) > 0 && (selected?.size ?? 0) < rows.length;
   const selectedAll = rows.length > 0 && selected?.size === rows.length;
+
+  // Handle pagination and rows per page change
+  const handlePageChange = (event: unknown, newPage: number) => {
+    setPage(newPage);
+  };
+
+  const handleRowsPerPageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
+  const paginatedRows = React.useMemo(() => {
+    const startIndex = page * rowsPerPage;
+    const endIndex = startIndex + rowsPerPage;
+    return rows.slice(startIndex, endIndex);
+  }, [page, rowsPerPage, rows]);
 
   return (
     <Card>
@@ -81,10 +74,11 @@ export function CustomersTable({
               <TableCell>Phone</TableCell>
               <TableCell>Location</TableCell>
               <TableCell>Signed Up</TableCell>
+              <TableCell>Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.map((row) => {
+            {paginatedRows.map((row) => {
               const isSelected = selected?.has(row._id);
 
               return (
@@ -110,24 +104,26 @@ export function CustomersTable({
                   <TableCell>{row.email}</TableCell>
                   <TableCell>{row.phone}</TableCell>
                   <TableCell>
-                    {row.streetAddress}, {row.city},<br></br> {row.country}
+                    {row.streetAddress}, {row.city},<br /> {row.country}
                   </TableCell>
                   <TableCell>{dayjs(row.createdAt).format('MMM D, YYYY')}</TableCell>
+                  <TableCell>
+                    <CustomerOptions customerId={row._id} />
+                  </TableCell>
                 </TableRow>
               );
             })}
           </TableBody>
-
         </Table>
       </Box>
       <Divider />
       <TablePagination
         component="div"
-        count={count}
-        onPageChange={noop}
-        onRowsPerPageChange={noop}
+        count={rows.length}
         page={page}
         rowsPerPage={rowsPerPage}
+        onPageChange={handlePageChange}
+        onRowsPerPageChange={handleRowsPerPageChange}
         rowsPerPageOptions={[5, 10, 25]}
       />
     </Card>

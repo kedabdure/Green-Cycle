@@ -24,7 +24,7 @@ import {
   Stack,
 } from '@mui/material';
 import { Trash as DeleteIcon } from '@phosphor-icons/react';
-import { ScaleSpinner } from '@/components/loader/spinner';
+import { ClipSpinner } from '@/components/loader/spinner';
 
 interface Category {
   _id: string;
@@ -262,8 +262,8 @@ export default function Categories() {
               Create Category
             </Button>
           </Box>
-          {isFetching ? (<Box mt={5} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <ScaleSpinner />
+          {isFetching ? (<Box mt={5}>
+            <ClipSpinner />
           </Box>
           ) : (
             <Box mt={3}>

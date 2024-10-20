@@ -17,7 +17,7 @@ import { ScaleSpinner } from "@/components/loader/spinner";
 
 import { ProductProps } from "@/types/product";
 import { OrderProps } from "@/types/order";
-import { CustomerProps } from "@/types/customer";
+import { Customer } from "@/types/customer";
 import { CategoryProps } from "@/types/category";
 
 // Fetch products from API
@@ -27,7 +27,7 @@ const fetchProducts = async (): Promise<ProductProps[]> => {
 };
 
 // Fetch customers from API
-const fetchCustomers = async (): Promise<CustomerProps[]> => {
+const fetchCustomers = async (): Promise<Customer[]> => {
   const { data } = await axios.get("/api/customers");
   return data;
 };
@@ -62,7 +62,7 @@ export default function DashboardPage(): React.JSX.Element {
     queryFn: fetchOrders,
   });
 
-  const { data: categories = [], isLoading: isLoadingCategories, isError: isErrorCategories} = useQuery({
+  const { data: categories = [], isLoading: isLoadingCategories, isError: isErrorCategories } = useQuery({
     queryKey: ["categories"],
     queryFn: fetchCategories,
   })
@@ -79,26 +79,43 @@ export default function DashboardPage(): React.JSX.Element {
       return sum + item.quantity * item.price_data.amount;
     }, 0);
     return acc + lineItemTotal;
-  }, 0).toFixed(2);
+  }, 0).toFixed(0);
 
 
   // TASKS PROGRESS
-  const completedTasks = orders.filter((order) => order.paid).length;
+  const completedTasks = orders.filter((order) => order.status === 'Delivered').length;
   const totalTasks = orders.length;
-  const tasksProgress = (completedTasks / totalTasks) * 100
+  const tasksProgress = ((completedTasks / totalTasks) * 100).toFixed(2);
 
 
   // TOTAL PRODUCTS
   const totalProductsNow = products.length;
-  const totalProductsLastMonth = products.filter((product) => dayjs(product.updatedAt).isAfter(dayjs().subtract(1, "month"))).length;
-  const diffProducts = ((totalProductsNow - totalProductsLastMonth) / totalProductsLastMonth * 100).toFixed(1);
-  const trendProducts = parseFloat(diffProducts) > 0 ? "up" : "down";
+  const totalProductsLastMonth = products.filter((product) =>
+    dayjs(product.updatedAt).isAfter(dayjs().subtract(1, "week"))
+  ).length;
+
+  const diffProducts = totalProductsLastMonth > 0
+    ? (((totalProductsNow - totalProductsLastMonth) / totalProductsLastMonth) * 100).toFixed(1)
+    : "N/A";
+
+  const trendProducts = totalProductsLastMonth === 0
+    ? "up"
+    : (parseFloat(diffProducts) > 0 ? "up" : "down");
+
 
   // TOTAL CUSTOMERS
   const totalCustomersNow = customers.length;
-  const totalCustomersLastMonth = customers.filter((customer) => dayjs(customer.createdAt).isAfter(dayjs().subtract(1, "month"))).length;
-  const diffCustomers = ((totalCustomersNow + 1 - totalCustomersLastMonth) / totalCustomersLastMonth * 100).toFixed(1);
-  const trendCustomers = parseFloat(diffCustomers) > 0 ? "up" : "down";
+  const totalCustomersLastMonth = customers.filter((customer: Customer) =>
+    dayjs(customer.createdAt).isAfter(dayjs().subtract(1, "month"))
+  ).length;
+
+  const diffCustomers = totalCustomersLastMonth > 0
+    ? (((totalCustomersNow - totalCustomersLastMonth) / totalCustomersLastMonth) * 100).toFixed(1)
+    : "N/A";
+
+  const trendCustomers = totalCustomersLastMonth === 0
+    ? "up"
+    : (parseFloat(diffCustomers) > 0 ? "up" : "down");
 
   // TOTAL TRAFFIC DISTRIBUTION
   const mobileCatId = categories.find((cat) => cat.name === "Mobile")?._id;
@@ -106,7 +123,7 @@ export default function DashboardPage(): React.JSX.Element {
   const tvId = categories.find((cat) => cat.name === "Tv")?._id;
 
   // calculate the total number of products in each category
-  const mobileNumber = (products.filter((product) => product.category === mobileCatId).length / totalProductsNow )* 100;
+  const mobileNumber = (products.filter((product) => product.category === mobileCatId).length / totalProductsNow) * 100;
   const pcNumber = (products.filter((product) => product.category === pcId).length / totalProductsNow) * 100;
   const tvNumber = (products.filter((product) => product.category === tvId).length / totalProductsNow) * 100;
 
@@ -115,7 +132,7 @@ export default function DashboardPage(): React.JSX.Element {
       {/* TOTAL PRODUCTS */}
       <Grid lg={3} sm={6} xs={12}>
         <TotalProducts
-          diff={diffProducts + 2}
+          diff={diffProducts}
           trend={trendProducts}
           sx={{ height: "100%" }}
           value={products.length.toString()}
@@ -134,7 +151,7 @@ export default function DashboardPage(): React.JSX.Element {
 
       {/* ORDER COMPLETED */}
       <Grid lg={3} sm={6} xs={12}>
-        <TasksProgress sx={{ height: "100%" }} value={tasksProgress} />
+        <TasksProgress sx={{ height: "100%" }} value={parseFloat(tasksProgress)} />
       </Grid>
 
       {/* TOTAL SALE */}
@@ -167,15 +184,7 @@ export default function DashboardPage(): React.JSX.Element {
       {/* LATEST ORDERS */}
       <Grid xs={12}>
         <LatestOrders
-          orders={orders.map((order: OrderProps) => ({
-            id: order._id,
-            customer: { name: order.firstName + " " + order.lastName },
-            location: order.city + ", " + order.country,
-            amount: order.line_items.amount,
-            status: order.paid ? "delivered" : "pending",
-            createdAt: dayjs(order.createdAt).toDate(),
-          }))}
-          sx={{ height: "100%" }}
+          orders={orders}
         />
       </Grid>
     </Grid>

@@ -14,24 +14,11 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import { ArrowRight as ArrowRightIcon } from '@phosphor-icons/react/dist/ssr/ArrowRight';
 import dayjs from 'dayjs';
-
-const statusMap = {
-  pending: { label: 'Pending', color: 'warning' },
-  delivered: { label: 'Delivered', color: 'success' },
-  refunded: { label: 'Refunded', color: 'error' },
-} as const;
-
-export interface Order {
-  location: string;
-  id: string;
-  customer: { name: string };
-  amount: number;
-  status: 'pending' | 'delivered' | 'refunded';
-  createdAt: Date;
-}
+import { Typography } from '@mui/material';
+import { OrderProps } from '@/types/order';
 
 export interface LatestOrdersProps {
-  orders?: Order[];
+  orders?: OrderProps[];
   sx?: SxProps;
 }
 
@@ -52,16 +39,98 @@ export function LatestOrders({ orders = [], sx }: LatestOrdersProps): React.JSX.
           </TableHead>
           <TableBody>
             {orders.map((order) => {
-              const { label, color } = statusMap[order.status] ?? { label: 'Unknown', color: 'default' };
-
               return (
-                <TableRow hover key={order.id}>
-                  <TableCell>{order.customer.name}</TableCell>
-                  <TableCell>{order.location}</TableCell>
+                <TableRow hover key={order._id}>
+                  <TableCell>{order.firstName} {order.lastName}</TableCell>
+                  <TableCell>{order.streetAddress}, {order.city}, {order.country}</TableCell>
                   <TableCell>{dayjs(order.createdAt).format('MMM D, YYYY')}</TableCell>
-                  <TableCell>
-                    <Chip color={color} label={label} size="small" />
+                  <TableCell sx={{ p: 0 }}>
+                    {order.status === 'Pending' && (
+                      <Typography
+                        sx={{
+                          width: '90px',
+                          backgroundColor: '#FFC107',
+                          color: '#fff',
+                          borderRadius: '25px',
+                          fontSize: '.8rem',
+                          padding: '4px 8px',
+                          textAlign: 'center',
+                        }}
+                        variant="body2"
+                      >
+                        {order.status}
+                      </Typography>
+                    )}
+
+                    {order.status === 'Shipped' && (
+                      <Typography
+                        sx={{
+                          width: '90px',
+                          backgroundColor: '#0D6EFD',
+                          color: '#fff',
+                          borderRadius: '25px',
+                          fontSize: '.8rem',
+                          padding: '4px 8px',
+                          textAlign: 'center',
+                        }}
+                        variant="body2"
+                      >
+                        {order.status}
+                      </Typography>
+                    )}
+
+                    {order.status === 'On the Way' && (
+                      <Typography
+                        sx={{
+                          width: '90px',
+                          backgroundColor: '#0dcaf0',
+                          color: '#fff',
+                          borderRadius: '25px',
+                          fontSize: '.8rem',
+                          padding: '4px 6px',
+                          textAlign: 'center',
+                        }}
+                        variant="body2"
+                      >
+                        {order.status}
+                      </Typography>
+                    )}
+
+                    {order.status === 'Delivered' && (
+                      <Typography
+                        sx={{
+                          width: '90px',
+                          backgroundColor: '#198754',
+                          color: '#fff',
+                          borderRadius: '25px',
+                          fontSize: '.8rem',
+                          padding: '4px 8px',
+                          textAlign: 'center',
+                        }}
+                        variant="body2"
+                      >
+                        {order.status}
+                      </Typography>
+                    )}
+
+                    {order.status === 'Cancelled' && (
+                      <Typography
+                        sx={{
+                          width: '90px',
+                          backgroundColor: '#DC3545',
+                          color: '#fff',
+                          borderRadius: '25px',
+                          fontSize: '.8rem',
+                          padding: '4px 8px',
+                          textAlign: 'center',
+                        }}
+                        variant="body2"
+                      >
+                        {order.status}
+                      </Typography>
+                    )}
                   </TableCell>
+
                 </TableRow>
               );
             })}

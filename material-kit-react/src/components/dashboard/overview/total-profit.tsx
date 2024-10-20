@@ -30,8 +30,8 @@ export function TotalProfit({ value, sx }: TotalProfitProps): React.JSX.Element 
               <ReceiptIcon fontSize="var(--icon-fontSize-lg)" />
             </Avatar>
           </Stack>
-          <Typography variant="h5">
-            {formateNumber(value)} <Typography component="span" fontSize="1rem" color="text.secondary">ETB</Typography>
+          <Typography variant="h4">
+            {formateNumber(value)} <Typography component="span" fontSize="1rem" fontWeight= 'bold' color="text.secondary">ETB</Typography>
           </Typography>
         </Stack>
       </CardContent>

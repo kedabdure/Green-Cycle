@@ -1,33 +1,48 @@
+"use client";
+
 import * as React from 'react';
-import { Suspense } from 'react';
+import { Suspense, useState } from 'react';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { Download as DownloadIcon } from '@phosphor-icons/react/dist/ssr/Download';
 import { Plus as PlusIcon } from '@phosphor-icons/react/dist/ssr/Plus';
 import { Upload as UploadIcon } from '@phosphor-icons/react/dist/ssr/Upload';
+import { useQuery } from '@tanstack/react-query';
+import axios from 'axios';
 
 import { config } from '@/config';
 import { CustomersFilters } from '@/components/dashboard/customer/customers-filters';
 import { CustomersTable } from '@/components/dashboard/customer/customers-table';
-import type { Customer } from '@/components/dashboard/customer/customers-table';
-import { mongooseConnect } from '@/lib/mongoose';
-import User from '@/models/User';
+import { ScaleSpinner } from '@/components/loader/spinner';
 
-// Metadata can still be defined for the page
-export const metadata = { title: `Customers | Dashboard | ${config.site.name}` };
+const fetchCustomers = async () => {
+  const { data } = await axios.get('/api/customers');
+  return data;
+};
 
-export default async function Page(): Promise<React.JSX.Element> {
-  await mongooseConnect();
-  const customers = await User.find();
-  const customersData = JSON.parse(JSON.stringify(customers));
+export default function Page(): React.JSX.Element {
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
 
-  const page = 0;
-  const rowsPerPage = 5;
-  const paginatedCustomers = applyPagination(customersData, page, rowsPerPage);
+  const { data: customers = [], isLoading, isError } = useQuery({
+    queryKey: ['customers'],
+    queryFn: fetchCustomers,
+  });
+
+  const handlePageChange = (newPage: number) => {
+    setPage(newPage);
+  };
+
+  const handleRowsPerPageChange = (newRowsPerPage: number) => {
+    setRowsPerPage(newRowsPerPage);
+    setPage(0); // Reset to page 0 when changing rows per page
+  };
+
+  const paginatedCustomers = applyPagination(customers, page, rowsPerPage);
 
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<ScaleSpinner />}>
       <Stack spacing={3}>
         <Stack direction="row" spacing={3}>
           <Stack spacing={1} sx={{ flex: '1 1 auto' }}>
@@ -48,17 +63,12 @@ export default async function Page(): Promise<React.JSX.Element> {
           </div>
         </Stack>
         <CustomersFilters />
-        <CustomersTable
-          count={paginatedCustomers.length}
-          page={page}
-          rows={paginatedCustomers}
-          rowsPerPage={rowsPerPage}
-        />
+        <CustomersTable rows={customers}/>
       </Stack>
     </Suspense>
   );
 }
 
-function applyPagination(rows: Customer[], page: number, rowsPerPage: number): Customer[] {
+function applyPagination(rows: any[], page: number, rowsPerPage: number): any[] {
   return rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 }
