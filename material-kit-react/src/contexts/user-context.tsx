@@ -46,14 +46,14 @@ export function UserProvider({ children }: UserProviderProps): React.JSX.Element
   // FETCH ADMIN INFO FROM AN API
   const fetchAdminInfo = async (email: string) => {
     try {
-      const res = await axios.get(`/api/admin?email=${email}`);
+      const res = await axios.get(`/api/admins?email=${email}`);
       if (res.status === 200) {
         setAdminInfo(res.data);
       } else {
-        throw new Error('Failed to fetch admin info');
+        throw new Error('Failed to fetch admins info');
       }
     } catch (error) {
-      logger.error('Error fetching admin info:', error);
+      logger.error('Error fetching admins info:', error);
     }
   };
 

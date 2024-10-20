@@ -23,8 +23,7 @@ import axios from 'axios';
 
 // Zod schema for validation
 const accountDetailsSchema = z.object({
-  firstName: z.string().min(1, 'First name is required'),
-  lastName: z.string().optional(),
+  name: z.string().min(1, 'Name is required'),
   email: z.string().email('Invalid email address'),
   phone: z.string().optional(),
   city: z.string().optional(),
@@ -39,8 +38,7 @@ export function AccountDetailsForm(): React.JSX.Element {
 
   const [isUpdating, setIsUpdating] = useState(false);
   const [formData, setFormData] = useState<FormValues>({
-    firstName: user?.name?.split(' ')[0] || '',
-    lastName: user?.name?.split(' ')[1] || '',
+    name: user?.name || '',
     email: user?.email || '',
     phone: '',
     city: '',
@@ -87,7 +85,7 @@ export function AccountDetailsForm(): React.JSX.Element {
     setErrors({});
 
     try {
-      const response = await axios.put('/api/admin', formData);
+      const response = await axios.put(`/api/admins?email=${formData.email}`, formData);
       if (response.status !== 200) {
         setIsUpdating(false);
         setSnackbarState({
@@ -146,27 +144,16 @@ export function AccountDetailsForm(): React.JSX.Element {
         <CardContent>
           <Grid container spacing={3}>
             <Grid md={6} xs={12}>
-              <FormControl fullWidth required error={Boolean(errors.firstName)}>
-                <InputLabel>First name</InputLabel>
+              <FormControl fullWidth required error={Boolean(errors.name)}>
+                <InputLabel>Name</InputLabel>
                 <OutlinedInput
-                  value={formData.firstName}
+                  value={formData.name}
                   onChange={handleInputChange}
                   label="First name"
-                  name="firstName"
-                  error={Boolean(errors.firstName)}
+                  name="name"
+                  error={Boolean(errors.name)}
                 />
-                {errors.firstName && <p>{errors.firstName}</p>}
-              </FormControl>
-            </Grid>
-            <Grid md={6} xs={12}>
-              <FormControl fullWidth error={Boolean(errors.lastName)}>
-                <InputLabel>Last name</InputLabel>
-                <OutlinedInput
-                  value={formData.lastName || ''}
-                  onChange={handleInputChange}
-                  label="Last name"
-                  name="lastName"
-                />
+                {errors.name && <p>{errors.name}</p>}
               </FormControl>
             </Grid>
             <Grid md={6} xs={12}>
