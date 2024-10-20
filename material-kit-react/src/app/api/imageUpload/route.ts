@@ -3,7 +3,7 @@ import ImageKit from 'imagekit';
 import busboy from 'busboy';
 import { Readable } from 'stream';
 
-// INITIALIZE IMAGEKIT
+// Initialize ImageKit
 const imagekit = new ImageKit({
   publicKey: process.env.NEXT_PUBLIC_IMAGEKIT_PUBLIC_KEY || '',
   privateKey: process.env.IMAGEKIT_PRIVATE_KEY || '',
@@ -17,26 +17,27 @@ interface ImageKitUploadResponse {
 
 const MAX_RETRIES = 3;
 
+// Function to retry file uploads in case of failure
 async function retryUpload(
   fileBuffer: Buffer,
   fileName: string,
+  folder: string,
   retries = MAX_RETRIES
 ): Promise<ImageKitUploadResponse> {
   let attempt = 0;
   while (attempt < retries) {
     try {
-      // Try uploading the file
       const result = await imagekit.upload({
         file: fileBuffer,
         fileName,
-        folder: '/ecommerce/products',
+        folder,
       });
       return result;
-    } catch (error) {
+    } catch (error: any) {
       attempt++;
       if (attempt >= retries) {
-        const errorMessage = (error as any).message;
-        throw new Error(`Failed to upload after ${attempt} attempts: ${errorMessage}`);
+        console.error(`Error: ${error.message}`);
+        throw new Error(`Failed to upload after ${attempt} attempts: ${error.message}`);
       }
       console.log(`Retrying upload (${attempt}/${retries}) for file: ${fileName}`);
     }
@@ -44,26 +45,24 @@ async function retryUpload(
   throw new Error('Unexpected error: upload failed after retries.');
 }
 
+// POST handler to process image upload
 export async function POST(req: NextRequest): Promise<NextResponse> {
-  try {
-    if (req.method !== 'POST') {
-      return NextResponse.json({ message: 'Method not allowed' }, { status: 405 });
-    }
+  if (req.method !== 'POST') {
+    return NextResponse.json({ message: 'Method not allowed' }, { status: 405 });
+  }
 
-    // CREATE a new BUSBOY instance to `parse form data`
+  try {
     const headers = Object.fromEntries(req.headers.entries());
     const bb = busboy({ headers });
 
     const files: { fileBuffer: Buffer; fileName: string; mimeType: string }[] = [];
+    let directory = '';
 
-    // HANDLE the 'FILE' event when files are uploaded
+    // Collect file chunks and directory name from the request
     bb.on('file', (name, file, info) => {
       const { filename, mimeType } = info;
-
       const chunks: Buffer[] = [];
-      file.on('data', (data: Buffer) => {
-        chunks.push(data);
-      });
+      file.on('data', (data: Buffer) => chunks.push(data));
 
       file.on('close', () => {
         files.push({
@@ -74,33 +73,37 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       });
     });
 
-    // HANDLE the 'FIELD' event if there are any FORM FIELDS
     bb.on('field', (name, val) => {
-      console.log(`Field [${name}]: value: ${val}`);
+      if (name === 'directory') {
+        directory = val;
+      }
     });
 
-    // Create a READABLE STREAM and pipe it to BUSBOY
     const readableStream = Readable.from(req.body as any);
+
+    // Wait for file processing completion
     await new Promise<void>((resolve, reject) => {
       bb.on('close', resolve);
       bb.on('error', reject);
       readableStream.pipe(bb);
     });
 
-    // If NO FILES are found
+    // Validate the request
     if (!files.length) {
       return NextResponse.json({ message: 'No files found in the request.' }, { status: 400 });
     }
+    if (!directory) {
+      return NextResponse.json({ message: 'No directory specified.' }, { status: 400 });
+    }
 
-    // UPLOAD ALL FILES to ImageKit CONCURRENTLY with retry logic
+    // Upload each file to the specified directory in ImageKit
     const uploadPromises = files.map(({ fileBuffer, fileName }) =>
-      retryUpload(fileBuffer, fileName)
+      retryUpload(fileBuffer, fileName, directory)
     );
 
-    // WAIT for all file UPLOADS TO FINISH
     const uploadResults: ImageKitUploadResponse[] = await Promise.all(uploadPromises);
 
-    // GENERATE URLs with transformations for each uploaded file
+    // Generate and return image URLs with transformations
     const urls = uploadResults.map(result =>
       imagekit.url({
         src: result.url,
@@ -114,8 +117,11 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     );
 
     return NextResponse.json({ message: 'Upload successful!', urls }, { status: 200 });
-  } catch (err) {
-    console.error('Error uploading images:', err);
-    return NextResponse.json({ message: 'Upload failed', error: (err as Error).message }, { status: 500 });
+  } catch (err: any) {
+    console.error('Error uploading images:', err.message);
+    return NextResponse.json(
+      { message: 'Upload failed', error: err.message || 'Unexpected error occurred' },
+      { status: 500 }
+    );
   }
 }

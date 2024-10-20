@@ -26,6 +26,8 @@ export function MainNav(): React.JSX.Element {
   const userPopover = usePopover<HTMLDivElement>();
   const { user } = useUser();
 
+  console.log('user', user);
+
   const {data} = useQuery({
     queryKey: ['admin'],
     queryFn: async () => {
