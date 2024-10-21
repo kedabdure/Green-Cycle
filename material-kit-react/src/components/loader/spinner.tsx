@@ -42,7 +42,7 @@ export function ClipSpinner() {
       justifyContent: "center",
       alignItems: "center",
       width: "100%",
-      height: "100% !important",
+      height: "10vh",
     }}>
       <BeatLoader
         color="darkblue"

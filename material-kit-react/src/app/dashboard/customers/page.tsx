@@ -12,6 +12,7 @@ import axios from 'axios';
 
 import { CustomersFilters } from '@/components/dashboard/customer/customers-filters';
 import { CustomersTable } from '@/components/dashboard/customer/customers-table';
+import { Customer } from '@/types/customer';
 
 const fetchCustomers = async () => {
   const { data } = await axios.get('/api/customers');
@@ -23,6 +24,18 @@ export default function Page(): React.JSX.Element {
     queryKey: ['customers'],
     queryFn: fetchCustomers,
   });
+
+  const [searchQuery, setSearchQuery] = React.useState<string>('');
+
+  const filteredCustomers = customers.filter((customer: { name: string; email: string; }) =>
+    customer.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    customer.email.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+
+  console.log("search", searchQuery)
+
+  console.log(filteredCustomers)
 
   return (
     <Stack spacing={3}>
@@ -44,8 +57,8 @@ export default function Page(): React.JSX.Element {
           </Button>
         </div>
       </Stack>
-      <CustomersFilters />
-      <CustomersTable rows={customers} />
+      <CustomersFilters onSearch={setSearchQuery} />
+      <CustomersTable rows={filteredCustomers} isLoading={isLoading} />
     </Stack>
   );
 }

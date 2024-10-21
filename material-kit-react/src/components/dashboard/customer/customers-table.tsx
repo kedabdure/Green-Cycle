@@ -18,12 +18,14 @@ import dayjs from 'dayjs';
 import CustomerOptions from '@/components/dashboard/customer/customers-actions';
 import { useSelection } from '@/hooks/use-selection';
 import { Customer } from '@/types/customer';
+import { ClipSpinner } from '@/components/loader/spinner';
 
 interface CustomersTableProps {
   rows: Customer[];
+  isLoading?: boolean;
 }
 
-export function CustomersTable({ rows }: CustomersTableProps): React.JSX.Element {
+export function CustomersTable({ rows, isLoading }: CustomersTableProps): React.JSX.Element {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
@@ -53,72 +55,75 @@ export function CustomersTable({ rows }: CustomersTableProps): React.JSX.Element
   return (
     <Card>
       <Box sx={{ overflowX: 'auto' }}>
-        <Table sx={{ minWidth: '800px' }}>
-          <TableHead>
-            <TableRow>
-              <TableCell padding="checkbox">
-                <Checkbox
-                  checked={selectedAll}
-                  indeterminate={selectedSome}
-                  onChange={(event) => {
-                    if (event.target.checked) {
-                      selectAll();
-                    } else {
-                      deselectAll();
-                    }
-                  }}
-                />
-              </TableCell>
-              <TableCell>Name</TableCell>
-              <TableCell>Email</TableCell>
-              <TableCell>Phone</TableCell>
-              <TableCell>Location</TableCell>
-              <TableCell>Status</TableCell>
-              <TableCell>Actions</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {paginatedRows.map((row) => {
-              const isSelected = selected?.has(row._id);
+        {isLoading ? (<ClipSpinner />
+        ) : (
+          <Table sx={{ minWidth: '800px' }}>
+            <TableHead>
+              <TableRow>
+                <TableCell padding="checkbox">
+                  <Checkbox
+                    checked={selectedAll}
+                    indeterminate={selectedSome}
+                    onChange={(event) => {
+                      if (event.target.checked) {
+                        selectAll();
+                      } else {
+                        deselectAll();
+                      }
+                    }}
+                  />
+                </TableCell>
+                <TableCell>Name</TableCell>
+                <TableCell>Email</TableCell>
+                <TableCell>Phone</TableCell>
+                <TableCell>Location</TableCell>
+                <TableCell>Status</TableCell>
+                <TableCell>Actions</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {paginatedRows.map((row) => {
+                const isSelected = selected?.has(row._id);
 
-              return (
-                <TableRow hover key={row._id} selected={isSelected}>
-                  <TableCell padding="checkbox">
-                    <Checkbox
-                      checked={isSelected}
-                      onChange={(event) => {
-                        if (event.target.checked) {
-                          selectOne(row._id);
-                        } else {
-                          deselectOne(row._id);
-                        }
-                      }}
-                    />
-                  </TableCell>
-                  <TableCell>
-                    <Stack sx={{ alignItems: 'center' }} direction="row" spacing={2}>
-                      <Avatar src={row.image} />
-                      <Typography variant="subtitle2">{row.name}<br />
-                        <Typography variant="caption">{dayjs(row.createdAt).format('MMM D, YYYY')}</Typography>
-                      </Typography>
-                    </Stack>
-                  </TableCell>
-                  <TableCell>{row.email}</TableCell>
-                  <TableCell>{row.phone}</TableCell>
-                  <TableCell>
-                    {row.streetAddress}, {row.city},<br /> {row.country}</TableCell>
-                  <TableCell sx={{p: 0}}>
-                    {row.status === 'active' && <span style={{ width: '100px', borderRadius: '25px', color: '#f1f1f1', padding: '4px 10px', backgroundColor: 'green' }}>{row.status}</span>}
-                    {row.status === 'suspended' && <span style={{ width: '100px', borderRadius: '25px', color: '#f1f1f1', padding: '4px 10px', backgroundColor: 'orange' }}>{row.status}</span>}
-                  </TableCell>
-                  <TableCell>
-                    <CustomerOptions customerId={row._id} />
-                  </TableCell>
-                </TableRow>
-              );
-            })}
-          </TableBody>
-        </Table>
+                return (
+                  <TableRow hover key={row._id} selected={isSelected}>
+                    <TableCell padding="checkbox">
+                      <Checkbox
+                        checked={isSelected}
+                        onChange={(event) => {
+                          if (event.target.checked) {
+                            selectOne(row._id);
+                          } else {
+                            deselectOne(row._id);
+                          }
+                        }}
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <Stack sx={{ alignItems: 'center' }} direction="row" spacing={2}>
+                        <Avatar src={row.image} />
+                        <Typography variant="subtitle2">{row.name}<br />
+                          <Typography variant="caption">{dayjs(row.createdAt).format('MMM D, YYYY')}</Typography>
+                        </Typography>
+                      </Stack>
+                    </TableCell>
+                    <TableCell>{row.email}</TableCell>
+                    <TableCell>{row.phone}</TableCell>
+                    <TableCell>
+                      {row.streetAddress}, {row.city},<br /> {row.country}</TableCell>
+                    <TableCell sx={{ p: 0 }}>
+                      {row.status === 'active' && <span style={{ width: '100px', borderRadius: '25px', color: '#f1f1f1', padding: '4px 10px', backgroundColor: 'green' }}>{row.status}</span>}
+                      {row.status === 'suspended' && <span style={{ width: '100px', borderRadius: '25px', color: '#f1f1f1', padding: '4px 10px', backgroundColor: 'orange' }}>{row.status}</span>}
+                    </TableCell>
+                    <TableCell>
+                      <CustomerOptions customerId={row._id} />
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
+            </TableBody>
+          </Table>
+        )}
       </Box>
       <Divider />
       <TablePagination
