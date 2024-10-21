@@ -21,7 +21,7 @@ export async function GET(req: Request) {
         return NextResponse.json({ message: 'Admin not found with this email' }, { status: 404 });
       }
     } else if (id) {
-      const adminDoc = await Admin.findById(id);
+      const adminDoc = await Admin.findById({ _id: id });
       if (adminDoc) {
         return NextResponse.json(adminDoc, { status: 200 });
       } else {

@@ -60,9 +60,9 @@ export function UserPopover({ anchorEl, onClose, open }: UserPopoverProps): Reac
       slotProps={{ paper: { sx: { width: '240px' } } }}
     >
       <Box sx={{ p: '16px 20px ' }}>
-        <Typography variant="subtitle1">{data.name}</Typography>
+        <Typography variant="subtitle1">{data?.name}</Typography>
         <Typography color="text.secondary" variant="body2">
-          {data.email}
+          {data?.email}
         </Typography>
       </Box>
       <Divider />

@@ -12,6 +12,7 @@ export const paths = {
     orders: '/dashboard/orders',
     account: '/dashboard/account',
     customers: '/dashboard/customers',
+    admins: '/dashboard/admins',
     settings: '/dashboard/settings',
   },
 } as const;
