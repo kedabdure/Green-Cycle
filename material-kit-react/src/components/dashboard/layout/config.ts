@@ -7,7 +7,7 @@ export const navItems = [
   { key: 'categories', title: 'Categories', href: paths.dashboard.categories, icon: 'list-checks'},
   { key: 'orders', title: 'Orders', href: paths.dashboard.orders, icon: 'cart' },
   { key: 'customers', title: 'Customers', href: paths.dashboard.customers, icon: 'users' },
-  { key: 'admins', title: 'Admins', href: paths.dashboard.admins, icon: 'admin' },
+  { key: 'admins', title: 'Admins', href: paths.dashboard.admins.admins, icon: 'admin', matcher: {type: 'startsWith', href: paths.dashboard.admins.admins} },
   { key: 'settings', title: 'Settings', href: paths.dashboard.settings, icon: 'gear-six' },
   { key: 'account', title: 'Account', href: paths.dashboard.account, icon: 'user' },
 ] satisfies NavItemConfig[];

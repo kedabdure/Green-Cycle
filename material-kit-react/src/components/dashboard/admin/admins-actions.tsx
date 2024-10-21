@@ -46,8 +46,6 @@ export default function AdminOptions({ adminId }: AdminsOptionsProps) {
     enabled: !!adminEmail,
   })
 
-  console.log(admin.role)
-
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -57,7 +55,7 @@ export default function AdminOptions({ adminId }: AdminsOptionsProps) {
   };
 
   const handleDelete = async () => {
-    if (admin.role !== 'superadmin') {
+    if (admin.role !== 'super_admin') {
       Swal.fire({
         title: "Unauthorized!",
         text: "This action is allowed for Super Admins only!",
@@ -73,7 +71,7 @@ export default function AdminOptions({ adminId }: AdminsOptionsProps) {
     try {
       const res = await axios.delete(`/api/admins?id=${adminId}`);
       if (res.status === 200) {
-        queryClient.invalidateQueries({ queryKey: ['admin'] });
+        queryClient.invalidateQueries({ queryKey: ['admins'] });
         Swal.fire({
           title: "Success",
           text: "Customer deleted successfully!",

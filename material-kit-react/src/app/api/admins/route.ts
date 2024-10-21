@@ -28,7 +28,7 @@ export async function GET(req: Request) {
         return NextResponse.json({ message: 'Admin not found with this ID' }, { status: 404 });
       }
     } else {
-      const adminDocs = await Admin.find();
+      const adminDocs = await Admin.find().sort({ createdAt: -1 });
       if (adminDocs.length > 0) {
         return NextResponse.json(adminDocs, { status: 200 });
       } else {
@@ -46,14 +46,25 @@ export async function POST(req: Request) {
 
   try {
     const data = await req.json();
+
+    const { email } = data;
+
+    // Check if admin already exists
+    const admin = await Admin.findOne({ email });
+    if (admin) {
+      return NextResponse.json({ message: 'Admin with this email already exists' }, { status: 200 });
+    }
+
+    // CREATE new admin
     const newAdmin = await Admin.create(data);
     if (!newAdmin) {
-      return NextResponse.json({ error: 'Error creating admin' }, { status: 500 });
-    } else {
-      return NextResponse.json(newAdmin, { status: 201 });
+      return NextResponse.json({ error: 'Failed to create admin' }, { status: 500 });
     }
+
+    return NextResponse.json({ message: 'Admin created successfully', admin: newAdmin }, { status: 201 });
   } catch (error) {
-    return NextResponse.json({ error: 'Error creating admin' }, { status: 500 });
+    console.error('Error creating admin:', error);
+    return NextResponse.json({ error: 'Server error, unable to create admin' }, { status: 500 });
   }
 }
 

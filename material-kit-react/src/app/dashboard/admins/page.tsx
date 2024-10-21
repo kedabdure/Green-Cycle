@@ -14,6 +14,8 @@ import axios from 'axios';
 import { CustomersFilters } from '@/components/dashboard/customer/customers-filters';
 import { AdminsTable } from '@/components/dashboard/admin/admins-table';
 import { ScaleSpinner } from '@/components/loader/spinner';
+import { AdminsFilters } from '@/components/dashboard/admin/admins-filters';
+import Link from 'next/link';
 
 const fetchCustomers = async () => {
   const { data } = await axios.get('/api/admins');
@@ -42,13 +44,18 @@ export default function Page(): React.JSX.Element {
             </Stack>
           </Stack>
           <div>
-            <Button startIcon={<PlusIcon fontSize="var(--icon-fontSize-md)" />} variant="contained">
-              Add
-            </Button>
+            <Link
+              href={'/dashboard/admins/new'}
+              style={{ textDecoration: 'none', color: 'inherit' }}
+            >
+              <Button startIcon={<PlusIcon fontSize="var(--icon-fontSize-md)" />} variant="contained">
+                Create Admin
+              </Button>
+            </Link>
           </div>
         </Stack>
-        <CustomersFilters />
-        <AdminsTable rows={admins}/>
+        <AdminsFilters />
+        <AdminsTable rows={admins} />
       </Stack>
     </Suspense>
   );
