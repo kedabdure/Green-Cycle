@@ -19,13 +19,15 @@ import { ShieldStar, User } from '@phosphor-icons/react';
 import { useSelection } from '@/hooks/use-selection';
 import AdminProps from '@/types/admin';
 import AdminOptions from '@/components/dashboard/admin/admins-actions';
+import { ClipSpinner } from '@/components/loader/spinner';
 
 
 interface AdminsTableProps {
   rows?: AdminProps[];
+  isLoading: boolean;
 }
 
-export function AdminsTable({ rows = [] }: AdminsTableProps): React.JSX.Element {
+export function AdminsTable({ rows = [], isLoading }: AdminsTableProps): React.JSX.Element {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
@@ -46,55 +48,37 @@ export function AdminsTable({ rows = [] }: AdminsTableProps): React.JSX.Element 
   return (
     <Card>
       <Box sx={{ overflowX: 'auto' }}>
-        <Table sx={{ minWidth: '800px' }}>
-          <TableHead>
-            <TableRow>
-              <TableCell>Name</TableCell>
-              <TableCell>Email</TableCell>
-              <TableCell>Role</TableCell>
-              <TableCell>Status</TableCell>
-              <TableCell>Actions</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {paginatedRows.map((row) => {
-              return (
-                <TableRow hover key={row._id}>
-                  <TableCell>
-                    <Stack sx={{ alignItems: 'center' }} direction="row" spacing={2}>
-                      <Avatar src={row.image} />
-                      <Typography variant="subtitle2">
-                        {row.name}
-                        <br />
-                        <Typography variant="caption">{dayjs(row.createdAt).format('MMM D, YYYY')}</Typography>
-                      </Typography>
-                    </Stack>
-                  </TableCell>
-                  <TableCell>{row.email}</TableCell>
-                  <TableCell>
-                    <Typography
-                      sx={{
-                        backgroundColor: row.status === 'active' ? 'green' : 'orange',
-                        color: 'white',
-                        borderRadius: '25px',
-                        padding: '4px 10px',
-                        fontSize: '.85rem',
-                        textAlign: 'center',
-                      }}
-                    >
-                      {row.status === 'suspended' ? 'Suspended' : 'Active'}
-                    </Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Stack direction="row" alignItems="center" spacing={.5}>
-                      {row.role === 'super_admin' ? (
-                        <ShieldStar size={22} weight="bold" color="purple" />
-                      ) : (
-                        <User size={22} weight="bold" color="blue" />
-                      )}
+        {isLoading ? (<ClipSpinner />
+        ) : (
+          <Table sx={{ minWidth: '800px' }}>
+            <TableHead>
+              <TableRow>
+                <TableCell>Name</TableCell>
+                <TableCell>Email</TableCell>
+                <TableCell>Role</TableCell>
+                <TableCell>Status</TableCell>
+                <TableCell>Actions</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {paginatedRows.map((row) => {
+                return (
+                  <TableRow hover key={row._id}>
+                    <TableCell>
+                      <Stack sx={{ alignItems: 'center' }} direction="row" spacing={2}>
+                        <Avatar src={row.image} />
+                        <Typography variant="subtitle2">
+                          {row.name}
+                          <br />
+                          <Typography variant="caption">{dayjs(row.createdAt).format('MMM D, YYYY')}</Typography>
+                        </Typography>
+                      </Stack>
+                    </TableCell>
+                    <TableCell>{row.email}</TableCell>
+                    <TableCell>
                       <Typography
                         sx={{
-                          backgroundColor: row.role === 'super_admin' ? 'purple' : 'blue',
+                          backgroundColor: row.status === 'active' ? 'green' : 'orange',
                           color: 'white',
                           borderRadius: '25px',
                           padding: '4px 10px',
@@ -102,18 +86,39 @@ export function AdminsTable({ rows = [] }: AdminsTableProps): React.JSX.Element 
                           textAlign: 'center',
                         }}
                       >
-                        {row.role === 'super_admin' ? 'Super Admin' : 'Admin'}
+                        {row.status === 'suspended' ? 'Suspended' : 'Active'}
                       </Typography>
-                    </Stack>
-                  </TableCell>
-                  <TableCell>
-                    <AdminOptions adminId={row._id} />
-                  </TableCell>
-                </TableRow>
-              );
-            })}
-          </TableBody>
-        </Table>
+                    </TableCell>
+                    <TableCell>
+                      <Stack direction="row" alignItems="center" spacing={.5}>
+                        {row.role === 'super_admin' ? (
+                          <ShieldStar size={22} weight="bold" color="purple" />
+                        ) : (
+                          <User size={22} weight="bold" color="blue" />
+                        )}
+                        <Typography
+                          sx={{
+                            backgroundColor: row.role === 'super_admin' ? 'purple' : 'blue',
+                            color: 'white',
+                            borderRadius: '25px',
+                            padding: '4px 10px',
+                            fontSize: '.85rem',
+                            textAlign: 'center',
+                          }}
+                        >
+                          {row.role === 'super_admin' ? 'Super Admin' : 'Admin'}
+                        </Typography>
+                      </Stack>
+                    </TableCell>
+                    <TableCell>
+                      <AdminOptions adminId={row._id} />
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
+            </TableBody>
+          </Table>
+        )}
       </Box>
       <Divider />
       <TablePagination

@@ -32,11 +32,6 @@ export default function Page(): React.JSX.Element {
     customer.email.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-
-  console.log("search", searchQuery)
-
-  console.log(filteredCustomers)
-
   return (
     <Stack spacing={3}>
       <Stack direction="row" spacing={3}>

@@ -11,11 +11,11 @@ import { Upload as UploadIcon } from '@phosphor-icons/react/dist/ssr/Upload';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 
-import { CustomersFilters } from '@/components/dashboard/customer/customers-filters';
 import { AdminsTable } from '@/components/dashboard/admin/admins-table';
 import { ScaleSpinner } from '@/components/loader/spinner';
 import { AdminsFilters } from '@/components/dashboard/admin/admins-filters';
 import Link from 'next/link';
+import AdminProps from '@/types/admin';
 
 const fetchCustomers = async () => {
   const { data } = await axios.get('/api/admins');
@@ -27,6 +27,14 @@ export default function Page(): React.JSX.Element {
     queryKey: ['admins'],
     queryFn: fetchCustomers,
   });
+
+  const [searchQuery, setSearchQuery] = React.useState<string>('');
+
+  const filteredAdmins = admins.filter((admin: AdminProps) =>
+    admin.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    admin.email.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
 
   return (
     <Suspense fallback={<ScaleSpinner />}>
@@ -54,8 +62,8 @@ export default function Page(): React.JSX.Element {
             </Link>
           </div>
         </Stack>
-        <AdminsFilters />
-        <AdminsTable rows={admins} />
+        <AdminsFilters onSearch={setSearchQuery}/>
+        <AdminsTable rows={filteredAdmins} isLoading={isLoading}/>
       </Stack>
     </Suspense>
   );
