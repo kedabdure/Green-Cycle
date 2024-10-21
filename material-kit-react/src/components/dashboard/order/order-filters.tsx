@@ -4,7 +4,15 @@ import InputAdornment from '@mui/material/InputAdornment';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import { MagnifyingGlass as MagnifyingGlassIcon } from '@phosphor-icons/react/dist/ssr/MagnifyingGlass';
 
-export function OrdersFilters(): React.JSX.Element {
+interface OrderSearchProps {
+  onSearch: (query: string) => void;
+}
+
+export function OrdersFilters({ onSearch }: OrderSearchProps): React.JSX.Element {
+  const handleOrdersSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+    onSearch(event.target.value);
+  }
+
   return (
     <Card sx={{ p: 2 }}>
       <OutlinedInput
@@ -17,6 +25,7 @@ export function OrdersFilters(): React.JSX.Element {
           </InputAdornment>
         }
         sx={{ maxWidth: '500px' }}
+        onChange={handleOrdersSearch}
       />
     </Card>
   );

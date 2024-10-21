@@ -13,14 +13,16 @@ import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
-import dayjs from 'dayjs';
-import { useSelection } from '@/hooks/use-selection';
 import ProductOptions from './products-actions';
 import Image from 'next/image';
+import { ClipSpinner } from '@/components/loader/spinner';
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
+import { Tooltip } from '@mui/material';
 
-function noop(): void {
-  // do nothing
-}
+
+dayjs.extend(relativeTime);
+
 
 export interface ProductInterface {
   _id: string;
@@ -35,19 +37,16 @@ export interface ProductInterface {
 
 interface ProductsTableProps {
   rows?: ProductInterface[];
+  isLoading: boolean;
 }
 
-export function ProductsTable({ rows = [] }: ProductsTableProps): React.JSX.Element {
+export function ProductsTable({ rows = [], isLoading }: ProductsTableProps): React.JSX.Element {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
   const rowIds = React.useMemo(() => {
     return rows.map((product) => product._id);
   }, [rows]);
-
-  const { selectAll, deselectAll, selectOne, deselectOne, selected } = useSelection(rowIds);
-  const selectedSome = (selected?.size ?? 0) > 0 && (selected?.size ?? 0) < rows.length;
-  const selectedAll = rows.length > 0 && selected?.size === rows.length;
 
   const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
     setPage(newPage);
@@ -72,77 +71,70 @@ export function ProductsTable({ rows = [] }: ProductsTableProps): React.JSX.Elem
   return (
     <Card>
       <Box sx={{ overflowX: 'auto' }}>
-        <Table sx={{ minWidth: '800px' }}>
-          <TableHead>
-            <TableRow>
-              <TableCell padding="checkbox">
-                <Checkbox
-                  checked={selectedAll}
-                  indeterminate={selectedSome}
-                  onChange={(event) => {
-                    if (event.target.checked) {
-                      selectAll();
-                    } else {
-                      deselectAll();
-                    }
-                  }}
-                />
-              </TableCell>
-              <TableCell>Title</TableCell>
-              <TableCell>Price</TableCell>
-              <TableCell>Actions</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {paginatedRows.map((row) => {
-              const isSelected = selected?.has(row._id);
-              return (
-                <TableRow hover key={row._id} selected={isSelected}>
-                  <TableCell padding="checkbox">
-                    <Checkbox
-                      checked={isSelected}
-                      onChange={(event) => {
-                        if (event.target.checked) {
-                          selectOne(row._id);
-                        } else {
-                          deselectOne(row._id);
-                        }
-                      }}
-                    />
-                  </TableCell>
-                  <TableCell>
-                    <Stack sx={{ alignItems: 'center' }} direction="row" spacing={2}>
-                      <Box
+        {isLoading ? (<ClipSpinner />) : (
+          <Table sx={{ minWidth: '800px' }}>
+            <TableHead>
+              <TableRow>
+                <TableCell>Title</TableCell>
+                <TableCell>Price</TableCell>
+                <TableCell>Description</TableCell>
+                <TableCell>Actions</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {paginatedRows.map((row) => {
+                return (
+                  <TableRow hover key={row._id}>
+                    <TableCell>
+                      <Stack sx={{ alignItems: 'center' }} direction="row" spacing={2}>
+                        <Box
+                          sx={{
+                            width: { xs: 40, sm: 50, md: 60 },
+                            height: { xs: 40, sm: 50, md: 60 },
+                            position: 'relative',
+                          }}
+                        >
+                          <Image
+                            src={row.images[0]}
+                            fill
+                            alt="Product photo"
+                            sizes="(max-width: 600px) 40px, (max-width: 900px) 50px, 60px"
+                            placeholder="blur"
+                            blurDataURL={`${row.images[0]}?tr=w-10,h-10,bl`}
+                            style={{ objectFit: "contain" }}
+                          />
+                        </Box>
+                        <Typography variant="subtitle2">
+                          {row.title} <br />
+                          <Typography variant="caption" color="text.secondary">
+                            {dayjs(row.updatedAt).fromNow()}
+                          </Typography>
+                        </Typography>
+                      </Stack>
+                    </TableCell>
+
+                    <Tooltip title={row.description} arrow>
+                      <TableCell
                         sx={{
-                          width: { xs: 40, sm: 50, md: 60 },
-                          height: { xs: 40, sm: 50, md: 60 },
-                          position: 'relative',
+                          maxWidth: 200,
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis',
+                          whiteSpace: 'nowrap',
                         }}
                       >
-                        <Image
-                          src={row.images[0]}
-                          fill
-                          alt="Product photo"
-                          sizes="(max-width: 600px) 40px, (max-width: 900px) 50px, 60px"
-                          placeholder="blur"
-                          blurDataURL={`${row.images[0]}?tr=w-10,h-10,bl`}
-                          style={{objectFit: "contain"}}
-                        />
-                      </Box>
-                      <Typography variant="subtitle2">{row.title}</Typography>
-                    </Stack>
-                  </TableCell>
-
-                  {/* <TableCell>{row.description}</TableCell> */}
-                  <TableCell>{formatePrice(row.price)} ETB</TableCell>
-                  <TableCell>
-                    <ProductOptions productId={row._id}/>
-                  </TableCell>
-                </TableRow>
-              );
-            })}
-          </TableBody>
-        </Table>
+                        {row.description}
+                      </TableCell>
+                    </Tooltip>
+                    <TableCell>{formatePrice(row.price)} ETB</TableCell>
+                    <TableCell>
+                      <ProductOptions productId={row._id} />
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
+            </TableBody>
+          </Table>
+        )}
       </Box>
       <Divider />
       <TablePagination

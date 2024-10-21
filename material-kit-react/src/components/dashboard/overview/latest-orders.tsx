@@ -14,8 +14,12 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import { ArrowRight as ArrowRightIcon } from '@phosphor-icons/react/dist/ssr/ArrowRight';
 import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
 import { Typography } from '@mui/material';
 import { OrderProps } from '@/types/order';
+
+
+dayjs.extend(relativeTime);
 
 export interface LatestOrdersProps {
   orders?: OrderProps[];
@@ -43,7 +47,7 @@ export function LatestOrders({ orders = [], sx }: LatestOrdersProps): React.JSX.
                 <TableRow hover key={order._id}>
                   <TableCell>{order.firstName} {order.lastName}</TableCell>
                   <TableCell>{order.streetAddress}, {order.city}, {order.country}</TableCell>
-                  <TableCell>{dayjs(order.createdAt).format('MMM D, YYYY')}</TableCell>
+                  <TableCell>{dayjs(order.createdAt).fromNow()}</TableCell>
                   <TableCell sx={{ p: 0 }}>
                     {order.status === 'Pending' && (
                       <Typography

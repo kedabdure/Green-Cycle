@@ -45,7 +45,7 @@ export function ClipSpinner() {
       height: "10vh",
     }}>
       <BeatLoader
-        color="darkblue"
+        color="#111"
       />
     </Box>
   );

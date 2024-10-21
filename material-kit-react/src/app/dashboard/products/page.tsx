@@ -6,7 +6,6 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { Download as DownloadIcon } from '@phosphor-icons/react/dist/ssr/Download';
 import { Plus as PlusIcon } from '@phosphor-icons/react/dist/ssr/Plus';
-import { Upload as UploadIcon } from '@phosphor-icons/react/dist/ssr/Upload';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 
@@ -14,6 +13,10 @@ import { ProductsFilters } from '@/components/dashboard/product/products-filters
 import { ProductsTable } from '@/components/dashboard/product/products-table';
 import Link from 'next/link';
 import { ScaleSpinner } from '@/components/loader/spinner';
+import dayjs from 'dayjs';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
+import { ProductProps } from '@/types/product';
 
 const fetchProducts = async () => {
   const response = await axios.get('/api/products');
@@ -21,19 +24,47 @@ const fetchProducts = async () => {
 }
 
 export default function ProductsPage(): React.JSX.Element {
-  // Fetch products using React Query
+  // FETCH PRODUCTS using React Query
   const { data: products = [], isLoading, isError } = useQuery({
     queryKey: ["products"],
     queryFn: fetchProducts,
   });
 
-  if (isLoading) {
-    return <ScaleSpinner />;
-  }
+  const [searchQuery, setSearchQuery] = React.useState<string>('');
 
-  if (isError) {
-    return <div>Error loading products</div>;
-  }
+  const filteredProducts = products.filter((product: ProductProps) => (
+    product.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    product.category?.toLowerCase().includes(searchQuery.toLowerCase())
+  ));
+
+  const exportToPDF = () => {
+    const doc = new jsPDF();
+
+    // DEFINE TABLE COLUMNS+
+    const tableColumn = ["Title", "Price (ETB)", "Storage", "RAM", "SIM", "Color", "Created At"];
+    const tableRows: string[][] = [];
+
+    products.forEach((product: ProductProps) => {
+      const productData = [
+        product.title ?? '',
+        product?.price?.toString() ?? '',
+        product?.properties?.storage ?? '',
+        product?.properties?.RAM ?? '',
+        product?.properties?.SIM ?? '',
+        product?.properties?.color ?? '',
+        dayjs(product.createdAt).format('MMM D, YYYY'),
+      ];
+      tableRows.push(productData);
+    });
+
+    // ADD TABLE to the PDF
+    autoTable(doc, {
+      head: [tableColumn],
+      body: tableRows,
+    });
+
+    doc.save('products.pdf');
+  };
 
   return (
     <Stack spacing={3}>
@@ -41,16 +72,12 @@ export default function ProductsPage(): React.JSX.Element {
         <Stack spacing={1} sx={{ flex: '1 1 auto' }}>
           <Typography variant="h4">Products</Typography>
           <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
-            <Button color="inherit" startIcon={<UploadIcon fontSize="var(--icon-fontSize-md)" />}>
-              Import
-            </Button>
-            <Button color="inherit" startIcon={<DownloadIcon fontSize="var(--icon-fontSize-md)" />}>
+            <Button color="inherit" onClick={exportToPDF} startIcon={<DownloadIcon fontSize="var(--icon-fontSize-md)" />}>
               Export
             </Button>
           </Stack>
         </Stack>
         <div>
-          {/* Link wrapped around Button to avoid nesting */}
           <Link
             href={'/dashboard/products/new'}
             style={{ textDecoration: 'none', color: 'inherit' }}
@@ -61,13 +88,9 @@ export default function ProductsPage(): React.JSX.Element {
           </Link>
         </div>
       </Stack>
-
-      {/* Search filters */}
-      <ProductsFilters />
-
-      {/* Product table */}
+      <ProductsFilters onSearch={setSearchQuery} />
       {products.length > 0 ? (
-        <ProductsTable rows={products} />
+        <ProductsTable rows={filteredProducts} isLoading={isLoading}/>
       ) : (
         <Typography>No products available</Typography>
       )}

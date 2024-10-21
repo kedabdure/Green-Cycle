@@ -115,6 +115,11 @@ export default function OrderActions({ orderId, currentStatus }: OrderOptionsPro
           },
         }}
       >
+        <MenuItem onClick={() => handleStatusChange('Pending')}>
+          <Typography ml="3px" fontSize=".9rem">
+            Pending
+          </Typography>
+        </MenuItem>
         <MenuItem onClick={() => handleStatusChange('Shipped')}>
           <Typography ml="3px" fontSize=".9rem">
             Shipped
