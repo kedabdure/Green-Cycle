@@ -25,7 +25,7 @@ import OrderActions from '@/components/dashboard/order/order-actions';
 import { OrdersFilters } from '@/components/dashboard/order/order-filters';
 import { Button } from '@mui/material';
 import { DownloadSimple as DownloadIcon } from '@phosphor-icons/react';
-import { ClipSpinner, ScaleSpinner } from '@/components/loader/spinner';
+import { ClipSpinner } from '@/components/loader/spinner';
 
 
 
@@ -64,7 +64,7 @@ const OrdersPage = () => {
   };
 
 
-    const exportToPDF = () => {
+  const exportToPDF = () => {
     const doc = new jsPDF();
 
     // DEFINE TABLE COLUMNS+
