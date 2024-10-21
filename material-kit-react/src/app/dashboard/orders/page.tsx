@@ -17,6 +17,9 @@ import axios from 'axios';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
+
 import { OrderProps } from '@/types/order';
 import OrderActions from '@/components/dashboard/order/order-actions';
 import { OrdersFilters } from '@/components/dashboard/order/order-filters';
@@ -48,8 +51,6 @@ const OrdersPage = () => {
     order.streetAddress?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  console.log(filteredOrders)
-
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
@@ -60,6 +61,35 @@ const OrdersPage = () => {
   const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
+  };
+
+
+    const exportToPDF = () => {
+    const doc = new jsPDF();
+
+    // DEFINE TABLE COLUMNS+
+    const tableColumn = ["Name", "Email", "Phone", "Address", "Transaction Ref", "Ordered At"];
+    const tableRows: string[][] = [];
+
+    orders.forEach((order: OrderProps) => {
+      const orderData = [
+        (order.firstName + ' ') + (order.lastName),
+        order.email ?? '',
+        order.phone ?? '',
+        (order.streetAddress + ',') + (order.subCity + ',') + (order.city + ',') + (order.country),
+        order.tx_ref ?? '',
+        dayjs(order.createdAt).format('MMM D, YYYY'),
+      ];
+      tableRows.push(orderData);
+    });
+
+    // ADD TABLE to the PDF
+    autoTable(doc, {
+      head: [tableColumn],
+      body: tableRows,
+    });
+
+    doc.save('orders.pdf');
   };
 
   // PAGINATION
@@ -74,7 +104,7 @@ const OrdersPage = () => {
         <Stack spacing={1} sx={{ flex: '1 1 auto' }}>
           <Typography variant="h4">Orders</Typography>
           <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
-            <Button color="inherit" startIcon={<DownloadIcon fontSize="var(--icon-fontSize-md)" />}>
+            <Button color="inherit" onClick={exportToPDF} startIcon={<DownloadIcon fontSize="var(--icon-fontSize-md)" />}>
               Export
             </Button>
           </Stack>

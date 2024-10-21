@@ -12,7 +12,6 @@ import axios from 'axios';
 import { ProductsFilters } from '@/components/dashboard/product/products-filters';
 import { ProductsTable } from '@/components/dashboard/product/products-table';
 import Link from 'next/link';
-import { ScaleSpinner } from '@/components/loader/spinner';
 import dayjs from 'dayjs';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
