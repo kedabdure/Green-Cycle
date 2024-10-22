@@ -1,26 +1,23 @@
 {
-  "version": 2,
-  "builds": [
-    {
-      "src": "admin/package.json",
-      "use": "@vercel/next"
-    }
-  ],
   "routes": [
     {
-      "src": "/",
-      "dest": "/admin/src/app/page"
+      "src": "/(api/.*)",
+      "dest": "/admin/src/app/$1"
     },
     {
-      "src": "/dashboard",
-      "dest": "/admin/src/app/dashboard/page"
+      "src": "/(dashboard.*)",
+      "dest": "/admin/src/app/dashboard"
     },
     {
-      "src": "/products",
-      "dest": "/admin/src/app/products/page"
+      "src": "/(auth.*)",
+      "dest": "/admin/src/app/auth"
     },
     {
-      "src": "/admin/(.*)",
+      "src": "/(products.*)",
+      "dest": "/admin/src/app/products"
+    },
+    {
+      "src": "/(.*)",
       "dest": "/admin/src/app/$1"
     }
   ]
