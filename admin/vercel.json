@@ -1,5 +1,27 @@
 {
-  "rewrites": [
-    { "source": "/(.*)", "destination": "/" }
+  "version": 2,
+  "builds": [
+    {
+      "src": "admin/package.json",
+      "use": "@vercel/next"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/",
+      "dest": "/admin/src/app/page"
+    },
+    {
+      "src": "/dashboard",
+      "dest": "/admin/src/app/dashboard/page"
+    },
+    {
+      "src": "/products",
+      "dest": "/admin/src/app/products/page"
+    },
+    {
+      "src": "/admin/(.*)",
+      "dest": "/admin/src/app/$1"
+    }
   ]
 }
