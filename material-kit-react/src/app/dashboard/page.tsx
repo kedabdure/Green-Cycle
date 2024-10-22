@@ -46,6 +46,10 @@ const fetchCategories = async (): Promise<CategoryProps[]> => {
 
 
 export default function DashboardPage(): React.JSX.Element {
+  React.useEffect(() => {
+    document.title = "Overview | Admin Dashboard";
+  })
+
   // FETCH DATA USING REACT QUERY
   const { data: products = [], isLoading: isLoadingProducts, isError: isErrorProducts } = useQuery({
     queryKey: ["products"],

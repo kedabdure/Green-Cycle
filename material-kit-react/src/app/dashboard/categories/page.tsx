@@ -44,6 +44,10 @@ export default function Categories() {
   const [isFetching, setIsFetching] = useState<boolean>(false);
 
   useEffect(() => {
+    document.title = 'Manage Categories | Admin Dashboard';
+  }, []);
+
+  useEffect(() => {
     fetchCategories();
   }, []);
 
@@ -238,13 +242,13 @@ export default function Categories() {
             </Box>
 
             <Box mt={2} sx={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <Button type="submit" variant="contained" sx={{ fontSize: {xs: '.82rem', md: '.95rem'}, color: "#fff" }}>
+              <Button type="submit" variant="contained" sx={{ fontSize: { xs: '.82rem', md: '.95rem' }, color: "#fff" }}>
                 {isLoading ? (<CircularProgress size={24} color='inherit' />
                 ) : (
                   editedCategory ? 'Update' : 'Save'
                 )}
               </Button>
-              <Button onClick={() => setCreateCategory(false)} variant="outlined" sx={{ fontSize: {xs: '.8rem', md: '.95rem'}, color: "secondary" }}>
+              <Button onClick={() => setCreateCategory(false)} variant="outlined" sx={{ fontSize: { xs: '.8rem', md: '.95rem' }, color: "secondary" }}>
                 Cancel
               </Button>
             </Box>

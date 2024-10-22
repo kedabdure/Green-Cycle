@@ -20,6 +20,7 @@ import { ScaleSpinner } from '@/components/loader/spinner';
 import { AdminsFilters } from '@/components/dashboard/admin/admins-filters';
 import Link from 'next/link';
 import AdminProps from '@/types/admin';
+import Head from 'next/head';
 
 dayjs.extend(relativeTime);
 
@@ -29,12 +30,16 @@ const fetchCustomers = async () => {
 };
 
 export default function Page(): React.JSX.Element {
+  const [searchQuery, setSearchQuery] = React.useState<string>('');
+
+  React.useEffect(() => {
+    document.title = 'Manage Admins | Dashboard '
+  }, []);
+
   const { data: admins = [], isLoading, isError } = useQuery({
     queryKey: ['admins'],
     queryFn: fetchCustomers,
   });
-
-  const [searchQuery, setSearchQuery] = React.useState<string>('');
 
   const filteredAdmins = admins.filter((admin: AdminProps) =>
     admin.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -70,31 +75,36 @@ export default function Page(): React.JSX.Element {
 
 
   return (
-    <Suspense fallback={<ScaleSpinner />}>
-      <Stack spacing={3}>
-        <Stack direction="row" spacing={3}>
-          <Stack spacing={1} sx={{ flex: '1 1 auto' }}>
-            <Typography variant="h4">Customers</Typography>
-            <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
-              <Button color="inherit" onClick={exportToPDF} startIcon={<DownloadIcon fontSize="var(--icon-fontSize-md)" />}>
-                Export
-              </Button>
+    <>
+      <Head>
+        <title>Admin Dashboard - Manage Admins</title>
+      </Head>
+      <Suspense fallback={<ScaleSpinner />}>
+        <Stack spacing={3}>
+          <Stack direction="row" spacing={3}>
+            <Stack spacing={1} sx={{ flex: '1 1 auto' }}>
+              <Typography variant="h4">Admins</Typography>
+              <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+                <Button color="inherit" onClick={exportToPDF} startIcon={<DownloadIcon fontSize="var(--icon-fontSize-md)" />}>
+                  Export
+                </Button>
+              </Stack>
             </Stack>
+            <div>
+              <Link
+                href={'/dashboard/admins/new'}
+                style={{ textDecoration: 'none', color: 'inherit' }}
+              >
+                <Button startIcon={<PlusIcon fontSize="var(--icon-fontSize-md)" />} variant="contained">
+                  Create Admin
+                </Button>
+              </Link>
+            </div>
           </Stack>
-          <div>
-            <Link
-              href={'/dashboard/admins/new'}
-              style={{ textDecoration: 'none', color: 'inherit' }}
-            >
-              <Button startIcon={<PlusIcon fontSize="var(--icon-fontSize-md)" />} variant="contained">
-                Create Admin
-              </Button>
-            </Link>
-          </div>
+          <AdminsFilters onSearch={setSearchQuery} />
+          <AdminsTable rows={filteredAdmins} isLoading={isLoading} />
         </Stack>
-        <AdminsFilters onSearch={setSearchQuery} />
-        <AdminsTable rows={filteredAdmins} isLoading={isLoading} />
-      </Stack>
-    </Suspense>
+      </Suspense>
+    </>
   );
 }

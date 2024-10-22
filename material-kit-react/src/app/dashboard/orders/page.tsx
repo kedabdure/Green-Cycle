@@ -37,12 +37,16 @@ const fetchOrders = async () => {
 };
 
 const OrdersPage = () => {
+  const [searchQuery, setSearchQuery] = React.useState<string>('');
+
+  React.useEffect(() => {
+    document.title = 'Manage Orders | Admin Dashboard';
+  }, []);
+
   const { data: orders = [], isLoading, isError, error } = useQuery({
     queryKey: ['orders'],
     queryFn: fetchOrders,
   });
-
-  const [searchQuery, setSearchQuery] = React.useState<string>('');
 
   const filteredOrders = orders.filter((order: OrderProps) =>
     order.firstName?.toLowerCase().includes(searchQuery.toLowerCase()) ||

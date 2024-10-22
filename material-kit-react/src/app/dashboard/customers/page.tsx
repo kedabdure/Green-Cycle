@@ -25,12 +25,16 @@ const fetchCustomers = async () => {
 
 
 export default function Page(): React.JSX.Element {
+  const [searchQuery, setSearchQuery] = React.useState<string>('');
+
+  React.useEffect(() => {
+    document.title = 'Manage Customers | Admin Dashboard';
+  }, []);
+
   const { data: customers = [], isLoading, isError } = useQuery({
     queryKey: ['customers'],
     queryFn: fetchCustomers,
   });
-
-  const [searchQuery, setSearchQuery] = React.useState<string>('');
 
   const filteredCustomers = customers.filter((customer: { name: string; email: string; }) =>
     customer.name.toLowerCase().includes(searchQuery.toLowerCase()) ||

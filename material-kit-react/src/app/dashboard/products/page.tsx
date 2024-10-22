@@ -16,6 +16,7 @@ import dayjs from 'dayjs';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { ProductProps } from '@/types/product';
+import { ClipSpinner, ScaleSpinner } from '@/components/loader/spinner';
 
 const fetchProducts = async () => {
   const response = await axios.get('/api/products');
@@ -23,13 +24,18 @@ const fetchProducts = async () => {
 }
 
 export default function ProductsPage(): React.JSX.Element {
-  // FETCH PRODUCTS using React Query
+  const [searchQuery, setSearchQuery] = React.useState<string>('');
+
+  React.useEffect(() => {
+    document.title = 'Manage Products | Admin Dashboard';
+  }, []);
+
   const { data: products = [], isLoading, isError } = useQuery({
     queryKey: ["products"],
     queryFn: fetchProducts,
   });
 
-  const [searchQuery, setSearchQuery] = React.useState<string>('');
+  if (isLoading) { return <ScaleSpinner />; }
 
   const filteredProducts = products.filter((product: ProductProps) => (
     product.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -88,11 +94,7 @@ export default function ProductsPage(): React.JSX.Element {
         </div>
       </Stack>
       <ProductsFilters onSearch={setSearchQuery} />
-      {products.length > 0 ? (
-        <ProductsTable rows={filteredProducts} isLoading={isLoading}/>
-      ) : (
-        <Typography>No products available</Typography>
-      )}
+      {products.length && <ProductsTable rows={filteredProducts} isLoading={isLoading} />}
     </Stack>
   );
 }

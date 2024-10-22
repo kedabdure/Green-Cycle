@@ -18,16 +18,16 @@ export function TasksProgress({ value, sx }: TasksProgressProps): React.JSX.Elem
     <Card sx={sx}>
       <CardContent>
         <Stack spacing={2}>
-          <Stack direction="row" sx={{ alignItems: 'flex-start', justifyContent: 'space-between' }} spacing={3}>
-            <Stack spacing={1}>
+          <Stack direction="column" spacing={3}>
+            <Stack sx={{ display: 'flex', flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'space-between' }} spacing={3}>
               <Typography color="text.secondary" gutterBottom variant="overline">
                 Order Completed
               </Typography>
-              <Typography variant="h4">{value}%</Typography>
+              <Avatar sx={{ backgroundColor: 'var(--mui-palette-warning-main)', height: '56px', width: '56px' }}>
+                <ListBulletsIcon fontSize="var(--icon-fontSize-lg)" />
+              </Avatar>
             </Stack>
-            <Avatar sx={{ backgroundColor: 'var(--mui-palette-warning-main)', height: '56px', width: '56px' }}>
-              <ListBulletsIcon fontSize="var(--icon-fontSize-lg)" />
-            </Avatar>
+            <Typography variant="h4">{value}%</Typography>
           </Stack>
           <div>
             <LinearProgress value={value} variant="determinate" />
