@@ -1,24 +1,5 @@
 {
-  "routes": [
-    {
-      "src": "/(api/.*)",
-      "dest": "/admin/src/app/$1"
-    },
-    {
-      "src": "/(dashboard.*)",
-      "dest": "/admin/src/app/dashboard"
-    },
-    {
-      "src": "/(auth.*)",
-      "dest": "/admin/src/app/auth"
-    },
-    {
-      "src": "/(products.*)",
-      "dest": "/admin/src/app/products"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/admin/src/app/$1"
-    }
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/" }
   ]
 }
