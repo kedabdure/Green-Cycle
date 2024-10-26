@@ -1,7 +1,0 @@
-{
-  "packages": [
-    "frontend",
-    "admin"
-  ],
-  "version": "independent"
-}
