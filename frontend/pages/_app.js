@@ -5,6 +5,10 @@ import "../styles/globals.css";
 import CartContextProvider from "../components/CartContext";
 import { SessionProvider } from "next-auth/react";
 import PageLoader from "../components/PageLoader"; // Updated MUI PageLoader component
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+
+const queryClient = new QueryClient();
 
 const GlobalStyles = createGlobalStyle`
   body {
@@ -44,12 +48,14 @@ export default function App({ Component, pageProps: { session, ...pageProps } })
   return (
     <>
       <GlobalStyles />
-      {loading && <PageLoader />} {/* Conditionally render the PageLoader based on loading state */}
-      <SessionProvider session={session}>
-        <CartContextProvider>
-          <Component {...pageProps} />
-        </CartContextProvider>
-      </SessionProvider>
+      {loading && <PageLoader />}
+      <QueryClientProvider client={queryClient}>
+        <SessionProvider session={session}>
+          <CartContextProvider>
+            <Component {...pageProps} />
+          </CartContextProvider>
+        </SessionProvider>
+      </QueryClientProvider>
     </>
   );
 }

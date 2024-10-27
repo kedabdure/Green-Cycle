@@ -15,7 +15,8 @@ import { Router, useRouter } from 'next/router';
 const StyledHeader = styled.header`
   width: 100%;
   height: 68px;
-  background-color: #111;
+  background-color: #fff;
+  color: #111;
   position: fixed;
   top: 0;
   // padding: 17px 0;
@@ -51,7 +52,7 @@ const StyledNav = styled.nav`
   align-items: center;
   justify-content: center;
   padding: ${props => (props.$mobileNavActive ? "40px 20px 20px 25px" : "0 10px")};
-  background-color: #111;
+  background-color: #fff;
   font-size: 1rem;
 
   @media screen and (min-width: 800px) {
@@ -68,13 +69,13 @@ const StyledNav = styled.nav`
 
 const NavLink = styled(Link)`
   display: block;
-  color: #aaa;
+  color: #111;
   text-decoration: none;
   padding: 10px 0;
   transition: color 0.3s ease;
 
   &:hover {
-    color: white;
+    color: darkgreen;
   }
 
   @media screen and (min-width: 800px) {
@@ -121,7 +122,7 @@ const NavButton = styled.button`
   width: 30px;
   height: 30px;
   border: 0;
-  color: white;
+  color: #111;
   cursor: pointer;
   position: relative;
   z-index: 3;
@@ -158,7 +159,7 @@ const CartBadge = styled.div`
   justify-content: center;
   font-size: 0.7rem;
   background-color: #f50057;
-  color: white;
+  color: #fff;
   border-radius: 50%;
   z-index: 100;
 
@@ -177,9 +178,9 @@ const Button = styled.div`
   text-align: center;
   border-radius: 30px;
   font-size: 0.9rem;
-  background-color: #fff;
+  background-color: #111;
   border: 1px solid #fff;
-  color: #000;
+  color: #fff;
   cursor: pointer;
 
   &:hover {
@@ -194,7 +195,7 @@ const OutlinedButton = styled.div`
   font-size: 1rem;
   border: none;
   border-radius: 4px;
-  color: #ccc;
+  color: #111;
 
   &:hover {
     opacity: 0.9;
@@ -240,7 +241,7 @@ export default function Header() {
       <Center>
         <Wrapper>
           <Logo href="/" passHref>
-            <LogoWhite width="120" />
+            <LogoWhite width="100" />
           </Logo>
 
           <StyledNav $mobileNavActive={mobileNavActive}>

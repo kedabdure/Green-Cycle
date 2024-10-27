@@ -1,17 +1,22 @@
-import Featured from "../components/Featured";
+// import Featured from "../components/Featured";
 import Header from "../components/Header";
 import NewProducts from "../components/NewProducts";
 import { mongooseConnect } from "../lib/mongoose";
 import { Product } from "../models/Product";
 import Footer from "../components/Footer";
+import Hero from '../components/home/Hero'
+import Featured from "../components/home/Featured";
+import ProductSlide from "../components/home/ProductSlide";
 
 
 export default function Home({ featuredProduct, newProducts }) {
   return (
     <div>
       <Header />
-      <Featured product={featuredProduct} />
-      <NewProducts newProducts={newProducts} />
+      <Hero />
+      <Featured />
+      <ProductSlide />
+      {/* <NewProducts newProducts={newProducts} /> */}
       <Footer />
     </div>
   );
