@@ -167,8 +167,8 @@ const ImageCircleSmall = styled.div`
 `;
 
 const ImageCircleXSmall = styled.div`
-  width: 68px;
-  height: 68px;
+  width: 60px;
+  height: 60px;
   overflow: hidden;
   border-radius: 50%;
 `;
@@ -206,18 +206,18 @@ export default function Hero() {
             <ImageCircleXSmall>
               <Image src="/assets/images/forest1.jfif" width={68} height={68} />
             </ImageCircleXSmall>
-            <ImageCircleSmall>
-              <Image src="/assets/images/greenHand.jfif" width={80} height={80} />
-            </ImageCircleSmall>
+            <ImageCircleXSmall>
+              <Image src="/assets/images/chair1.jfif" width={68} height={68} />
+            </ImageCircleXSmall>
           </ImageCircleTop>
 
           <ImageCircleBottom>
             <ImageCircleSmall>
+              <Image src="/assets/images/greenHand.jfif" width={80} height={80} />
+            </ImageCircleSmall>
+            <ImageCircleSmall>
               <Image src="/assets/images/greenWorld.jfif" width={80} height={80} />
             </ImageCircleSmall>
-            <ImageCircleXSmall>
-              <Image src="/assets/images/chair1.jfif" width={68} height={68} />
-            </ImageCircleXSmall>
           </ImageCircleBottom>
         </ImageCircleWrapper>
       </Wrapper>

@@ -39,27 +39,38 @@ export default function ProductSlide() {
   return (
     <Box sx={{ width: "100%", minHeight: "931px", mx: "auto", p: 4 }}>
       <Box sx={{ width: "100%", maxWidth: 1200, mx: "auto" }}>
-        <Box sx={{ textAlign: "left", display: "flex", alignItems: "center", justifyContent: "space-between", mb: 4 }}>
+        <Box sx={{ textAlign: "left", display: "flex", alignItems: "center", justifyContent: "space-between", mb: 8, mx: 2 }}>
           <Box>
-            <Typography variant="overline" color="primary" gutterBottom>Furniture</Typography>
+            <Typography variant="overline" color="primary" gutterBottom sx={{mb: 3}}>Furniture</Typography>
             <Typography variant="h4" color="textPrimary">Discover the Latest Trends</Typography>
             <Typography variant="body1" color="textSecondary" sx={{ maxWidth: 600, mt: 1 }}>
               Stay updated with our insights and engaging blog posts about modern furniture and fashion.
             </Typography>
           </Box>
           <Button
-            variant="contained"
             sx={{
-
+              backgroundColor: '#111',
+              padding: '10px 20px',
+              textTransform: 'capitalize',
+              textAlign: 'center',
+              display: 'flex',
+              gap: '5px',
+              color: '#fff',
+              borderRadius: '5px',
+              transition: 'all 0.3s ease',
+              '&:hover': {
+                backgroundColor: '#333',
+                transform: 'scale(1.03)',
+              }
             }}
             color="primary">
             Explore <ArrowRight size={18} />
           </Button>
         </Box>
 
-        <Box sx={{ position: "relative", width: "100%", m: 0, height: "613px" }}>
+        <Box sx={{ position: "relative", width: "100%", height: "613px" }}>
           <Slider ref={sliderRef} {...settings}>
-            {productsData.length > 0 && productsData?.map((product, index) => (
+            {productsData.length > 0 && productsData?.map((product) => (
               <Box key={product._id}>
                 <Card
                   sx={{
@@ -67,9 +78,10 @@ export default function ProductSlide() {
                     maxHeight: "499px",
                     display: "flex",
                     flexDirection: "column",
-                    boxShadow: 3,
-                    borderRadius: 1,
                     overflow: "hidden",
+                    boxShadow: 3,
+                    margin: "0 auto",
+                    borderRadius: 1,
                     transition: "transform 0.3s ease",
                     "&:hover": { transform: "scale(1.01)" },
                   }}
@@ -86,15 +98,15 @@ export default function ProductSlide() {
                     />
                   </Box>
                   <CardContent sx={{ textAlign: "left", width: "100%", height: "auto", p: '32px' }}>
-                    <Typography variant="overline" color="gray" fontSize=".6rem" mb= "1rem" gutterBottom>Furniture</Typography>
-                    <Typography variant="h5" color="textPrimary" sx={{  mb: 2, fontSize: '24px', fontWeight: '700', lineHeight: '25.38px' }}>
+                    <Typography variant="overline" color="gray" fontSize=".6rem" mb="1rem" gutterBottom>Furniture</Typography>
+                    <Typography variant="h5" color="textPrimary" sx={{ mb: 2, fontSize: '24px', fontWeight: '700', lineHeight: '25.38px' }}>
                       {product.title}
                     </Typography>
                     <Typography variant="body2" color="textSecondary" sx={{ overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis" }}>
                       {product.description}
                     </Typography>
                     <Typography variant="h6" color="primary" sx={{ mt: 2 }}>
-                      {product.price.toFixed(2)} <Typography variant="subtitle2">ETB</Typography>
+                      {product.price.toFixed(2)} <Typography variant="body1" display="inline-block">ETB</Typography>
                     </Typography>
                     <Typography variant="caption" sx={{ mt: '1rem', textAlign: 'left' }} color="textSecondary">
                       {dayjs(product.updatedAt).fromNow()}
@@ -118,6 +130,7 @@ export default function ProductSlide() {
               alignItems: 'center',
               justifyContent: 'flex-end',
               gap: 2,
+              paddingRight: '1rem',
             }}
           >
             <Button

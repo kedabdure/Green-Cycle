@@ -1,10 +1,10 @@
 import Image from "next/image";
-import styled from "styled-components"
+import styled from "styled-components";
 
 const Container = styled.div`
   width: 100%;
   min-height: 100vh;
-  padding: 50px;
+  padding: 30px 20px;
   background-color: #fff;
   display: flex;
   flex-direction: column;
@@ -17,161 +17,217 @@ const Wrapper = styled.div`
   max-width: 1133px;
   display: flex;
   flex-direction: column;
-  gap: 40px;
+  gap: 50px;
+
+  @media (max-width: 768px) {
+    gap: 20px;
+    margin-top: 20px;
+  }
 `;
 
 const TitleWrapper = styled.div`
   display: flex;
+  flex-direction: row;
   align-items: center;
   gap: 12px;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: 8px;
+    text-align: center;
+  }
 `;
 
 const Title = styled.h1`
   width: 60%;
-  height: 58px;
   font-size: 2rem;
   text-align: left;
+
+  @media (max-width: 768px) {
+    width: 100%;
+    font-size: 1.5rem;
+  }
 `;
 
 const StyledP = styled.p`
   width: 40%;
   padding: 5px;
-  font-size: .8rem;
-  font-weight: 400;
-  line-height: 24px;
+  font-size: 0.8rem;
+  line-height: 1.5;
   text-align: left;
+
+  @media (max-width: 768px) {
+    width: 100%;
+    font-size: 0.9rem;
+  }
 `;
 
 const ContentWrapper = styled.div`
-  width: 1,139px;
-  height: 593px;
-  gap: 24px;
+  width: 100%;
   display: flex;
-  align-items: center;
-  gap: 20px;
+  gap: 24px;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
 `;
 
 const LeftSectionWrapper = styled.div`
   width: 460px;
-  height: 593px;
   display: flex;
   flex-direction: column;
   gap: 20px;
 
+  @media (max-width: 768px) {
+    width: 100%;
+    align-items: center;
+  }
+
   div {
-    object-fit: cover;
-    width: 460px;
-    height: 500px;
+    width: 100%;
+    height: auto;
+    overflow: hidden;
+    border-radius: 16px;
   }
 `;
 
 const MainImage = styled(Image)`
   border-radius: 16px;
+  object-fit: cover;
 `;
 
 const RightSectionWrapper = styled.div`
   width: 655px;
-  height: 502px;
   display: flex;
   flex-direction: column;
   gap: 20px;
+
+  @media (max-width: 768px) {
+    width: 100%;
+  }
 `;
 
 const TextWrapper = styled.div`
   width: 429px;
-  height: 150px;
   display: flex;
   flex-direction: column;
   gap: 10px;
-  text-align: left;
-  background-color: #f5f5f5;
   padding: 30px;
+  background-color: #f5f5f5;
   border-radius: 16px;
+  text-align: left;
+
+  @media (max-width: 768px) {
+    padding: 20px;
+  }
 `;
 
 const DescTitle = styled.h1`
-  font-size: 24px;
+  font-size: 1.5rem;
   font-weight: 500;
+
+  @media (max-width: 768px) {
+    font-size: 1.2rem;
+  }
 `;
 
 const DescText = styled.div`
-  font-size: 14px;
+  font-size: 0.9rem;
 `;
 
 const DescImageWrapper = styled.div`
-  width: 655px;
-  height: 150px;
   display: flex;
   gap: 24px;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: 20px;
+  }
 `;
 
 const DescImageLeft = styled.div`
-  width: 364px;
+  width: 100%;
   height: 150px;
+  overflow: hidden;
   border-radius: 16px;
 `;
 
 const DescImageRight = styled.div`
-  width: 267px;
+  width: 100%;
   height: 150px;
+  overflow: hidden;
   border-radius: 16px;
 `;
 
 const DescImage = styled(Image)`
+  width: 100%;
+  height: 100%;
   object-fit: cover;
   border-radius: 16px;
 `;
 
 const DescFooter = styled.div`
-  height: 165px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 10px;
   padding: 30px;
   background-color: #f5f5f5;
   border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 
   h1 {
-    font-size: 24px;
+    font-size: 1.5rem;
     font-weight: 600;
   }
 
   p {
-    font-size: 14px;
+    font-size: 0.9rem;
+  }
+
+  @media (max-width: 768px) {
+    padding: 20px;
   }
 `;
 
 const Button = styled.button`
-  padding: 0px 20px;
-  border-radius: 4px;
-  color; #111;
+  width: 140px;
+  height: 46px;
+  font-size: .9rem;
+  border-radius: 5px;
+  background-color: #111;
+  color: #fff;
   font-weight: 500;
-  font-size: 1rem;
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 5px 15px;
-  transition: background-color 0.3s ease;
+  justify-content: center;
+  gap: 5px;
+  transition: all 0.3s ease;
 
   &:hover {
-    background-color: #D7FFB1;
+    background-color: #333;
+    transform: scale(1.03);
   }
 `;
 
 const SvgImage = styled(Image)`
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  background-color: darkgreen;
+  width: 32px;
+  height: 32px;
 `;
 
 const CurvedSvg = styled(Image)`
   position: absolute;
-  top: 11%;
-  left: 39%;
-  width: 515.98px;
-  height: 225.67px;
+  top: 6%;
+  left: 40%;
+  width: 516px;
+  height: 226px;
+
+  @media (max-width: 768px) {
+    width: 300px;
+    height: auto;
+    top: 5%;
+    left: 20%;
+  }
 `;
 
 export default function () {
@@ -179,11 +235,9 @@ export default function () {
     <Container>
       <Wrapper>
         <TitleWrapper>
-          <Title>
-            Transforming Scrap into Value
-          </Title>
+          <Title>Transforming Scrap into Value</Title>
           <StyledP>
-            Discover efficient scrap recycling neighborhood! We're dedicated to providing convenient reliable.
+            Discover efficient scrap recycling in your neighborhood! We're dedicated to providing convenient and reliable services.
           </StyledP>
         </TitleWrapper>
 
@@ -192,22 +246,16 @@ export default function () {
             <div>
               <MainImage width={460} height={500} src="/assets/images/sofa.jfif" alt="featured" />
             </div>
-            <div>
-              <Button>
-                Learn More
-                <SvgImage width={12} height={12} src="/assets/images/arrow-right.svg" alt="featured" />
-              </Button>
-            </div>
+            <Button>
+              Learn More
+              <SvgImage width={12} height={12} src="/assets/images/arrow-right.svg" alt="arrow" />
+            </Button>
           </LeftSectionWrapper>
 
           <RightSectionWrapper>
             <TextWrapper>
-              <DescTitle>
-                How We Make It?
-              </DescTitle>
-              <DescText>
-                UrbanGreen tech’s LED lighting solutions have demonstred energy efficiency gains
-              </DescText>
+              <DescTitle>How We Make It?</DescTitle>
+              <DescText>UrbanGreen tech’s LED lighting solutions have demonstrated significant energy efficiency gains.</DescText>
             </TextWrapper>
             <DescImageWrapper>
               <DescImageLeft>
@@ -219,12 +267,12 @@ export default function () {
             </DescImageWrapper>
             <DescFooter>
               <h1>80% Energy Efficiency</h1>
-              <p>UrbanGreen tech’s LED lighting solutions have demonstred energy efficiency gains of up to 80% compared to traditional lighting system.</p>
+              <p>UrbanGreen tech’s LED lighting solutions have demonstrated up to 80% energy efficiency improvements compared to traditional lighting systems.</p>
             </DescFooter>
           </RightSectionWrapper>
         </ContentWrapper>
         <CurvedSvg src="/assets/images/curv-arrow.svg" width={1139} height={593} />
       </Wrapper>
     </Container>
-  )
+  );
 }
