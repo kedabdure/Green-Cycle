@@ -52,7 +52,7 @@ const Wrapper = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 16px 0;
+  padding: 16px 30px;
 `;
 
 const StyledNav = styled.nav`
@@ -76,7 +76,7 @@ const StyledNav = styled.nav`
   @media screen and (min-width: 800px) {
     display: flex;
     flex-direction: row;
-    gap: 15px;
+    gap: 24px;
     position: static;
     height: auto;
     opacity: 1;
@@ -278,74 +278,72 @@ export default function Header() {
 
   return (
     <StyledHeader $isVisible={isHeaderVisible}>
-      <Center>
-        <Wrapper>
-          <Logo href="/" passHref>
-            <LogoWhite width="100" />
-          </Logo>
+      <Wrapper>
+        <Logo href="/" passHref>
+          <LogoWhite width="100" />
+        </Logo>
 
-          <StyledNav $mobileNavActive={mobileNavActive}>
-            <NavLink href={"/"}>Home</NavLink>
-            <NavLink href={"/products"}>All products</NavLink>
-            <NavLink href={"/categories"}>Categories</NavLink>
-            <NavLink href={"/about"}>About</NavLink>
-            {mobileNavActive && <NavLink href={"/account"}>Account</NavLink>}
-            <MobileButtons>
-              {session && status === "authenticated" && (
-                <Button onClick={() => signOut()}>logout</Button>
-              )}
-              {!session && status !== "authenticated" && (
-                <>
-                  <NavLink href={"/auth/login"}>
-                    <OutlinedButton>Login</OutlinedButton>
-                  </NavLink>
-                  <NavLink href={"/auth/register"}>
-                    <Button>Sign up</Button>
-                  </NavLink>
-                </>
-              )}
-            </MobileButtons>
-          </StyledNav>
+        <StyledNav $mobileNavActive={mobileNavActive}>
+          <NavLink href={"/"}>Home</NavLink>
+          <NavLink href={"/products"}>All products</NavLink>
+          <NavLink href={"/categories"}>Categories</NavLink>
+          <NavLink href={"/about"}>About</NavLink>
+          {mobileNavActive && <NavLink href={"/account"}>Account</NavLink>}
+          <MobileButtons>
+            {session && status === "authenticated" && (
+              <Button onClick={() => signOut()}>logout</Button>
+            )}
+            {!session && status !== "authenticated" && (
+              <>
+                <NavLink href={"/auth/login"}>
+                  <OutlinedButton>Login</OutlinedButton>
+                </NavLink>
+                <NavLink href={"/auth/register"}>
+                  <Button>Sign up</Button>
+                </NavLink>
+              </>
+            )}
+          </MobileButtons>
+        </StyledNav>
 
-          <ButtonWrapper>
-            <NavButton onClick={() => setMobileNavActive(prev => !prev)}>
-              {!mobileNavActive ? <BarsIcon /> : <Close />}
-            </NavButton>
+        <ButtonWrapper>
+          <NavButton onClick={() => setMobileNavActive(prev => !prev)}>
+            {!mobileNavActive ? <BarsIcon /> : <Close />}
+          </NavButton>
 
-            <DesktopButtons>
-              {!session && (
-                <>
-                  <NavLink href={"/auth/login"}>
-                    <OutlinedButton>Login</OutlinedButton>
-                  </NavLink>
-                  <NavLink href={"/auth/register"}>
-                    <Button>Sign up</Button>
-                  </NavLink>
-                </>
-              )}
-              {session && (
-                <LogoutWrapper>
-                  <StyledSpan>
-                    {image ? (
-                      <StyledImage src={image} alt="User profile" width="33" height="33" />
-                    ) : (
-                      nameFirstChar
-                    )}
-                  </StyledSpan>
-                  <Button onClick={() => signOut()}>Logout</Button>
-                </LogoutWrapper>
-              )}
-            </DesktopButtons>
+          <DesktopButtons>
+            {!session && (
+              <>
+                <NavLink href={"/auth/login"}>
+                  <OutlinedButton>Login</OutlinedButton>
+                </NavLink>
+                <NavLink href={"/auth/register"}>
+                  <Button>Sign up</Button>
+                </NavLink>
+              </>
+            )}
+            {session && (
+              <LogoutWrapper>
+                <StyledSpan>
+                  {image ? (
+                    <StyledImage src={image} alt="User profile" width="33" height="33" />
+                  ) : (
+                    nameFirstChar
+                  )}
+                </StyledSpan>
+                <Button onClick={() => signOut()}>Logout</Button>
+              </LogoutWrapper>
+            )}
+          </DesktopButtons>
 
-            <CartIconWrapper onClick={() => router.push("/cart")}>
-              <Cart>
-                <CartIcon />
-              </Cart>
-              <CartBadge>{cartProducts?.length}</CartBadge>
-            </CartIconWrapper>
-          </ButtonWrapper>
-        </Wrapper>
-      </Center>
+          <CartIconWrapper onClick={() => router.push("/cart")}>
+            <Cart>
+              <CartIcon />
+            </Cart>
+            <CartBadge>{cartProducts?.length}</CartBadge>
+          </CartIconWrapper>
+        </ButtonWrapper>
+      </Wrapper>
     </StyledHeader>
   );
 }
