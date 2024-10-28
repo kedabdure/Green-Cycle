@@ -1,6 +1,6 @@
 import LogoWhite from "./icons/LogoWhite";
 import Link from "next/link";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import Center from "./Center";
 import { useContext, useState, useEffect } from "react";
 import { CartContext } from "./CartContext";
@@ -9,8 +9,25 @@ import CartIcon from "./icons/CartIcon";
 import Close from "./icons/Close";
 import { signIn, useSession, signOut } from "next-auth/react";
 import Image from "next/image";
-import { Router, useRouter } from 'next/router';
+import { useRouter } from "next/router";
 
+const slideDown = keyframes`
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+`;
+
+const slideUp = keyframes`
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-100%);
+  }
+`;
 
 const StyledHeader = styled.header`
   width: 100%;
@@ -19,8 +36,9 @@ const StyledHeader = styled.header`
   color: #111;
   position: fixed;
   top: 0;
-  // padding: 17px 0;
   z-index: 1000;
+  animation: ${({ $isVisible }) => ($isVisible ? slideDown : slideUp)} 0.5s ease forwards;
+  transform: ${({ $isVisible }) => ($isVisible ? "translateY(0)" : "translateY(-100%)")};
 `;
 
 const Logo = styled(Link)`
@@ -115,9 +133,6 @@ const MobileButtons = styled.div`
 `;
 
 const NavButton = styled.button`
-  position: absolute;
-  top: 2px;
-  right: 0px;
   background-color: transparent;
   width: 30px;
   height: 30px;
@@ -138,6 +153,7 @@ const CartIconWrapper = styled.div`
   align-items: center;
   gap: 1px;
   z-index: 1000;
+  position: relative;
 `;
 
 const Cart = styled.div`
@@ -225,19 +241,43 @@ const StyledImage = styled(Image)`
   height: 100%;
   border-radius: 50%;
   margin: 0 auto;
-  }
 `;
+
 export default function Header() {
   const { cartProducts } = useContext(CartContext);
   const [mobileNavActive, setMobileNavActive] = useState(false);
-  const router = useRouter()
+  const router = useRouter();
 
   const { data: session, status } = useSession();
   const nameFirstChar = session?.user?.name.split(" ")[0][0].toUpperCase();
   const image = session?.user?.image;
 
+  const [isHeaderVisible, setIsHeaderVisible] = useState(true);
+  const [scrollPosition, setScrollPosition] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollPosition = window.scrollY;
+
+      if (currentScrollPosition === 0) {
+        setIsHeaderVisible(true);
+      } else if (currentScrollPosition > scrollPosition) {
+        setIsHeaderVisible(false);
+      } else {
+        setIsHeaderVisible(true);
+      }
+
+      setScrollPosition(currentScrollPosition);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [scrollPosition]);
+
   return (
-    <StyledHeader>
+    <StyledHeader $isVisible={isHeaderVisible}>
       <Center>
         <Wrapper>
           <Logo href="/" passHref>
@@ -250,7 +290,6 @@ export default function Header() {
             <NavLink href={"/categories"}>Categories</NavLink>
             <NavLink href={"/about"}>About</NavLink>
             {mobileNavActive && <NavLink href={"/account"}>Account</NavLink>}
-            {/* Mobile Buttons */}
             <MobileButtons>
               {session && status === "authenticated" && (
                 <Button onClick={() => signOut()}>logout</Button>
@@ -265,17 +304,14 @@ export default function Header() {
                   </NavLink>
                 </>
               )}
-
             </MobileButtons>
           </StyledNav>
 
-          {/* CartWrapper */}
           <ButtonWrapper>
             <NavButton onClick={() => setMobileNavActive(prev => !prev)}>
               {!mobileNavActive ? <BarsIcon /> : <Close />}
             </NavButton>
 
-            {/* Desktop Buttons */}
             <DesktopButtons>
               {!session && (
                 <>
@@ -287,24 +323,26 @@ export default function Header() {
                   </NavLink>
                 </>
               )}
-              {session && status === "authenticated" && (
+              {session && (
                 <LogoutWrapper>
-                  <StyledSpan onClick={() => router.push('/account')}>
-                    {image ? <StyledImage src={image} width={30} height={30} alt="profile" /> : nameFirstChar}
+                  <StyledSpan>
+                    {image ? (
+                      <StyledImage src={image} alt="User profile" width="33" height="33" />
+                    ) : (
+                      nameFirstChar
+                    )}
                   </StyledSpan>
-                  <Button onClick={() => signOut()}>logout</Button>
+                  <Button onClick={() => signOut()}>Logout</Button>
                 </LogoutWrapper>
               )}
             </DesktopButtons>
 
-            <NavLink href={"/cart"}>
-              <CartIconWrapper>
-                <Cart>
-                  <CartIcon />
-                  <CartBadge>{cartProducts.length}</CartBadge>
-                </Cart>
-              </CartIconWrapper>
-            </NavLink>
+            <CartIconWrapper onClick={() => router.push("/cart")}>
+              <Cart>
+                <CartIcon />
+              </Cart>
+              <CartBadge>{cartProducts?.length}</CartBadge>
+            </CartIconWrapper>
           </ButtonWrapper>
         </Wrapper>
       </Center>
