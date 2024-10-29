@@ -3,7 +3,8 @@ import Image from 'next/image';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import OrderForm from '@/components/order/OrderForm';
-import { Box, Typography, Button, Container, Stack, Paper, Radio, RadioGroup, FormControlLabel, styled } from '@mui/material';
+import { Box, Typography, Container, Stack, Paper, Radio, RadioGroup, FormControlLabel, styled } from '@mui/material';
+import OrderPreview from '@/components/order/OrderPreview';
 
 
 const CustomRadio = styled(Radio)(({ theme }) => ({
@@ -45,7 +46,7 @@ export default function Checkout() {
           py: '130px',
         }}
       >
-        <Typography variant="h5" sx={{ mb: 2, fontWeight: 'bold' }}>
+        <Typography variant="h5" sx={{ mb: 3, fontSize: '32px', fontWeight: '700' }}>
           Checkout
         </Typography>
         <Stack
@@ -59,19 +60,19 @@ export default function Checkout() {
           {/* Left Section */}
           <Box sx={{ flex: 1, maxWidth: { xs: '100%', md: '504px' } }}>
             <Typography variant="h5" sx={{ mb: 5, fontSize: '24px', fontWeight: '700', display: 'flex', alignItems: 'center' }}>
-              <Typography component="span" sx={{ fontSize: '18px', fontWeight: '600', color: '#aaa' }}>
+              <Typography component="span" sx={{ fontSize: '16px', fontWeight: '600', color: '#aaa' }}>
                 Home
               </Typography>
-              <Typography component="span" sx={{ fontSize: '18px', fontWeight: '600', color: '#aaa', mx: 1 }}>
+              <Typography component="span" sx={{ fontSize: '16px', fontWeight: '600', color: '#aaa', mx: 1 }}>
                 /
               </Typography>
-              <Typography component="span" sx={{ fontSize: '18px', fontWeight: '600', color: '#aaa' }}>
+              <Typography component="span" sx={{ fontSize: '16px', fontWeight: '600', color: '#aaa' }}>
                 My Cart
               </Typography>
-              <Typography component="span" sx={{ fontSize: '18px', fontWeight: '600', color: '#333', mx: 1 }}>
+              <Typography component="span" sx={{ fontSize: '16px', fontWeight: '600', color: '#333', mx: 1 }}>
                 /
               </Typography>
-              <Typography component="span" sx={{ fontSize: '22px', fontWeight: '600', color: '#333' }}>
+              <Typography component="span" sx={{ fontSize: '18px', fontWeight: '600', color: '#333' }}>
                 Checkout
               </Typography>
             </Typography>
@@ -101,7 +102,7 @@ export default function Checkout() {
                             {/* Responsive Payment Logos */}
                             <Image
                               src="/assets/images/chapa.svg"
-                              width={90}
+                              width={80}
                               height={40}
                               alt="Chapa"
                               style={{ objectFit: 'contain' }}
@@ -109,7 +110,7 @@ export default function Checkout() {
                             />
                             <Image
                               src="/assets/images/cbe-transparent.svg"
-                              width={55}
+                              width={50}
                               height={35}
                               alt="cbe"
                               style={{ objectFit: 'contain' }}
@@ -142,7 +143,6 @@ export default function Checkout() {
                         </Stack>
                       }
                     />
-
                     <FormControlLabel
                       value="cash"
                       control={<CustomRadio />}
@@ -168,7 +168,7 @@ export default function Checkout() {
             </Box>
           </Box>
 
-          {/* Cart Summary */}
+          {/* Right Section */}
           <Box
             sx={{
               flex: 1,
@@ -176,44 +176,12 @@ export default function Checkout() {
               maxWidth: "561.65px",
             }}
           >
-            <Typography variant="h5" sx={{ mb: 5, fontSize: '22px', fontWeight: '700', display: 'flex', alignItems: 'center' }}>
+            <Typography variant="h5" sx={{ mb: 5, fontSize: '18px', fontWeight: '700', display: 'flex', alignItems: 'center' }}>
               Order Preview
             </Typography>
-
-            {/* Cart Items */}
-            <Paper elevation={3} sx={{ p: 3, mb: 3 }}>
-              <Stack spacing={2}>
-                <Box>
-                  <Typography variant="body1">Cart Item 1</Typography>
-                  {/* Add item details */}
-                </Box>
-                <Box>
-                  <Typography variant="body1">Cart Item 2</Typography>
-                  {/* Add item details */}
-                </Box>
-                {/* Add more cart items as needed */}
-              </Stack>
-            </Paper>
-
-            {/* Summary */}
-            <Paper elevation={3} sx={{ p: 3 }}>
-              <Stack spacing={1}>
-                <Box display="flex" justifyContent="space-between">
-                  <Typography variant="body1">Subtotal</Typography>
-                  <Typography variant="body1">$100.00</Typography>
-                </Box>
-                <Box display="flex" justifyContent="space-between">
-                  <Typography variant="body1">Shipping</Typography>
-                  <Typography variant="body1">$10.00</Typography>
-                </Box>
-                <Box display="flex" justifyContent="space-between">
-                  <Typography variant="body1">Total</Typography>
-                  <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-                    $110.00
-                  </Typography>
-                </Box>
-              </Stack>
-            </Paper>
+            <Box>
+              <OrderPreview />
+            </Box>
           </Box>
         </Stack>
       </Container>
