@@ -1,10 +1,41 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Image from 'next/image';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import { Box, Typography, Button, Container, Stack, Paper, Divider, Checkbox, FormGroup, FormControlLabel, } from '@mui/material';
+import OrderForm from '@/components/OrderForm';
+import { Box, Typography, Button, Container, Stack, Paper, Radio, RadioGroup, FormControlLabel, styled } from '@mui/material';
+
+
+const CustomRadio = styled(Radio)(({ theme }) => ({
+  color: '#666',
+  '&.Mui-checked': {
+    color: '#333',
+  },
+  '& .MuiSvgIcon-root': {
+    fontSize: 30,
+    borderRadius: '50%',
+    backgroundColor: '#f0f0f0',
+    transition: 'background-color 0.3s ease',
+  },
+  '&:hover .MuiSvgIcon-root': {
+    backgroundColor: '#e0e0e0',
+  },
+}));
+
 
 export default function Checkout() {
+  const [paymentMethod, setPaymentMethod] = useState('card');
+  const [formData, setFormData] = useState({})
+
+  const handleFormData = (data) => {
+    setFormData(data)
+    console.log("Form data received in parent:", formData);
+  }
+
+  const handleChange = (event) => {
+    setPaymentMethod(event.target.value);
+  };
+
   return (
     <>
       <Header />
@@ -23,7 +54,6 @@ export default function Checkout() {
           sx={{
             width: '100%',
             maxWidth: '1200px',
-            margin: '0 auto',
           }}
         >
           {/* Left Section */}
@@ -45,99 +75,100 @@ export default function Checkout() {
                 Checkout
               </Typography>
             </Typography>
-
-            {/*Payment Options */}
-            <Box sx={{
-              width: '100%',
-              height: '100%',
-              maxHeight: '180.51px'
-            }}>
-              <Paper elevation={3} sx={{ p: 3, borderRadius: '12px' }}>
-                <Typography variant="h6" sx={{ fontWeight: '700', fontSize: '24px', mb: 2 }}>
+            <Box sx={{ width: '100%' }}>
+              <Paper elevation={2} sx={{ p: 4, borderRadius: '16px' }}>
+                <Typography variant="h6" sx={{ fontWeight: '700', fontSize: { xs: '18px', sm: '22px', md: '24px' }, mb: 2 }}>
                   Select Your Payment Method
                 </Typography>
                 <Box>
-                  <FormGroup>
-                    {/* Card Payment Option */}
+                  <RadioGroup value={paymentMethod} onChange={handleChange}>
                     <FormControlLabel
-                      control={<Checkbox defaultChecked />}
+                      value="card"
+                      control={<CustomRadio />}
                       label={
                         <Stack direction="column" spacing={1}>
                           <Box
                             sx={{
                               display: 'flex',
-                              gap: 1,
+                              gap: { xs: '5px', sm: '10px' },
                               alignItems: 'center',
                               mt: 1,
                               flexWrap: 'wrap',
+                              alignItems: 'center',
+                              justifyContent: { xs: 'center', sm: 'flex-start' },
                             }}
                           >
-                            {/* Payment Logos */}
+                            {/* Responsive Payment Logos */}
                             <Image
                               src="/assets/images/chapa.svg"
-                              width={110}
-                              height={48}
+                              width={90}
+                              height={40}
                               alt="Chapa"
                               style={{ objectFit: 'contain' }}
-                            />
-                            <Image
-                              src="/assets/images/awash-bank.svg"
-                              width={95}
-                              height={48}
-                              alt="CBE Birr"
-                              style={{ objectFit: 'contain' }}
+                              sizes="(max-width: 600px) 70px, (max-width: 960px) 90px, 110px"
                             />
                             <Image
                               src="/assets/images/cbe-transparent.svg"
-                              width={85}
-                              height={48}
-                              alt="Awash Bank"
+                              width={55}
+                              height={35}
+                              alt="cbe"
                               style={{ objectFit: 'contain' }}
+                              sizes="(max-width: 600px) 40px, (max-width: 960px) 60px, 85px"
                             />
                             <Image
-                              src="/assets/images/bank-byssinia.svg"
-                              width={95}
-                              height={48}
-                              alt="Bank of Abyssinia"
+                              src="/assets/images/awash-bank.svg"
+                              width={70}
+                              height={40}
+                              alt="awash"
                               style={{ objectFit: 'contain' }}
+                              sizes="(max-width: 600px) 60px, (max-width: 960px) 90px, 95px"
                             />
+                            <Box
+                              sx={{
+                                display: { xs: 'none', lg: 'flex' },
+                                alignItems: 'center',
+                              }}
+                            >
+                              <Image
+                                src="/assets/images/bank-byssinia.svg"
+                                width={95}
+                                height={40}
+                                alt="Bank of Abyssinia"
+                                sizes="(max-width: 600px) 60px, (max-width: 960px) 80px, 95px"
+                                style={{ objectFit: 'contain' }}
+                              />
+                            </Box>
                           </Box>
                         </Stack>
                       }
                     />
 
-
-                    {/* Cash on Delivery Option */}
                     <FormControlLabel
-                      control={<Checkbox />}
+                      value="cash"
+                      control={<CustomRadio />}
                       label={
-                        <Typography variant="body1" sx={{fontWeight: '700', fontSize: '16px', color: '#555'}}>
+                        <Typography
+                          variant="body1"
+                          sx={{
+                            fontWeight: '700',
+                            fontSize: '16px',
+                            color: '#555',
+                          }}
+                        >
                           Cash on Delivery
                         </Typography>
                       }
                     />
-                  </FormGroup>
+                  </RadioGroup>
                 </Box>
               </Paper>
             </Box>
-
-            {/* Payment Form */}
-            <Box sx={{ mt: 3 }}>
-              <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 2 }}>
-                Billing Information
-              </Typography>
-              {/* Add form fields here */}
-            </Box>
-
-            {/* Pay Button */}
-            <Box sx={{ mt: 3 }}>
-              <Button variant="contained" color="primary" fullWidth>
-                Pay Now
-              </Button>
+            <Box sx={{ mt: 6 }}>
+              <OrderForm onFormSubmit={handleFormData} paymentMethod={paymentMethod} />
             </Box>
           </Box>
 
-          {/* Right Section - Cart Summary */}
+          {/* Cart Summary */}
           <Box sx={{ flex: 1 }}>
             <Typography variant="h5" sx={{ mb: 2, fontWeight: 'bold' }}>
               Order Summary

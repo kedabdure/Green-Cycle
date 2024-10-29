@@ -7,38 +7,32 @@ import {
   Alert,
   FormControl,
   Box,
+  Select,
+  MenuItem,
+  InputLabel,
 } from '@mui/material';
-import { useSession } from 'next-auth/react';
 
 const initialValues = {
   firstName: '',
   lastName: '',
   phone: '',
   email: '',
-  country: '',
-  city: '',
+  country: 'Ethiopia',
+  city: 'Addis Ababa',
   subCity: '',
-  wereda: '',
   streetAddress: '',
 };
 
-export default function TableOrderForm({ handleSubmit }) {
+export default function OrderForm({ onFormSubmit, paymentMethod }) {
   const [formValues, setFormValues] = useState(initialValues);
   const [formErrors, setFormErrors] = useState({});
   const [submitSuccess, setSubmitSuccess] = useState(false);
-
-  const { data: session } = useSession()
-
-  const name = session?.user?.name;
-  const existingFirstName = name?.split(' ')[0];
-  const existingLastName = name?.split(' ')[1];
 
   const validate = (values) => {
     const errors = {};
     const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
     const phoneRegex = /^\+251(9|7)\d{8}$/;
 
-    // Field validations
     if (!values.firstName) errors.firstName = 'First name is required!';
     if (!values.lastName) errors.lastName = 'Last name is required!';
     if (!values.email) {
@@ -52,10 +46,7 @@ export default function TableOrderForm({ handleSubmit }) {
       errors.phone = 'Enter 9 or 7 after +251';
     }
     if (!values.streetAddress) errors.streetAddress = 'Street Address is required!';
-    if (!values.city) errors.city = 'City is required!';
-    if (!values.subCity) errors.subCity = 'Sub-City is required!';
-    if (!values.wereda) errors.wereda = 'Wereda is required!';
-    if (!values.country) errors.country = 'Country is required!';
+    if (!values.subCity) errors.subCity = 'Sub City is required!';
 
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
@@ -72,179 +63,160 @@ export default function TableOrderForm({ handleSubmit }) {
     if (formErrors[name]) setFormErrors({ ...formErrors, [name]: '' });
   };
 
-  function handleSubmitForm(e) {
+  const handleSubmitForm = (e) => {
     e.preventDefault();
-    const isValid = validate(formValues);
-    if (isValid) {
+
+    if (validate(formValues)) {
       setSubmitSuccess(true);
-      handleSubmit({
-        ...formValues,
-        phone: formValues.phone.replace(/^\+251/, '0'),
-      });
+
+      onFormSubmit({ ...formValues, phone: formValues.phone.replace(/^\+251/, '0') });
+
       setFormValues(initialValues);
     } else {
       setSubmitSuccess(false);
     }
-  }
+  };
 
   return (
     <form onSubmit={handleSubmitForm}>
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '15px',
-        }}
-      >
-        {/* First Name */}
-        <FormControl fullWidth>
-          <TextField
-            label="First name"
-            id="firstName"
-            name="firstName"
-            type="text"
-            value={formValues.firstName}
-            onChange={handleChange}
-            required
-            size="small"
-          />
-          {formErrors.firstName && <Alert severity="error">{formErrors.firstName}</Alert>}
-        </FormControl>
+      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+        <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, gap: 1.5 }}>
+          <FormControl fullWidth>
+            <TextField
+              label="First name"
+              name="firstName"
+              value={formValues.firstName}
+              onChange={handleChange}
+              size="small"
+              variant="outlined"
+            />
+            {formErrors.firstName && <Alert severity="error">{formErrors.firstName}</Alert>}
+          </FormControl>
 
-        {/* Last Name */}
-        <FormControl fullWidth>
-          <TextField
-            label="Last name"
-            id="lastName"
-            name="lastName"
-            type="text"
-            value={formValues.lastName}
-            onChange={handleChange}
-            required
-            size="small"
-          />
-          {formErrors.lastName && <Alert severity="error">{formErrors.lastName}</Alert>}
-        </FormControl>
+          <FormControl fullWidth>
+            <TextField
+              label="Last name"
+              name="lastName"
+              value={formValues.lastName}
+              onChange={handleChange}
+              size="small"
+              variant="outlined"
+            />
+            {formErrors.lastName && <Alert severity="error">{formErrors.lastName}</Alert>}
+          </FormControl>
+        </Box>
 
-        {/* Phone Number */}
-        <FormControl fullWidth>
-          <PhoneInput
-            label="Phone Number"
-            name="phone"
-            placeholder="Enter phone number"
-            value={formValues.phone}
-            onChange={handlePhoneChange}
-            defaultCountry="ET"
-            international
-            countryCallingCodeEditable={false}
-          />
-          {formErrors.phone && (
-            <Alert severity="error" style={{ marginTop: '10px' }}>
-              {formErrors.phone}
-            </Alert>
-          )}
-        </FormControl>
+        <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, gap: 1.5 }}>
+          <FormControl fullWidth>
+            <PhoneInput
+              placeholder="Enter phone number"
+              value={formValues.phone}
+              onChange={handlePhoneChange}
+              defaultCountry="ET"
+              international
+              countryCallingCodeEditable={false}
+            />
+            {formErrors.phone && <Alert severity="error" sx={{ mt: 1 }}>{formErrors.phone}</Alert>}
+          </FormControl>
 
-        {/* Email */}
-        <FormControl fullWidth>
-          <TextField
-            label="Email"
-            id="email"
-            name="email"
-            type="email"
-            placeholder="example@gmail.com"
-            value={formValues.email}
-            onChange={handleChange}
-            required
-            size="small"
-          />
-          {formErrors.email && <Alert severity="error">{formErrors.email}</Alert>}
-        </FormControl>
+          <FormControl fullWidth>
+            <TextField
+              label="Email"
+              name="email"
+              type="email"
+              value={formValues.email}
+              onChange={handleChange}
+              size="small"
+              variant="outlined"
+            />
+            {formErrors.email && <Alert severity="error">{formErrors.email}</Alert>}
+          </FormControl>
+        </Box>
 
-        {/* Country */}
-        <FormControl fullWidth>
-          <TextField
-            label="Country"
-            id="country"
-            name="country"
-            type="text"
-            placeholder="Enter country"
-            value={formValues.country}
-            onChange={handleChange}
-            required
-            size="small"
-          />
-          {formErrors.country && <Alert severity="error">{formErrors.country}</Alert>}
-        </FormControl>
+        <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, gap: 1.5 }}>
+          <FormControl fullWidth>
+            <InputLabel size="small">Country</InputLabel>
+            <Select
+              label="country"
+              name="country"
+              value={formValues.country}
+              onChange={handleChange}
+              size="small"
+            >
+              <MenuItem value="Ethiopia">Ethiopia</MenuItem>
+            </Select>
+          </FormControl>
 
-        {/* City */}
-        <FormControl fullWidth>
-          <TextField
-            label="City"
-            id="city"
-            name="city"
-            type="text"
-            placeholder="Enter city"
-            value={formValues.city}
-            onChange={handleChange}
-            required
-            size="small"
-          />
-          {formErrors.city && <Alert severity="error">{formErrors.city}</Alert>}
-        </FormControl>
+          <FormControl fullWidth>
+            <InputLabel size="small">City</InputLabel>
+            <Select
+              label="city"
+              name="city"
+              value={formValues.city}
+              onChange={handleChange}
+              size="small"
+            >
+              <MenuItem value="Addis Ababa">Addis Ababa</MenuItem>
+            </Select>
+          </FormControl>
+        </Box>
 
-        {/* Sub-City */}
         <FormControl fullWidth>
-          <TextField
-            label="Sub-City"
-            id="subCity"
+          <InputLabel size="small">Sub City</InputLabel>
+          <Select
+            label="Sub City"
             name="subCity"
-            type="text"
-            placeholder="Enter Sub-City"
             value={formValues.subCity}
             onChange={handleChange}
-            required
             size="small"
-          />
+          >
+            <MenuItem value="">
+              <em>None</em>
+            </MenuItem>
+            {["Addis Ketema", "Akaky Kaliti", "Arada", "Bole", "Gullele", "Kirkos", "Kolfe Keranio", "Lideta", "Nifas Silk-Lafto", "Yeka"].map((subCity) => (
+              <MenuItem key={subCity} value={subCity}>{subCity}</MenuItem>
+            ))}
+          </Select>
           {formErrors.subCity && <Alert severity="error">{formErrors.subCity}</Alert>}
         </FormControl>
 
-        {/* Wereda */}
-        <FormControl fullWidth>
-          <TextField
-            label="Wereda"
-            id="wereda"
-            name="wereda"
-            type="text"
-            placeholder="Enter Wereda"
-            value={formValues.wereda}
-            onChange={handleChange}
-            required
-            size="small"
-          />
-          {formErrors.wereda && <Alert severity="error">{formErrors.wereda}</Alert>}
-        </FormControl>
-
-        {/* Street Address */}
         <FormControl fullWidth>
           <TextField
             label="Street Address"
-            id="streetAddress"
             name="streetAddress"
-            type="text"
-            placeholder="Enter street address"
             value={formValues.streetAddress}
             onChange={handleChange}
-            required
             size="small"
+            variant="outlined"
           />
           {formErrors.streetAddress && <Alert severity="error">{formErrors.streetAddress}</Alert>}
         </FormControl>
 
-        {/* Submit Button */}
-        <Button type="submit" fullWidth variant="contained" style={{ height: "40px", color: "#fff", backgroundColor: "#111" }}>
-          Continue to payment
-        </Button>
+        <Box
+          onClick={handleSubmitForm}
+          sx={{
+            mt: 3,
+            width: "100%",
+            maxWidth: '250px',
+            backgroundColor: '#111',
+            color: '#fff',
+            borderRadius: '33px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            textAlign: 'center',
+            height: '42px',
+            fontSize: '15px',
+            cursor: 'pointer',
+            transition: 'background .3s ease',
+
+            '&:hover': {
+              background: '#333',
+            }
+          }}
+        >
+          {paymentMethod === 'card' ? 'Continue to pay' : 'Place Order'}
+        </Box>
         {submitSuccess && <Alert severity="success">Form submitted successfully!</Alert>}
       </Box>
     </form>
