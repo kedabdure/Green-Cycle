@@ -64,7 +64,7 @@ export default function Cart() {
   };
 
   function handleCheckout() {
-    // goToPayment();
+    router.push('/checkout');
   }
 
   function handleContinueShopping() {
