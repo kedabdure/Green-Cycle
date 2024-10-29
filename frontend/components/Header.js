@@ -1,7 +1,6 @@
 import LogoWhite from "./icons/LogoWhite";
 import Link from "next/link";
 import styled, { keyframes } from "styled-components";
-import Center from "./Center";
 import { useContext, useState, useEffect } from "react";
 import { CartContext } from "./CartContext";
 import BarsIcon from "./icons/Bars";
@@ -10,6 +9,7 @@ import Close from "./icons/Close";
 import { signIn, useSession, signOut } from "next-auth/react";
 import Image from "next/image";
 import { useRouter } from "next/router";
+
 
 const slideDown = keyframes`
   from {
@@ -52,7 +52,7 @@ const Wrapper = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 16px 30px;
+  padding: 16px 70px;
 `;
 
 const StyledNav = styled.nav`

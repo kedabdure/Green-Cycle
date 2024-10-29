@@ -5,7 +5,7 @@ import { mongooseConnect } from "../../lib/mongoose";
 import { Product } from "../../models/Product";
 import styled from "styled-components";
 import WhiteBox from "../../components/WhiteBox";
-import ProductImages from "../../components/ProductImages";
+import ProductDetail from "../../components/ProductDetail";
 import Button from "../../components/Button";
 import CartIcon from "../../components/icons/CartIcon";
 import { useContext } from "react";
@@ -49,7 +49,7 @@ export default function ProductPage({ product }) {
       <Center>
         <ColWrapper>
           <WhiteBox>
-            <ProductImages images={product.images} />
+            <ProductDetail images={product.images} />
           </WhiteBox>
           <div>
             <Title>{product.title}</Title>

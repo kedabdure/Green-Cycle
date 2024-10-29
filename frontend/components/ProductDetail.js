@@ -35,7 +35,7 @@ const BigImageWrapper = styled.div`
   height: 350px;
 `;
 
-export default function ProductImages({images}) {
+export default function ProductDetail({images}) {
   const [activeImage,setActiveImage] = useState(images?.[0]);
   return (
     <>

@@ -36,7 +36,7 @@ export default function ProductBox({ _id, title, price, images, badge }) {
         open={open}
         autoHideDuration={6000}
         onClose={handleClose}
-        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
       >
         <Alert
           onClose={handleClose}
@@ -58,7 +58,7 @@ export default function ProductBox({ _id, title, price, images, badge }) {
               onClick={handleClose}
               sx={{ marginLeft: 'auto', marginTop: '-0.25rem' }}
             >
-              <CloseIcon fontSize="small" />
+              <CloseIcon size={24} />
             </IconButton>
           }
         >
@@ -77,7 +77,7 @@ export default function ProductBox({ _id, title, price, images, badge }) {
           justifyContent: 'space-between',
           p: 2,
           borderRadius: 2,
-          zIndex: 2,
+          zIndex: 1,
         }}
       >
         <Box
