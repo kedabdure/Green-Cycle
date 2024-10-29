@@ -2,7 +2,7 @@ import LogoWhite from "./icons/LogoWhite";
 import Link from "next/link";
 import styled, { keyframes } from "styled-components";
 import { useContext, useState, useEffect } from "react";
-import { CartContext } from "./CartContext";
+import { CartContext } from "./cart/CartContext";
 import BarsIcon from "./icons/Bars";
 import CartIcon from "./icons/CartIcon";
 import Close from "./icons/Close";

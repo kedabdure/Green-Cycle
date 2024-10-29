@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import Router from "next/router";
 import { createGlobalStyle } from "styled-components";
 import "../styles/globals.css";
-import CartContextProvider from "../components/CartContext";
+import CartContextProvider from "../components/cart/CartContext";
 import { SessionProvider } from "next-auth/react";
 import PageLoader from "../components/PageLoader"; // Updated MUI PageLoader component
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";

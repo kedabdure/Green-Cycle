@@ -4,7 +4,6 @@ import mongoose from "mongoose";
 
 export default async function handle(req, res) {
   await mongooseConnect();
-
   // Convert ids to mongoose ObjectId instances if they are not already
   const ids = req.body.ids?.map(id => new mongoose.Types.ObjectId(String(id)));
 

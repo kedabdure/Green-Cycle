@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import OrderForm from '@/components/OrderForm';
+import OrderForm from '@/components/order/OrderForm';
 import { Box, Typography, Button, Container, Stack, Paper, Radio, RadioGroup, FormControlLabel, styled } from '@mui/material';
 
 
@@ -50,7 +50,7 @@ export default function Checkout() {
         </Typography>
         <Stack
           direction={{ xs: 'column', md: 'row' }}
-          spacing={5}
+          spacing={12}
           sx={{
             width: '100%',
             maxWidth: '1200px',
@@ -58,20 +58,20 @@ export default function Checkout() {
         >
           {/* Left Section */}
           <Box sx={{ flex: 1, maxWidth: { xs: '100%', md: '504px' } }}>
-            <Typography variant="h5" sx={{ mb: 5, fontWeight: 'bold', display: 'flex', alignItems: 'center' }}>
-              <Typography component="span" sx={{ color: '#ccc' }}>
+            <Typography variant="h5" sx={{ mb: 5, fontSize: '24px', fontWeight: '700', display: 'flex', alignItems: 'center' }}>
+              <Typography component="span" sx={{ fontSize: '18px', fontWeight: '600', color: '#aaa' }}>
                 Home
               </Typography>
-              <Typography component="span" sx={{ color: '#aaa', mx: 1 }}>
+              <Typography component="span" sx={{ fontSize: '18px', fontWeight: '600', color: '#aaa', mx: 1 }}>
                 /
               </Typography>
-              <Typography component="span" sx={{ color: '#aaa' }}>
+              <Typography component="span" sx={{ fontSize: '18px', fontWeight: '600', color: '#aaa' }}>
                 My Cart
               </Typography>
-              <Typography component="span" sx={{ color: '#333', mx: 1 }}>
+              <Typography component="span" sx={{ fontSize: '18px', fontWeight: '600', color: '#333', mx: 1 }}>
                 /
               </Typography>
-              <Typography component="span" sx={{ color: '#333' }}>
+              <Typography component="span" sx={{ fontSize: '22px', fontWeight: '600', color: '#333' }}>
                 Checkout
               </Typography>
             </Typography>
@@ -169,9 +169,15 @@ export default function Checkout() {
           </Box>
 
           {/* Cart Summary */}
-          <Box sx={{ flex: 1 }}>
-            <Typography variant="h5" sx={{ mb: 2, fontWeight: 'bold' }}>
-              Order Summary
+          <Box
+            sx={{
+              flex: 1,
+              width: "100%",
+              maxWidth: "561.65px",
+            }}
+          >
+            <Typography variant="h5" sx={{ mb: 5, fontSize: '22px', fontWeight: '700', display: 'flex', alignItems: 'center' }}>
+              Order Preview
             </Typography>
 
             {/* Cart Items */}

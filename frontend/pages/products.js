@@ -1,6 +1,6 @@
 import Header from "../components/Header";
 import Footer from "../components/Footer";
-import ProductsBox from "../components/home/ProductsBox";
+import ProductsBox from "../components/product/ProductsBox";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { Box, Typography, Button, Grid } from "@mui/material";

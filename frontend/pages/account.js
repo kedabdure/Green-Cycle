@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import Center from "../components/Center";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import styled from "styled-components";
@@ -45,6 +44,10 @@ const Container = styled.div`
     align-items: normal;
     margin: 0 auto;
   }
+`;
+
+const Center = styled.div`
+  padding: 70px 20px;
 `;
 
 const Input = styled.input`

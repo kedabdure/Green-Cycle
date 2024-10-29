@@ -1,11 +1,11 @@
 import React, { useContext, useEffect, useState } from "react";
 import Header from "../components/Header";
-import { CartContext } from "../components/CartContext";
+import { CartContext } from "../components/cart/CartContext";
 import { Box, Button, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
-import OrderForm from "../components/OrderForm";
+import OrderForm from "../components/order/OrderForm";
 import Currency from "../components/Currency";
 import Footer from "../components/Footer";
-import EmptyCartPage from "../components/EmptyCartPage";
+import EmptyCartPage from "../components/cart/EmptyCartPage";
 import Image from "next/image";
 import { Plus as PlusIcon, Minus as XIcon, Trash as DeleteIcon } from "phosphor-react";
 import router from "next/router";

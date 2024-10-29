@@ -6,7 +6,7 @@ import { Box, Typography, Chip, Stack, Alert, Snackbar, IconButton } from "@mui/
 import { X as CloseIcon } from "phosphor-react";
 import Image from "next/image";
 import { useContext } from "react";
-import { CartContext } from "../CartContext";
+import { CartContext } from "../cart/CartContext";
 
 export default function ProductBox({ _id, title, price, images, badge }) {
   const [open, setOpen] = useState(false);

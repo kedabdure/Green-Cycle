@@ -1,15 +1,13 @@
-import Center from "../../components/Center";
 import Header from "../../components/Header";
-import Title from "../../components/Title";
 import { mongooseConnect } from "../../lib/mongoose";
 import { Product } from "../../models/Product";
 import styled from "styled-components";
 import WhiteBox from "../../components/WhiteBox";
-import ProductDetail from "../../components/ProductDetail";
+import ProductDetail from "../../components/product/ProductDetail";
 import Button from "../../components/Button";
 import CartIcon from "../../components/icons/CartIcon";
 import { useContext } from "react";
-import { CartContext } from "../../components/CartContext";
+import { CartContext } from "../../components/cart/CartContext";
 import Currency from "../../components/Currency";
 
 
@@ -46,30 +44,28 @@ export default function ProductPage({ product }) {
   return (
     <>
       <Header />
-      <Center>
-        <ColWrapper>
-          <WhiteBox>
-            <ProductDetail images={product.images} />
-          </WhiteBox>
-          <div>
-            <Title>{product.title}</Title>
-            <p>{product.description}</p>
-            <PriceRow>
-              <div>
-                <Price>
-                  {formatPrice(product.price)}
-                  <Currency>ETB</Currency>
-                </Price>
-              </div>
-              <div>
-                <Button $black onClick={() => addProduct(product._id)}>
-                  <CartIcon />Add to cart
-                </Button>
-              </div>
-            </PriceRow>
-          </div>
-        </ColWrapper>
-      </Center>
+      <ColWrapper>
+        <WhiteBox>
+          <ProductDetail images={product.images} />
+        </WhiteBox>
+        <div>
+          <h1>{product.title}</h1>
+          <p>{product.description}</p>
+          <PriceRow>
+            <div>
+              <Price>
+                {formatPrice(product.price)}
+                <Currency>ETB</Currency>
+              </Price>
+            </div>
+            <div>
+              <Button $black onClick={() => addProduct(product._id)}>
+                <CartIcon />Add to cart
+              </Button>
+            </div>
+          </PriceRow>
+        </div>
+      </ColWrapper>
     </>
   );
 }

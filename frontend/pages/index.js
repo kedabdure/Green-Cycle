@@ -1,6 +1,4 @@
-// import Featured from "../components/Featured";
 import Header from "../components/Header";
-import NewProducts from "../components/NewProducts";
 import { mongooseConnect } from "../lib/mongoose";
 import { Product } from "../models/Product";
 import Footer from "../components/Footer";
@@ -16,7 +14,6 @@ export default function Home({ featuredProduct, newProducts }) {
       <Hero />
       <Featured />
       <ProductSlide />
-      {/* <NewProducts newProducts={newProducts} /> */}
       <Footer />
     </div>
   );
