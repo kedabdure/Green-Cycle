@@ -10,7 +10,6 @@ const OrderSchema = new Schema(
     country: String,
     city: String,
     subCity: String,
-    wereda: String,
     streetAddress: String,
     paid: Boolean,
     tx_ref: String,
