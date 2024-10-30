@@ -22,10 +22,15 @@ export default function ProductSlide() {
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
   const sliderRef = useRef(null);
 
-  const { data: productsData = [] } = useQuery({
+  const { data: productsData = [], error, isError } = useQuery({
     queryKey: ["products"],
     queryFn: fetchProducts,
   });
+
+  if (isError) {
+    console.error("Error fetching products:", error);
+    return <Typography color="error">Failed to load products.</Typography>;
+  }
 
   const settings = {
     dots: false,
@@ -41,7 +46,7 @@ export default function ProductSlide() {
       <Box sx={{ width: "100%", maxWidth: 1200, mx: "auto" }}>
         <Box sx={{ textAlign: "left", display: "flex", alignItems: "center", justifyContent: "space-between", mb: 8, mx: 2 }}>
           <Box>
-            <Typography variant="overline" color="primary" gutterBottom sx={{mb: 3}}>Furniture</Typography>
+            <Typography variant="overline" color="primary" gutterBottom sx={{ mb: 3 }}>Furniture</Typography>
             <Typography variant="h4" color="textPrimary">Discover the Latest Trends</Typography>
             <Typography variant="body1" color="textSecondary" sx={{ maxWidth: 600, mt: 1 }}>
               Stay updated with our insights and engaging blog posts about modern furniture and fashion.

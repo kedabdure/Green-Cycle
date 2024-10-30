@@ -3,7 +3,7 @@ import { CartContext } from "@/components/cart/CartContext";
 import { Box, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, Stack, useMediaQuery } from "@mui/material";
 import { Plus as PlusIcon, Minus as XIcon, Trash as DeleteIcon, Minus } from "phosphor-react";
 import Image from "next/image";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 
 const fetchProducts = async (ids) => {
@@ -14,9 +14,8 @@ const fetchProducts = async (ids) => {
 
 export default function OrderPreview() {
   const { cartProducts, addProduct, removeProduct, removeAllInstance } = useContext(CartContext);
-  
+  const queryClient = useQueryClient();
   const isMobile = useMediaQuery('(max-width: 600px)');
-  console.log(isMobile);
 
   const { data: products = [], isLoading } = useQuery({
     queryKey: ['products'],
@@ -26,14 +25,17 @@ export default function OrderPreview() {
 
   function moreOfThisProduct(id) {
     addProduct(id);
+    queryClient.invalidateQueries({ queryKey: ['products'] });
   }
 
   function lessOfThisProduct(id) {
     removeProduct(id);
+    queryClient.invalidateQueries({ queryKey: ['products'] });
   }
 
   function removeAllInstanceOfProduct(id) {
     removeAllInstance(id);
+    queryClient.invalidateQueries({ queryKey: ['products'] });
   }
 
   // Calculate total and subtotal
@@ -55,7 +57,7 @@ export default function OrderPreview() {
         maxWidth: "561.65px",
       }}>
       {products?.length > 0 && !isMobile && (
-        <TableContainer component={Box} sx={{ display: {sm: 'none', md: 'block'}}}>
+        <TableContainer component={Box} sx={{ display: { sm: 'none', md: 'block' } }}>
           <Table>
             <TableHead>
               <TableRow>
@@ -82,7 +84,7 @@ export default function OrderPreview() {
             <TableBody>
               {products.map((product) => (
                 <TableRow key={product._id}>
-                  <TableCell sx={{ p: 0 }}>
+                  <TableCell sx={{ p: 1 }}>
                     <Box
                       display="flex"
                       alignItems="center"

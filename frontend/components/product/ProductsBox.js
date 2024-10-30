@@ -36,7 +36,8 @@ export default function ProductBox({ _id, title, price, images, badge }) {
         open={open}
         autoHideDuration={6000}
         onClose={handleClose}
-        anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+        zIndex={100000}
       >
         <Alert
           onClose={handleClose}

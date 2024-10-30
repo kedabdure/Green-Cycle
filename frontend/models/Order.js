@@ -10,10 +10,10 @@ const OrderSchema = new Schema(
     country: String,
     city: String,
     subCity: String,
-    wereda: String,
     streetAddress: String,
-    paid: Boolean,
+    paid: {type: Boolean, default: false},
     tx_ref: String,
+    status: { type: String, default: "Pending" },
   },
   {
     timestamps: true,

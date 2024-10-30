@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import Image from 'next/image';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import OrderForm from '@/components/order/OrderForm';
 import { Box, Typography, Container, Stack, Paper, Radio, RadioGroup, FormControlLabel, styled } from '@mui/material';
 import OrderPreview from '@/components/order/OrderPreview';
-
+import { CartContext } from '@/components/cart/CartContext';
+import axios from 'axios';
 
 const CustomRadio = styled(Radio)(({ theme }) => ({
   color: '#666',
@@ -23,19 +24,41 @@ const CustomRadio = styled(Radio)(({ theme }) => ({
   },
 }));
 
-
 export default function Checkout() {
+  const { cartProducts } = useContext(CartContext);
   const [paymentMethod, setPaymentMethod] = useState('card');
-  const [formData, setFormData] = useState({})
-
-  const handleFormData = (data) => {
-    setFormData(data)
-    console.log("Form data received in parent:", formData);
-  }
 
   const handleChange = (event) => {
     setPaymentMethod(event.target.value);
   };
+
+
+  async function goToPayment(data) {
+    const orderData = { ...data, cartProducts };
+
+    let res;
+    try {
+      if (paymentMethod === 'card') {
+        res = await axios.post('/api/checkout', orderData);
+
+        if (res.data && res.data.payment_url) {
+          window.location.href = res.data.payment_url;
+        } else {
+          console.error("No payment URL returned");
+        }
+      } else {
+        res = await axios.post('/api/orders', orderData);
+
+        if (res.status === 201) {
+          // window.location.href = "/success";
+          console.log("Order created successfully");
+        }
+      }
+
+    } catch (error) {
+      console.error("Payment Initialization Failed:", error.message);
+    }
+  }
 
   return (
     <>
@@ -51,7 +74,7 @@ export default function Checkout() {
         </Typography>
         <Stack
           direction={{ xs: 'column', md: 'row' }}
-          spacing={12}
+          spacing={{ sm: 3, md: 4, lg: 12 }}
           sx={{
             width: '100%',
             maxWidth: '1200px',
@@ -164,7 +187,7 @@ export default function Checkout() {
               </Paper>
             </Box>
             <Box sx={{ mt: 6 }}>
-              <OrderForm onFormSubmit={handleFormData} paymentMethod={paymentMethod} />
+              <OrderForm onFormSubmit={goToPayment} paymentMethod={paymentMethod} />
             </Box>
           </Box>
 

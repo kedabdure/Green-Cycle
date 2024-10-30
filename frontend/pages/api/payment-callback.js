@@ -1,4 +1,4 @@
-import { verifyPayment } from "../../lib/chapaService";
+import { verifyPayment } from "../../lib/chapa-service";
 import { Order } from "../../models/Order";
 import { mongooseConnect } from "../../lib/mongoose";
 
@@ -10,12 +10,13 @@ export default async function handler(req, res) {
   if (!trx_ref || !status) {
     return res.status(400).json({ error: 'trx_ref and status are required' });
   }
+
   try {
     await mongooseConnect();
     const tx_ref = trx_ref;
     const response = await verifyPayment(tx_ref);
     if (response.status === 'success') {
-      const updateResult = await Order.updateOne({ tx_ref: tx_ref }, { paid: true });
+      const updateResult = await Order.updateOne({ tx_ref }, { paid: true });
       if (updateResult.matchedCount === 0) {
         return res.status(404).json({ error: 'Order not found' });
       }

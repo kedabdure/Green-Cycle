@@ -11,6 +11,7 @@ import {
   Select,
   MenuItem,
   InputLabel,
+  CircularProgress,
 } from '@mui/material';
 
 const initialValues = {
@@ -28,6 +29,7 @@ export default function OrderForm({ onFormSubmit, paymentMethod }) {
   const [formValues, setFormValues] = useState(initialValues);
   const [formErrors, setFormErrors] = useState({});
   const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const validate = (values) => {
     const errors = {};
@@ -64,24 +66,30 @@ export default function OrderForm({ onFormSubmit, paymentMethod }) {
     if (formErrors[name]) setFormErrors({ ...formErrors, [name]: '' });
   };
 
-  const handleSubmitForm = (e) => {
+  const handleSubmitForm = async (e) => {
     e.preventDefault();
+    setIsSubmitting(true);
 
     if (validate(formValues)) {
-      setSubmitSuccess(true);
+      try {
+        await onFormSubmit({ ...formValues, phone: formValues.phone.replace(/^\+251/, '0') });
+        setFormValues(initialValues);
+      } catch (error) {
+        console.error("Submission error:", error);
 
-      onFormSubmit({ ...formValues, phone: formValues.phone.replace(/^\+251/, '0') });
-
-      setFormValues(initialValues);
+      } finally {
+        setIsSubmitting(false);
+      }
     } else {
-      setSubmitSuccess(false);
+      setIsSubmitting(false);
     }
   };
+
 
   return (
     <form onSubmit={handleSubmitForm}>
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-        <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, gap: 1.5 }}>
+        <Box sx={{ display: 'flex', flexDirection: { md: 'column', lg: 'row' }, gap: 1.5 }}>
           <FormControl fullWidth>
             <TextField
               label="First name"
@@ -107,7 +115,7 @@ export default function OrderForm({ onFormSubmit, paymentMethod }) {
           </FormControl>
         </Box>
 
-        <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, gap: 1.5 }}>
+        <Box sx={{ display: 'flex', flexDirection: { md: 'column', lg: 'row' }, gap: 1.5 }}>
           <FormControl fullWidth>
             <PhoneInput
               placeholder="Enter phone number"
@@ -216,9 +224,14 @@ export default function OrderForm({ onFormSubmit, paymentMethod }) {
             }
           }}
         >
-          {paymentMethod === 'card' ? 'Continue to pay' : 'Place Order'}
+          {isSubmitting ? (
+            <CircularProgress size={18} color='#f1f1f1' sx={{ mr: 1 }} />
+          ) : (
+            <span>
+              {paymentMethod === 'card' ? 'Continue to pay' : 'Place Order'}
+            </span>
+          )}
         </Box>
-        {submitSuccess && <Alert severity="success">Form submitted successfully!</Alert>}
       </Box>
     </form>
   );

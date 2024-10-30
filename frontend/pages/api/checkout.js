@@ -1,7 +1,7 @@
 import { mongooseConnect } from "../../lib/mongoose";
 import { Product } from "../../models/Product";
 import { Order } from "../../models/Order";
-import { initializePayment, chapa } from "../../lib/chapaService";
+import { initializePayment, chapa } from "../../lib/chapa-service";
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -17,7 +17,7 @@ export default async function handler(req, res) {
   const {
     firstName, lastName, email,
     phone, country, city, subCity,
-    wereda, streetAddress, cartProducts,
+    streetAddress, cartProducts,
   } = req.body;
 
   const tx_ref = await chapa.genTxRef();
@@ -44,11 +44,18 @@ export default async function handler(req, res) {
     }
   }
 
-  // Create the order document in MongoDB
-  const orderDoc = await Order.create({
-    line_items, firstName, lastName, email, phone, country,
-    city, subCity, wereda, streetAddress, paid: false, tx_ref,
+  let total = 0;
+  const products = await Product.find({ _id: { $in: uniqueIds } });
+
+  const productPrices = {};
+  products.forEach(product => {
+    productPrices[product._id.toString()] = product.price;
   });
+
+  total = cartProducts.reduce((acc, productID) => {
+    const price = productPrices[productID] || 0;
+    return acc + price;
+  }, 0);
 
   try {
     const response = await initializePayment({
@@ -57,16 +64,17 @@ export default async function handler(req, res) {
       email,
       phone_number: phone,
       tx_ref,
-      // amount: line_items.reduce((acc, item) => acc + item.price_data.amount, 0),
+      total,
     });
 
-    // Log the response for debugging
-    console.log("Chapa Response:", response.data);
+    // CREATE the order
+    await Order.create({
+      line_items, firstName, lastName, email, phone, country,
+      city, subCity, streetAddress, tx_ref,
+    });
 
-    // Return the checkout URL only
     res.status(200).json({ payment_url: response.data.checkout_url });
   } catch (error) {
-    // Log the error for more insight
     console.error("Error during payment initialization:", error.message);
     res.status(500).json({ error: error.message });
   }

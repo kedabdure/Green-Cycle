@@ -1,4 +1,3 @@
-import { NextResponse } from 'next/server';
 import { Product } from '../../models/Product';
 
 import { mongooseConnect } from '../../lib/mongoose';

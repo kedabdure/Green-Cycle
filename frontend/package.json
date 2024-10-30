@@ -24,6 +24,7 @@
     "fs": "^0.0.1-security",
     "imagekit": "^5.2.0",
     "jspdf": "^2.5.2",
+    "jspdf-autotable": "^3.8.4",
     "mongodb": "^6.9.0",
     "mongoose": "^8.7.0",
     "multiparty": "^4.2.3",

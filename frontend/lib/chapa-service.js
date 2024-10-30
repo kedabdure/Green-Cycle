@@ -5,10 +5,12 @@ export const chapa = new Chapa({
   secretKey: process.env.CHAPA_SK,
 });
 
-export async function initializePayment({ first_name, last_name, email, phone_number, tx_ref }) {
+export async function initializePayment({ first_name, last_name, email, phone_number, tx_ref, total }) {
 
-  const callbackUrl = `${process.env.BASE_URL}/api/paymentCallback`;
-  const returnUrl = `${process.env.BASE_URL}/orderSummary?tx_ref=${tx_ref}`;
+  const callbackUrl = `${process.env.BASE_URL}/api/payment-callback`;
+  const returnUrl = `${process.env.BASE_URL}/order-summary?tx_ref=${tx_ref}`;
+
+  const totalAmount = total.toFixed(2);
 
   const initializeOptions = {
     first_name,
@@ -16,7 +18,7 @@ export async function initializePayment({ first_name, last_name, email, phone_nu
     email,
     phone_number,
     currency: 'ETB',
-    amount: '5',
+    amount: totalAmount.toString(),
     tx_ref,
     callback_url: callbackUrl,
     return_url: returnUrl,
