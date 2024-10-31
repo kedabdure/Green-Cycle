@@ -46,7 +46,7 @@ export default function ProductBox({ _id, title, price, images, badge }) {
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
-            width: '85%',
+            width: { xs: '85%', md: '100%'},
             fontSize: '1rem',
             padding: '0.4rem 1rem',
           }}

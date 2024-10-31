@@ -250,7 +250,7 @@ export default function Hero() {
 
         {/* Awareness */}
         <Box sx={{ position: "absolute", bottom: "0", left: "0", width: "100%", height: 'auto', display: "flex", justifyContent: "center", alignItems: "center", backgroundColor: 'transparent' }}>
-          <AwarenessSlider />
+          {/* <AwarenessSlider /> */}
         </Box>
       </Box>
     </Box>

@@ -25,7 +25,7 @@ const CustomRadio = styled(Radio)(({ theme }) => ({
 }));
 
 export default function Checkout() {
-  const { cartProducts } = useContext(CartContext);
+  const { cartProducts, clearCart } = useContext(CartContext);
   const [paymentMethod, setPaymentMethod] = useState('card');
 
   const handleChange = (event) => {
@@ -42,6 +42,7 @@ export default function Checkout() {
         res = await axios.post('/api/checkout', orderData);
 
         if (res.data && res.data.payment_url) {
+          clearCart();
           window.location.href = res.data.payment_url;
         } else {
           console.error("No payment URL returned");
@@ -51,6 +52,7 @@ export default function Checkout() {
 
         if (res.status === 201) {
           // window.location.href = "/success";
+          clearCart();
           console.log("Order created successfully");
         }
       }

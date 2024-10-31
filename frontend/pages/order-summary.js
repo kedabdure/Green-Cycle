@@ -2,9 +2,11 @@ import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
-import { Paper, Typography, Divider, Grid, Box, Button } from '@mui/material';
+import { Paper, Typography, Divider, Grid, Box, Button, CircularProgress } from '@mui/material';
 import { DownloadSimple, House } from 'phosphor-react';
 import { useRouter } from 'next/router';
+import { useContext } from 'react';
+import { CartContext } from '@/components/cart/CartContext';
 import dayjs from 'dayjs';
 
 const fetchOrderByTxRef = async (tx_ref) => {
@@ -21,6 +23,7 @@ export default function OrderSummary() {
     queryFn: () => fetchOrderByTxRef(tx_ref),
     enabled: !!tx_ref,
   });
+
 
   if (isLoading) {
     return (
@@ -93,13 +96,14 @@ export default function OrderSummary() {
     doc.save(`Order_${tx_ref}.pdf`);
   };
 
+
   return (
     <Paper
       elevation={4}
       sx={{
         padding: { xs: 2, md: 4 },
         maxWidth: 700,
-        margin: 'auto',
+        margin: '3rem auto',
         borderRadius: 2,
         boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)'
       }}
