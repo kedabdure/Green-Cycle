@@ -51,7 +51,7 @@ export default function ProductPage() {
 
   const slicedRelatedProducts = relatedProducts.slice(0, 4);
 
-  if (productLoading) return <CircularProgress />;
+  if (productLoading) return <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', paddingTop: "5rem" }}><CircularProgress color="#333" size={32} /></Box>;
   if (productError || !product) return <Typography variant="h6" color="error">Failed to load product</Typography>;
 
   return (
@@ -82,7 +82,7 @@ export default function ProductPage() {
               <Typography variant="h5" fontWeight="600">{product.price.toLocaleString()}</Typography>
               <Currency>ETB</Currency>
             </Box>
-            <Button variant="contained" sx={{  maxWidth: '120px', backgroundColor: "#111", textTransform: 'none', fontSize: '.95rem' }} onClick={handleAddToCart} startIcon={<CartIcon />}>
+            <Button variant="contained" sx={{ maxWidth: '120px', backgroundColor: "#111", textTransform: 'none', fontSize: '.95rem' }} onClick={handleAddToCart} startIcon={<CartIcon />}>
               Add to Cart
             </Button>
           </Grid>

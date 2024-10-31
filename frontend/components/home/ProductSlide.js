@@ -80,10 +80,10 @@ export default function ProductSlide() {
           </Button>
         </Box>
 
-        <Box component={Link} sx={{ position: "relative", width: "100%", height: "613px" }}>
+        <Box sx={{ position: "relative", width: "100%", height: "613px" }}>
           <Slider ref={sliderRef} {...settings}>
             {productsData.length > 0 && productsData?.map((product) => (
-              <Box key={product._id}>
+              <Box key={product._id} href={`/product/${product._id}`} component={Link} sx={{textDecoration: 'none'}}>
                 <Card
                   sx={{
                     width: { xs: "100%", sm: "370px" },

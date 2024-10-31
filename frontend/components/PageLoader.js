@@ -16,7 +16,7 @@ const PageLoader = () => (
       zIndex: 1000,
     }}
   >
-    <CircularProgress size={40} thickness={2} sx={{ color: 'white'}}/>
+    <CircularProgress size={50} thickness={3} sx={{ color: 'white'}}/>
   </Box>
 );
 

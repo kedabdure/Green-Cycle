@@ -1,226 +1,258 @@
+import { Box, Typography, Button, autocompleteClasses } from "@mui/material";
 import Image from "next/image";
-import styled from "styled-components";
-
-const Container = styled.div`
-  padding: 120px;
-  width: 100%;
-  min-height: 100vh;
-  color: #111;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #fff;
-  text-align: center;
-  position: relative;
-`;
-
-const Wrapper = styled.div`
-  width: 901px;
-  height: 597px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 48px;
-`;
-
-const TopSection = styled.div`
-  width: 877px;
-  height: 356px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`;
-
-const TextWrapper = styled.div`
-  width: 877px;
-  height: auto;
-  gap: 12px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`;
-
-const Title = styled.h1`
-  width: 100%;
-  font-size: 4rem;
-  color: #111;
-  margin-bottom: 1rem;
-  font-family: 'Outfit', sans-serif;
-  font-weight: 700;
-  line-height: 1.2;
-  text-align: center;
-`;
-
-const StyledSpan = styled.span`
-  padding: 5px 20px;
-  border-radius: 68px;
-  background: #D7FFB1;
-  opacity: 1;
-`;
-
-const Subtitle = styled.p`
-  font-size: .9rem;
-  color: #4f4f4f;
-  margin-bottom: 2rem;
-  line-height: 1.6;
-  text-align: center;
-  max-width: 700px;
-`;
-
-const ButtonWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  gap: .5rem;
-`;
-
-const LeftButton = styled.button`
-  max-width: 200px;
-  width: 120px;
-  padding: 0.75rem 1.5rem;
-  font-size: 1rem;
-  color: #111;
-  font-weight: 500;
-  background-color: #D7FFB1;
-  border: 1px solid #111;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-
-  &:hover {
-    background-color: transparent;
-  }
-`;
-
-const RightButton = styled.button`
-  max-width: 200px;
-  width: 120px;
-  padding: 0.75rem 1.5rem;
-  font-size: 1rem;
-  color: #111;
-  font-weight: 500;
-  background-color: transparent;
-  border: 1px solid #111;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-
-  &:hover {
-    background-color: #D7FFB1;
-  }
-`;
-
-const BottomSection = styled.div`
-  margin-top: 2rem;
-  max-width: 800px;
-  color: #333;
-  width: 901px;
-  height: 193px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 20px;
-`;
-
-const BigImage = styled.div`
-  width: 252px;
-  height: 202px;
-  overflow: hidden;
-  border-radius: 20px;
-  object-fit: cover;
-`;
-
-const ImageCircleWrapper = styled.div`
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  width: 1093px;
-  height: 142px;
-  gap: 0px;
-`;
-
-const ImageCircleTop = styled.div`
-  width: 100%;
-  height: 40%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`;
-
-const ImageCircleBottom = styled.div`
-  width: 80%;
-  height: 60%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`;
-
-const ImageCircleSmall = styled.div`
-  width: 80px;
-  height: 80px;
-  overflow: hidden;
-  border-radius: 50%;
-`;
-
-const ImageCircleXSmall = styled.div`
-  width: 60px;
-  height: 60px;
-  overflow: hidden;
-  border-radius: 50%;
-`;
+import AwarenessSlider from "./AwarenessSlider";
 
 export default function Hero() {
   return (
-    <Container>
-      <Wrapper>
-        <TopSection>
-          <TextWrapper>
-            <Title>Efficient <StyledSpan>Scrap</StyledSpan> Recycling Services Near You</Title>
-            <Subtitle>
-              Discover a sustainable way to furnish your home by buying and selling
-              pre-loved furniture. When you choose to reuse, you're giving these
-              pieces a second life and helping reduce waste. Let's make a positive
-              impact on the environment together.
-            </Subtitle>
-          </TextWrapper>
-          <ButtonWrapper>
-            <LeftButton>Sell</LeftButton>
-            <RightButton>Buy</RightButton>
-          </ButtonWrapper>
-        </TopSection>
-        <BottomSection>
-          <BigImage>
-            <Image src="/assets/images/Dupe-sofa.jfif" width={252} height={204} />
-          </BigImage>
-          <BigImage>
-            <Image src="/assets/images/traditional-style.jfif" width={252} height={204} />
-          </BigImage>
-        </BottomSection>
+    <Box
+      sx={{
+        padding: "120px",
+        width: "100%",
+        minHeight: "100vh",
+        color: "#111",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: "#fff",
+        textAlign: "center",
+        position: "relative",
+      }}
+    >
+      <Box
+        sx={{
+          width: "901px",
+          height: "597px",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          gap: "48px",
+          position: 'relative',
+        }}
+      >
+        <Box
+          sx={{
+            width: "877px",
+            height: "356px",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
+          <Box
+            sx={{
+              width: "877px",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              gap: "12px",
+            }}
+          >
+            <Typography
+              variant="h1"
+              sx={{
+                fontSize: "4rem",
+                color: "#111",
+                marginBottom: "1rem",
+                fontFamily: "'Outfit', sans-serif",
+                fontWeight: "700",
+                lineHeight: "1.2",
+                textAlign: "center",
+              }}
+            >
+              Efficient{" "}
+              <Box
+                component="span"
+                sx={{
+                  padding: "5px 20px",
+                  borderRadius: "68px",
+                  backgroundColor: "#D7FFB1",
+                }}
+              >
+                Scrap
+              </Box>{" "}
+              Recycling Services Near You
+            </Typography>
+            <Typography
+              variant="body1"
+              sx={{
+                fontSize: "0.9rem",
+                color: "#4f4f4f",
+                marginBottom: "2rem",
+                lineHeight: "1.6",
+                textAlign: "center",
+                maxWidth: "700px",
+              }}
+            >
+              Discover a sustainable way to furnish your home by buying and
+              selling pre-loved furniture. When you choose to reuse, you're
+              giving these pieces a second life and helping reduce waste. Let's
+              make a positive impact on the environment together.
+            </Typography>
+          </Box>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: "0.5rem",
+            }}
+          >
+            <Button
+              variant="contained"
+              sx={{
+                maxWidth: "200px",
+                width: "120px",
+                padding: "0.75rem 1.5rem",
+                fontSize: "1rem",
+                color: "#111",
+                fontWeight: "500",
+                backgroundColor: "#D7FFB1",
+                border: "1px solid #111",
+                borderRadius: "4px",
+                transition: "background-color 0.3s ease",
+                "&:hover": {
+                  backgroundColor: "transparent",
+                },
+              }}
+            >
+              Sell
+            </Button>
+            <Button
+              variant="outlined"
+              sx={{
+                maxWidth: "200px",
+                width: "120px",
+                padding: "0.75rem 1.5rem",
+                fontSize: "1rem",
+                color: "#111",
+                fontWeight: "500",
+                borderColor: "#111",
+                borderRadius: "4px",
+                transition: "background-color 0.3s ease",
+                "&:hover": {
+                  backgroundColor: "#D7FFB1",
+                },
+              }}
+            >
+              Buy
+            </Button>
+          </Box>
+        </Box>
+        <Box
+          sx={{
+            marginTop: "2rem",
+            maxWidth: "800px",
+            color: "#333",
+            width: "901px",
+            height: "193px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: "20px",
+          }}
+        >
+          <Box
+            sx={{
+              width: "252px",
+              height: "202px",
+              overflow: "hidden",
+              borderRadius: "20px",
+            }}
+          >
+            <Image src="/assets/images/Dupe-sofa.jfif" width={252} height={204} alt="Dupe Sofa" />
+          </Box>
+          <Box
+            sx={{
+              width: "252px",
+              height: "202px",
+              overflow: "hidden",
+              borderRadius: "20px",
+            }}
+          >
+            <Image src="/assets/images/traditional-style.jfif" width={252} height={204} alt="Traditional Style" />
+          </Box>
+        </Box>
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            width: "1093px",
+            height: "142px",
+            gap: "0px",
+          }}
+        >
+          <Box
+            sx={{
+              width: "100%",
+              height: "40%",
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <Box
+              sx={{
+                width: "60px",
+                height: "60px",
+                overflow: "hidden",
+                borderRadius: "50%",
+              }}
+            >
+              <Image src="/assets/images/forest1.jfif" width={68} height={68} alt="Forest" />
+            </Box>
+            <Box
+              sx={{
+                width: "60px",
+                height: "60px",
+                overflow: "hidden",
+                borderRadius: "50%",
+              }}
+            >
+              <Image src="/assets/images/chair1.jfif" width={68} height={68} alt="Chair" />
+            </Box>
+          </Box>
+          <Box
+            sx={{
+              width: "80%",
+              height: "60%",
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <Box
+              sx={{
+                width: "80px",
+                height: "80px",
+                overflow: "hidden",
+                borderRadius: "50%",
+              }}
+            >
+              <Image src="/assets/images/greenHand.jfif" width={80} height={80} alt="Green Hand" />
+            </Box>
+            <Box
+              sx={{
+                width: "80px",
+                height: "80px",
+                overflow: "hidden",
+                borderRadius: "50%",
+              }}
+            >
+              <Image src="/assets/images/greenWorld.jfif" width={80} height={80} alt="Green World" />
+            </Box>
+          </Box>
+        </Box>
 
-        <ImageCircleWrapper>
-          <ImageCircleTop>
-            <ImageCircleXSmall>
-              <Image src="/assets/images/forest1.jfif" width={68} height={68} />
-            </ImageCircleXSmall>
-            <ImageCircleXSmall>
-              <Image src="/assets/images/chair1.jfif" width={68} height={68} />
-            </ImageCircleXSmall>
-          </ImageCircleTop>
-
-          <ImageCircleBottom>
-            <ImageCircleSmall>
-              <Image src="/assets/images/greenHand.jfif" width={80} height={80} />
-            </ImageCircleSmall>
-            <ImageCircleSmall>
-              <Image src="/assets/images/greenWorld.jfif" width={80} height={80} />
-            </ImageCircleSmall>
-          </ImageCircleBottom>
-        </ImageCircleWrapper>
-      </Wrapper>
-    </Container>
+        {/* Awareness */}
+        <Box sx={{ position: "absolute", bottom: "0", left: "0", width: "100%", height: 'auto', display: "flex", justifyContent: "center", alignItems: "center", backgroundColor: 'transparent' }}>
+          <AwarenessSlider />
+        </Box>
+      </Box>
+    </Box>
   );
 }
