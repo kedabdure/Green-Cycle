@@ -4,11 +4,12 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
-import { Box, Card, CardContent, Typography, useMediaQuery, useTheme, Button } from "@mui/material";
+import { Box, Card, CardContent, Typography, useMediaQuery, useTheme, Button, Link } from "@mui/material";
 import Image from "next/image";
 import { CaretLeft, CaretRight, ArrowRight } from "phosphor-react";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import Router from "next/router";
 
 dayjs.extend(relativeTime);
 
@@ -18,6 +19,7 @@ const fetchProducts = async () => {
 };
 
 export default function ProductSlide() {
+  const router = Router;
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
   const sliderRef = useRef(null);
@@ -30,6 +32,10 @@ export default function ProductSlide() {
   if (isError) {
     console.error("Error fetching products:", error);
     return <Typography color="error">Failed to load products.</Typography>;
+  }
+
+  const formattedPrice = (price) => {
+    return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   }
 
   const settings = {
@@ -53,6 +59,7 @@ export default function ProductSlide() {
             </Typography>
           </Box>
           <Button
+            onClick={() => router.push("/products")}
             sx={{
               backgroundColor: '#111',
               padding: '10px 20px',
@@ -73,7 +80,7 @@ export default function ProductSlide() {
           </Button>
         </Box>
 
-        <Box sx={{ position: "relative", width: "100%", height: "613px" }}>
+        <Box component={Link} sx={{ position: "relative", width: "100%", height: "613px" }}>
           <Slider ref={sliderRef} {...settings}>
             {productsData.length > 0 && productsData?.map((product) => (
               <Box key={product._id}>
@@ -110,8 +117,8 @@ export default function ProductSlide() {
                     <Typography variant="body2" color="textSecondary" sx={{ overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis" }}>
                       {product.description}
                     </Typography>
-                    <Typography variant="h6" color="primary" sx={{ mt: 2 }}>
-                      {product.price.toFixed(2)} <Typography variant="body1" display="inline-block">ETB</Typography>
+                    <Typography variant="h6" color="grey.800" sx={{ mt: 2 }}>
+                      {formattedPrice(product.price.toFixed(2))} <Typography variant="body1" display="inline-block">ETB</Typography>
                     </Typography>
                     <Typography variant="caption" sx={{ mt: '1rem', textAlign: 'left' }} color="textSecondary">
                       {dayjs(product.updatedAt).fromNow()}

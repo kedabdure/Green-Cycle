@@ -4,11 +4,11 @@ import styled, { keyframes } from "styled-components";
 import { useContext, useState, useEffect } from "react";
 import { CartContext } from "./cart/CartContext";
 import BarsIcon from "./icons/Bars";
-import CartIcon from "./icons/CartIcon";
 import Close from "./icons/Close";
-import { signIn, useSession, signOut } from "next-auth/react";
+import { useSession, signOut } from "next-auth/react";
 import Image from "next/image";
 import { useRouter } from "next/router";
+import { ShoppingCart } from "phosphor-react";
 
 
 const slideDown = keyframes`
@@ -31,14 +31,16 @@ const slideUp = keyframes`
 
 const StyledHeader = styled.header`
   width: 100%;
-  height: 68px;
-  background-color: #fff;
+  height: auto;
+  background-color: ${({ $scrollPosition }) => ($scrollPosition > 0 ? "#fff" : "transparent")};
   color: #111;
   position: fixed;
   top: 0;
   z-index: 1000;
   animation: ${({ $isVisible }) => ($isVisible ? slideDown : slideUp)} 0.5s ease forwards;
   transform: ${({ $isVisible }) => ($isVisible ? "translateY(0)" : "translateY(-100%)")};
+
+  transition: background-color 0.5s ease-in-out;
 `;
 
 const Logo = styled(Link)`
@@ -46,13 +48,22 @@ const Logo = styled(Link)`
   width: 120px;
   height: auto;
   z-index: 3;
+  display: none;
+
+  @media screen and (min-width: 800px) {
+    display: block;
+  }
 `;
 
 const Wrapper = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 16px 70px;
+  padding: 16px 20px;
+
+  @media screen and (min-width: 768px) {
+    padding: 20px 80px;
+  }
 `;
 
 const StyledNav = styled.nav`
@@ -71,7 +82,7 @@ const StyledNav = styled.nav`
   justify-content: center;
   padding: ${props => (props.$mobileNavActive ? "40px 20px 20px 25px" : "0 10px")};
   background-color: #fff;
-  font-size: 1rem;
+  font-size: .95rem;
 
   @media screen and (min-width: 800px) {
     display: flex;
@@ -82,6 +93,7 @@ const StyledNav = styled.nav`
     opacity: 1;
     padding: 0;
     transition: none;
+    background-color: transparent;
   }
 `;
 
@@ -106,9 +118,11 @@ const ButtonWrapper = styled.div`
   align-items: center;
   justify-content: space-between;
   gap: 15px;
+  width: 100%;
 
   @media (min-width: 800px) {
     gap: 30px;
+    width: auto;
   }
 `;
 
@@ -189,7 +203,8 @@ const CartBadge = styled.div`
 `;
 
 const Button = styled.div`
-  max-width: 200px;
+  width: 100%;
+  max-width: 100px;
   padding: 6px 15px;
   text-align: center;
   border-radius: 30px;
@@ -219,21 +234,26 @@ const OutlinedButton = styled.div`
 `;
 
 const LogoutWrapper = styled.div`
+  width: 145px;
   display: flex;
   align-items: center;
-  gap: 15px;
-  color: #ccc;
-  font-size: 1rem;
+  justify-content: space-between;
 `;
 
 const StyledSpan = styled.span`
-  width: 33px;
-  height: 33px;
   font-size: 1rem;
+  width: 31px;
+  height: 31px;
+  font-weight: 500;
   color: #fff;
-  background: linear-gradient(145deg, #ff8a00, #e52e71, #00c6ff);
-  padding: 2px;
+  background: linear-gradient(145deg, #ff8a00, green, green);
+  // padding: 2px 7px;
   border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
 `;
 
 const StyledImage = styled(Image)`
@@ -277,7 +297,7 @@ export default function Header() {
   }, [scrollPosition]);
 
   return (
-    <StyledHeader $isVisible={isHeaderVisible}>
+    <StyledHeader $isVisible={isHeaderVisible} $scrollPosition={scrollPosition}>
       <Wrapper>
         <Logo href="/" passHref>
           <LogoWhite width="100" />
@@ -285,9 +305,9 @@ export default function Header() {
 
         <StyledNav $mobileNavActive={mobileNavActive}>
           <NavLink href={"/"}>Home</NavLink>
-          <NavLink href={"/products"}>All products</NavLink>
-          <NavLink href={"/categories"}>Categories</NavLink>
-          <NavLink href={"/about"}>About</NavLink>
+          <NavLink href={"/products"}>Shop Now</NavLink>
+          <NavLink href={"/about"}>About Us</NavLink>
+          <NavLink href={"/contact"}>Contact Us</NavLink>
           {mobileNavActive && <NavLink href={"/account"}>Account</NavLink>}
           <MobileButtons>
             {session && status === "authenticated" && (
@@ -324,9 +344,9 @@ export default function Header() {
             )}
             {session && (
               <LogoutWrapper>
-                <StyledSpan>
+                <StyledSpan onClick={() => router.push('/account')}>
                   {image ? (
-                    <StyledImage src={image} alt="User profile" width="33" height="33" />
+                    <StyledImage src={image} alt="User profile" width="20" height="20" />
                   ) : (
                     nameFirstChar
                   )}
@@ -338,7 +358,7 @@ export default function Header() {
 
           <CartIconWrapper onClick={() => router.push("/cart")}>
             <Cart>
-              <CartIcon />
+              <ShoppingCart size={30} />
             </Cart>
             <CartBadge>{cartProducts?.length}</CartBadge>
           </CartIconWrapper>

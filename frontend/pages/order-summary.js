@@ -1,13 +1,11 @@
-import { useContext } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
-import dayjs from 'dayjs';
-import { Box, Button, Typography, Divider, CircularProgress } from '@mui/material';
+import { Paper, Typography, Divider, Grid, Box, Button } from '@mui/material';
 import { DownloadSimple, House } from 'phosphor-react';
 import { useRouter } from 'next/router';
-import { CartContext } from '@/components/cart/CartContext';
+import dayjs from 'dayjs';
 
 const fetchOrderByTxRef = async (tx_ref) => {
   const { data } = await axios.get(`/api/orders?tx_ref=${tx_ref}`);
@@ -17,7 +15,6 @@ const fetchOrderByTxRef = async (tx_ref) => {
 export default function OrderSummary() {
   const router = useRouter();
   const { tx_ref } = router.query;
-  const { clearCart } = useContext(CartContext);
 
   const { data: order, isLoading, error } = useQuery({
     queryKey: ['order', tx_ref],
@@ -33,97 +30,187 @@ export default function OrderSummary() {
     );
   }
 
-  if (error) {
-    console.error("Error fetching order:", error);
-    return <Typography color="error">Error loading order.</Typography>;
-  }
+  if (error) return <Typography color="error">Error loading order.</Typography>;
+  if (!order) return <Typography>No order found for this transaction.</Typography>;
 
-  if (!order) {
-    return <Typography>No order found for this transaction.</Typography>;
-  }
-  clearCart();
+  const totalAmount = order.line_items.reduce((sum, item) => sum + item.quantity * item.price_data.amount, 0);
 
-
-  const totalAmount = order.line_items.reduce((sum, item) => sum + (item.quantity * item.price_data.amount), 0);
-
-  const formatNumber = (num) => {
-    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-  };
-
-  // PDF Export function
   const exportToPDF = () => {
     const doc = new jsPDF();
-    const tableColumn = ["Product", "Quantity", "Unit Price", "Total"];
-    const tableRows = order.line_items.map((item) => [
+
+    // Order Info Table
+    const orderInfoColumns = ["Field", "Details"];
+    const orderInfoRows = [
+      ["Transaction Reference", order.tx_ref],
+      ["Name", `${order.firstName} ${order.lastName}`],
+      ["Email", order.email],
+      ["Phone", order.phone],
+      ["Address", `${order.streetAddress}, ${order.subCity}, ${order.city}, ${order.country}`],
+      ["Order Date", dayjs(order.createdAt).format('MMM D, YYYY')],
+      ["Status", order.status],
+    ];
+
+    doc.setFontSize(16);
+    doc.text(`Order Summary - Green Cycle`, 14, 15);
+    doc.setFontSize(12);
+    doc.text(`Thank you for your purchase, ${order.firstName}!`, 14, 25);
+
+    autoTable(doc, {
+      startY: 30,
+      head: [orderInfoColumns],
+      body: orderInfoRows,
+      theme: 'grid',
+      headStyles: { fillColor: [56, 142, 60], textColor: [255, 255, 255] },
+      styles: { fontSize: 10, cellPadding: 3 },
+    });
+
+    // Product Table
+    const productColumns = ["Product", "Quantity", "Unit Price", "Total"];
+    const productRows = order.line_items.map((item) => [
       item.price_data.product_data.name,
       item.quantity,
-      `ETB ${formatNumber(item.price_data.amount.toFixed(2))}`,
-      `ETB ${formatNumber((item.quantity * item.price_data.amount).toFixed(2))}`
+      `${item.price_data.amount.toFixed(2)} ETB`,
+      `${(item.quantity * item.price_data.amount).toFixed(2)} ETB`,
     ]);
 
     autoTable(doc, {
-      head: [tableColumn],
-      body: tableRows,
+      startY: doc.autoTable.previous.finalY + 10,
+      head: [productColumns],
+      body: productRows,
       theme: 'striped',
-      headStyles: { fillColor: [56, 142, 60] },
-      styles: { fontSize: 10, font: 'helvetica' },
+      headStyles: { fillColor: [33, 150, 243], textColor: [255, 255, 255] },
+      styles: { fontSize: 10, cellPadding: 3 },
     });
 
-    // Title and summary details
-    doc.text(`Order Summary - ${order.firstName} ${order.lastName}`, 14, 10);
-    doc.text(`Total: ETB ${formatNumber(totalAmount.toFixed(2))}`, 14, 20);
-
-    // Adding order details and address to the PDF
-    doc.text(`Transaction Reference: ${order.tx_ref}`, 14, 30);
-    doc.text(`Name: ${order.firstName} ${order.lastName}`, 14, 35);
-    doc.text(`Email: ${order.email}`, 14, 40);
-    doc.text(`Phone: ${order.phone}`, 14, 45);
-    doc.text(`Address: ${order.streetAddress}, ${order.subCity}, ${order.city}, ${order.country}`, 14, 50);
-    doc.text(`Order Date: ${dayjs(order.createdAt).format('MMM D, YYYY')}`, 14, 55);
-    doc.text(`Status: ${order.status}`, 14, 60);
+    // Total Amount
+    doc.setFontSize(12);
+    doc.text(
+      `Total Amount: ${totalAmount.toFixed(2)} ETB`,
+      14,
+      doc.autoTable.previous.finalY + 10
+    );
 
     doc.save(`Order_${tx_ref}.pdf`);
   };
 
   return (
-    <Box p={3} style={{ maxWidth: 600, margin: '0 auto', textAlign: 'center' }}>
-      <Typography variant="h4" style={{ color: '#388E3C', fontWeight: 'bold' }}>Green Cycle</Typography>
-      <Typography variant="h6" gutterBottom>Thank you for your purchase, {order.firstName}!</Typography>
-
-      <Divider style={{ margin: '20px 0' }} />
-
-      <Box textAlign="left" style={{ lineHeight: 1.6 }}>
-        <Typography variant="body1"><strong>Transaction Reference:</strong> {order.tx_ref}</Typography>
-        <Typography variant="body1"><strong>Name:</strong> {order.firstName} {order.lastName}</Typography>
-        <Typography variant="body1"><strong>Email:</strong> {order.email}</Typography>
-        <Typography variant="body1"><strong>Phone:</strong> {order.phone}</Typography>
-        <Typography variant="body1"><strong>Address:</strong> {order.streetAddress}, {order.subCity}, {order.city}, {order.country}</Typography>
-        <Typography variant="body1"><strong>Order Date:</strong> {dayjs(order.createdAt).format('MMM D, YYYY')}</Typography>
-        <Typography variant="body1"><strong>Status:</strong> {order.status}</Typography>
-        <Typography variant="h6" style={{ marginTop: 10 }}><strong>Total Amount:</strong> {totalAmount.toFixed(2)} <small>ETB</small> </Typography>
+    <Paper
+      elevation={4}
+      sx={{
+        padding: { xs: 2, md: 4 },
+        maxWidth: 700,
+        margin: 'auto',
+        borderRadius: 2,
+        boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)'
+      }}
+    >
+      {/* Title and Thank You */}
+      <Box sx={{ textAlign: 'center', mb: 2 }}>
+        <Typography
+          variant="h5"
+          sx={{
+            color: '#388E3C',
+            fontWeight: 'bold',
+            mb: 1,
+            fontSize: { xs: '1.5rem', md: '2rem' }
+          }}
+        >
+          Green Cycle
+        </Typography>
+        <Typography
+          variant="subtitle1"
+          sx={{ color: '#555', fontSize: { xs: '0.9rem', md: '1rem' } }}
+        >
+          Thank you for your purchase, {order.firstName}!
+        </Typography>
       </Box>
 
-      <Divider style={{ margin: '20px 0' }} />
+      <Divider sx={{ my: 2 }} />
 
-      <Box mt={2}>
+      {/* Order Information and Delivery Address */}
+      <Grid container spacing={2} sx={{ textAlign: { xs: 'center', md: 'left' } }}>
+        <Grid item xs={12} md={6}>
+          <Typography
+            variant="subtitle1"
+            sx={{ fontWeight: 'bold', color: '#388E3C', mb: 1, fontSize: { xs: '1rem', md: '1.1rem' } }}
+          >
+            Order Information
+          </Typography>
+          <Box sx={{ pl: { md: 2 } }}>
+            <Typography variant="body2"><strong>Transaction Reference:</strong> {order.tx_ref}</Typography>
+            <Typography variant="body2"><strong>Order Date:</strong> {dayjs(order.createdAt).format('MMM D, YYYY')}</Typography>
+            <Typography variant="body2"><strong>Status:</strong> {order.status}</Typography>
+          </Box>
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <Typography
+            variant="subtitle1"
+            sx={{ fontWeight: 'bold', color: '#388E3C', mb: 1, fontSize: { xs: '1rem', md: '1.1rem' } }}
+          >
+            Delivery Address
+          </Typography>
+          <Box sx={{ pl: { md: 2 } }}>
+            <Typography variant="body2"><strong>Name:</strong> {order.firstName} {order.lastName}</Typography>
+            <Typography variant="body2"><strong>Email:</strong> {order.email}</Typography>
+            <Typography variant="body2"><strong>Phone:</strong> {order.phone}</Typography>
+            <Typography variant="body2"><strong>Address:</strong> {order.streetAddress}, {order.subCity}, {order.city}, {order.country}</Typography>
+          </Box>
+        </Grid>
+      </Grid>
+
+      <Divider sx={{ my: 2 }} />
+
+      {/* Product Summary */}
+      <Typography
+        variant="subtitle1"
+        sx={{ fontWeight: 'bold', color: '#388E3C', textAlign: 'center', mb: 1, fontSize: { xs: '1rem', md: '1.1rem' } }}
+      >
+        Order Summary
+      </Typography>
+      <Box sx={{ px: { xs: 2, md: 4 }, mb: 2 }}>
+        {order.line_items.map((item) => (
+          <Box
+            key={item.price_data.product_data.id}
+            display="flex"
+            justifyContent="space-between"
+            sx={{ py: 1, borderBottom: '1px solid #e0e0e0', fontSize: { xs: '0.85rem', md: '1rem' } }}
+          >
+            <Typography variant="body2" sx={{ fontWeight: 'medium' }}>{item.price_data.product_data.name}</Typography>
+            <Typography variant="body2">{item.quantity} x ETB {item.price_data.amount.toFixed(2)}</Typography>
+            <Typography variant="body2" sx={{ fontWeight: 'bold' }}>ETB {(item.quantity * item.price_data.amount).toFixed(2)}</Typography>
+          </Box>
+        ))}
+      </Box>
+
+      {/* Total Amount */}
+      <Box sx={{ textAlign: 'center', py: 2, bgcolor: '#f7f7f7', borderRadius: 1, mb: 2 }}>
+        <Typography
+          variant="h6"
+          sx={{ fontWeight: 'bold', color: '#388E3C', fontSize: { xs: '1rem', md: '1.2rem' } }}
+        >
+          Total Amount: ETB {totalAmount.toFixed(2)}
+        </Typography>
+      </Box>
+
+      {/* Buttons */}
+      <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2, mt: 2 }}>
         <Button
           variant="contained"
-          color="green"
+          sx={{ backgroundColor: '#388E3C', color: '#FFF', minWidth: 120, fontSize: { xs: '0.8rem', md: '0.9rem' }, textTransform: 'none' }}
           onClick={exportToPDF}
           startIcon={<DownloadSimple size={20} />}
-          style={{ marginRight: 10, textTransform: 'none' }}
         >
           Download
         </Button>
         <Button
           variant="contained"
-          color="green"
+          sx={{ backgroundColor: '#388E3C', color: '#FFF', minWidth: 120, fontSize: { xs: '0.8rem', md: '0.9rem' }, textTransform: 'none' }}
           href="/"
           startIcon={<House size={20} />}
         >
           Home
         </Button>
       </Box>
-    </Box>
+    </Paper>
   );
 }

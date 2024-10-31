@@ -310,7 +310,6 @@ export default function Account() {
                     e.target.onerror = null;
                     e.target.src = userProfileImage;
                   }}
-
                 />
               </div>
               <StyledLabel>

@@ -21,6 +21,7 @@ const ColWrapper = styled.div`
     grid-template-columns: .8fr 1.2fr;
   }
 `;
+
 const PriceRow = styled.div`
   display: flex;
   margin-top: 20px;
