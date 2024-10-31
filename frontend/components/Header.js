@@ -62,7 +62,7 @@ const Wrapper = styled.div`
   padding: 16px 20px;
 
   @media screen and (min-width: 768px) {
-    padding: 20px 80px;
+    padding: 18px 80px;
   }
 `;
 
@@ -99,7 +99,8 @@ const StyledNav = styled.nav`
 
 const NavLink = styled(Link)`
   display: block;
-  color: #111;
+  color: #333;
+  font-weight: 500;
   text-decoration: none;
   padding: 10px 0;
   transition: color 0.3s ease;
@@ -247,7 +248,6 @@ const StyledSpan = styled.span`
   font-weight: 500;
   color: #fff;
   background: linear-gradient(145deg, #ff8a00, green, green);
-  // padding: 2px 7px;
   border-radius: 50%;
   display: flex;
   flex-direction: column;

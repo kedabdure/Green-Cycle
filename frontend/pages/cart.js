@@ -58,12 +58,43 @@ export default function Cart() {
   return (
     <>
       <Header />
-      <Box p={"5rem"}>
+      <Box p={"5rem"} sx={{ p: { xs: '5rem 1rem', md: '5rem' }, position: 'relative', minHeight: '100vh' }}>
         {!cartProducts?.length && (
           <>
             <EmptyCartPage />
           </>
         )}
+
+        {/* Background Circles */}
+        <Box
+          sx={{
+            position: "absolute",
+            width: 600,
+            height: 600,
+            borderRadius: "50%",
+            top: { xs: "-30%", md: "-30%" },
+            right: { xs: "-60%", md: "-30%" },
+            zIndex: -1,
+            background: "radial-gradient(circle, rgba(80, 227, 194, 0.4) 0%, rgba(80, 227, 194, 0) 70%)",
+            backdropFilter: "blur(360px)",
+          }}
+        />
+
+        <Box
+          sx={{
+            position: "absolute",
+            width: { xs: "400px", md: "600px" },
+            height: { xs: "400px", md: "600px" },
+            borderRadius: "50%",
+            top: { xs: "73%", md: "30%" },
+            left: { xs: "-60%", md: "-30%" },
+            zIndex: -1,
+            background: "radial-gradient(circle, rgba(80, 227, 194, 0.4) 0%, rgba(80, 227, 194, 0) 70%)",
+            backdropFilter: "blur(360px)",
+          }}
+        />
+
+
         {cartProducts?.length > 0 && (<Typography variant="h4" sx={{ fontSize: '34px', fontWeight: '700', m: '3rem 0' }}>Your Shopping</Typography>)}
         <Box>
           {cartProducts?.length > 0 && (

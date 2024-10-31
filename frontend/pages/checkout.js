@@ -67,8 +67,39 @@ export default function Checkout() {
         sx={{
           minHeight: '100vh',
           py: '130px',
+          position: 'relative',
         }}
       >
+
+        {/* Blobs */}
+        <Box
+          sx={{
+            position: "absolute",
+            width: 600,
+            height: 600,
+            borderRadius: "50%",
+            top: "-20%",
+            right: "-40%",
+            zIndex: -1,
+            background: "radial-gradient(circle, rgba(0, 255, 123, 0.4) 0%, rgba(0, 255, 123, 0) 60%)", // Changed to greenish
+            backdropFilter: "blur(360px)",
+          }}
+        />
+
+        <Box
+          sx={{
+            position: "absolute",
+            width: 600,
+            height: 600,
+            borderRadius: "50%",
+            bottom: "-8%",
+            left: "-43%",
+            zIndex: -1,
+            background: "radial-gradient(circle, rgba(0, 255, 123, 0.4) 0%, rgba(0, 255, 123, 0) 60%)", // Changed to greenish
+            backdropFilter: "blur(360px)",
+          }}
+        />
+
         <Typography variant="h5" sx={{ mb: 3, fontSize: '32px', fontWeight: '700' }}>
           Checkout
         </Typography>
