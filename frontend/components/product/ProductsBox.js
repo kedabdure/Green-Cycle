@@ -37,7 +37,7 @@ export default function ProductBox({ _id, title, price, images, badge }) {
         autoHideDuration={6000}
         onClose={handleClose}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-        zIndex={100000}
+        sx={{ zIndex: 100000 }}
       >
         <Alert
           onClose={handleClose}
@@ -46,7 +46,7 @@ export default function ProductBox({ _id, title, price, images, badge }) {
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
-            width: '100%',
+            width: '85%',
             fontSize: '1rem',
             padding: '0.4rem 1rem',
           }}
@@ -70,8 +70,8 @@ export default function ProductBox({ _id, title, price, images, badge }) {
       {/* Product Box */}
       <Box
         sx={{
-          width: '276px',
-          height: '312px',
+          width: '100%',
+          height: 'auto',
           borderRadius: '16px',
           display: 'flex',
           flexDirection: 'column',
@@ -88,7 +88,7 @@ export default function ProductBox({ _id, title, price, images, badge }) {
             position: 'relative',
             bgcolor: '#fff',
             p: 2,
-            height: '176px',
+            height: '180px',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',

@@ -37,20 +37,6 @@ export default function Cart() {
     removeAllInstance(id);
   }
 
-  async function goToPayment(data) {
-    const orderData = { ...data, cartProducts };
-    try {
-      const res = await axios.post('/api/checkout', orderData);
-      if (res.data && res.data.payment_url) {
-        window.location.href = res.data.payment_url;
-      } else {
-        console.error("No payment URL returned");
-      }
-    } catch (error) {
-      console.error("Payment Initialization Failed:", error.message);
-    }
-  }
-
   let total = 0;
   for (const productID of cartProducts) {
     const price = products.find(product => product._id === productID)?.price;
@@ -81,9 +67,9 @@ export default function Cart() {
         {cartProducts?.length > 0 && (<Typography variant="h4" sx={{ fontSize: '34px', fontWeight: '700', m: '3rem 0' }}>Your Shopping</Typography>)}
         <Box>
           {cartProducts?.length > 0 && (
-            <Typography variant="h4" color="#aaa" fontSize="20px" mb="3rem">
-              Home/
-              <Typography component="span" color="#111" display="inline-block" marginLeft="5px" fontSize="20px" variant="h4">
+            <Typography variant="h4" color="#aaa" fontSize="16px" mb="3rem">
+              Home /
+              <Typography component="span" color="#111" display="inline-block" marginLeft="5px" fontSize="16px" fontWeight={500} variant="h4">
                 My Shop
               </Typography>
             </Typography>
@@ -158,8 +144,8 @@ export default function Cart() {
                                 </Typography>
                                 <Typography
                                   variant="body2"
-                                  color="#aaa"
-                                  fontSize="10px"
+                                  color="#555"
+                                  fontSize="11px"
                                   fontWeight="400"
                                   sx={{
                                     display: '-webkit-box',
@@ -262,10 +248,10 @@ export default function Cart() {
                 </Box>
 
                 <Box display="flex" flexDirection="column" justifyContent="center" gap={2}>
-                  <Button size="large" sx={{ backgroundColor: '#111', color: '#fff', border: '1px solid #111', borderRadius: '33px', textTransform: 'capitalize', padding: '8px 16px', fontSize: "14px" }} onClick={handleCheckout}>
+                  <Button size="large" sx={{ backgroundColor: '#111', color: '#fff', border: '1px solid #111', borderRadius: '33px', textTransform: 'capitalize', padding: '8px 16px', fontSize: "14px", fontWeight: '600' }} onClick={handleCheckout}>
                     Go to Checkout
                   </Button>
-                  <Button size="large" sx={{ backgroundColor: 'transparent', border: '1px solid #555', color: '#555', borderRadius: '33px', textTransform: 'capitalize', padding: '8px 16px', fontSize: "14px" }} onClick={handleContinueShopping}>
+                  <Button size="large" sx={{ backgroundColor: 'transparent', border: '1px solid #555', color: '#555', borderRadius: '33px', textTransform: 'capitalize', padding: '8px 16px', fontSize: "15px", fontWeight: '600' }} onClick={handleContinueShopping}>
                     Continue Shopping
                   </Button>
                 </Box>

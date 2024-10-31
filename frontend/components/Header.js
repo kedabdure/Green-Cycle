@@ -50,7 +50,7 @@ const Logo = styled(Link)`
   z-index: 3;
   display: none;
 
-  @media screen and (min-width: 800px) {
+  @media screen and (min-width: 850px) {
     display: block;
   }
 `;
@@ -84,10 +84,10 @@ const StyledNav = styled.nav`
   background-color: #fff;
   font-size: .95rem;
 
-  @media screen and (min-width: 800px) {
+  @media screen and (min-width: 850px) {
     display: flex;
     flex-direction: row;
-    gap: 24px;
+    gap: 20px;
     position: static;
     height: auto;
     opacity: 1;
@@ -108,7 +108,7 @@ const NavLink = styled(Link)`
     color: darkgreen;
   }
 
-  @media screen and (min-width: 800px) {
+  @media screen and (min-width: 850px) {
     padding: 0;
   }
 `;
@@ -120,7 +120,7 @@ const ButtonWrapper = styled.div`
   gap: 15px;
   width: 100%;
 
-  @media (min-width: 800px) {
+  @media (min-width: 850px) {
     gap: 30px;
     width: auto;
   }
@@ -129,7 +129,7 @@ const ButtonWrapper = styled.div`
 const DesktopButtons = styled.div`
   display: none;
   
-  @media screen and (min-width: 800px) {
+  @media screen and (min-width: 850px) {
     display: flex;
     gap: 15px;
   }
@@ -141,7 +141,7 @@ const MobileButtons = styled.div`
   align-items: center;
   padding: 20px 0;
 
-  @media screen and (min-width: 800px) {
+  @media screen and (min-width: 850px) {
     display: none;
   }
 `;
@@ -156,7 +156,7 @@ const NavButton = styled.button`
   position: relative;
   z-index: 3;
 
-  @media screen and (min-width: 800px) {
+  @media screen and (min-width: 850px) {
     display: none;
   }
 `;
@@ -193,7 +193,7 @@ const CartBadge = styled.div`
   border-radius: 50%;
   z-index: 100;
 
-  @media screen and (min-width: 800px) {
+  @media screen and (min-width: 850px) {
     font-size: 0.75rem;
     width: 19px;
     height: 19px;

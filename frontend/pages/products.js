@@ -3,26 +3,44 @@ import Footer from "../components/Footer";
 import ProductsBox from "../components/product/ProductsBox";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import { useState } from "react";
 import { Box, Typography, Button, Grid } from "@mui/material";
 
-// Fetch function
+// Fetch function for products
 const fetchProducts = async () => {
   const { data } = await axios.get("/api/products");
   return data;
 };
 
+// Fetch function for categories
+const fetchCategories = async () => {
+  const { data } = await axios.get("/api/categories");
+  return data;
+};
+
 export default function Products() {
-  const { data: products = [], isLoading } = useQuery({
-    productKey: ["products"],
+  const [selectedCategory, setSelectedCategory] = useState(null);
+
+  const { data: products = [], isLoading: productsLoading } = useQuery({
+    queryKey: ["products"],
     queryFn: fetchProducts,
   });
+
+  const { data: categories = [], isLoading: categoriesLoading } = useQuery({
+    queryKey: ["categories"],
+    queryFn: fetchCategories,
+  });
+
+  const filteredProducts = selectedCategory
+    ? products.filter((product) => product.category === selectedCategory)
+    : products;
 
   return (
     <>
       <Header />
       <Box
         sx={{
-          padding: "130px 20px",
+          p: "120px 20px",
           minHeight: "100vh",
           backgroundColor: "#EEF2FB",
           overflow: "hidden",
@@ -30,7 +48,7 @@ export default function Products() {
           zIndex: '1',
         }}
       >
-        <Box sx={{ maxWidth: 1200, margin: "0 auto" }}>
+        <Box sx={{ maxWidth: 1170, margin: "0 auto" }}>
           <Box sx={{ maxWidth: 756, marginBottom: 5 }}>
             <Typography variant="h4" fontWeight="600" gutterBottom sx={{ color: "#333" }}>
               Collection of Used Furniture
@@ -40,38 +58,59 @@ export default function Products() {
             </Typography>
           </Box>
 
-          <Box sx={{ display: "flex", flexWrap: "wrap", gap: 2, mb: 5 }}>
-            {["All Furniture", "Bedroom", "Living Room", "Home Office", "Dining Table", "More"].map((category, index) => (
+          {/* Category Filter Buttons */}
+          <Box sx={{ maxWidth: "800px", display: "flex", flexWrap: "wrap", gap: 2, mb: 5 }}>
+            <Button
+              variant={!selectedCategory ? "contained" : "outlined"}
+              onClick={() => setSelectedCategory(null)}
+              sx={{
+                borderRadius: "20px",
+                textTransform: "none",
+                fontSize: { xs: "0.9rem", md: "1rem" },
+                backgroundColor: !selectedCategory ? "#000" : "#e0e0e0",
+                color: !selectedCategory ? "#fff" : "#333",
+                ":hover": {
+                  backgroundColor: "#333",
+                  color: "#fff",
+                },
+              }}
+            >
+              All Furniture
+            </Button>
+
+            {categories.map((category) => (
               <Button
-                key={index}
-                variant={index === 0 ? "contained" : "outlined"}
+                key={category._id}
+                variant={selectedCategory === category._id ? "contained" : "outlined"}
+                onClick={() => setSelectedCategory(category._id)}
                 sx={{
                   borderRadius: "20px",
                   textTransform: "none",
                   fontSize: { xs: "0.9rem", md: "1rem" },
-                  backgroundColor: index === 0 ? "#000" : "#e0e0e0",
-                  color: index === 0 ? "#fff" : "#333",
+                  backgroundColor: selectedCategory === category._id ? "#000" : "#e0e0e0",
+                  color: selectedCategory === category._id ? "#fff" : "#333",
                   ":hover": {
                     backgroundColor: "#333",
                     color: "#fff",
                   },
                 }}
               >
-                {category}
+                {category.name}
               </Button>
             ))}
           </Box>
 
-          <Grid container spacing={3}>
-            {products?.length > 0 &&
-              products.map((product) => (
-                <Grid item xs={12} sm={6} md={3} key={product._id}>
-                  <ProductsBox {...product} />
-                </Grid>
-              ))}
+          {/* Products Grid */}
+          <Grid container spacing={1}>
+            {filteredProducts.map((product) => (
+              <Grid item xs={12} sm={4} md={4} lg={3} key={product._id}>
+                <ProductsBox {...product} />
+              </Grid>
+            ))}
           </Grid>
         </Box>
 
+        {/* Background Circles */}
         <Box
           sx={{
             position: "absolute",
@@ -85,7 +124,6 @@ export default function Products() {
             backdropFilter: "blur(360px)",
           }}
         />
-
         <Box
           sx={{
             position: "absolute",
