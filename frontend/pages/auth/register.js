@@ -14,7 +14,7 @@ const Section = styled.section`
   margin-top: 2rem;
   padding: 1rem;
   @media screen and (min-width: 768px) {
-    margin-top: 4rem;
+    margin-top: 1rem;
     padding: 0 2rem;
   }
 `;
@@ -69,7 +69,7 @@ const Button = styled.button`
   width: 100%;
   padding: 0.75rem;
   margin: 2rem 0 1rem 0;
-  background-color: #007bff;
+  background-color: #111;
   color: white;
   border: none;
   border-radius: 4px;
@@ -80,7 +80,7 @@ const Button = styled.button`
   justify-content: center;
   transition: background-color 0.3s;
   &:hover {
-    background-color: #0056b3;
+    background-color: #444;
   }
   &:disabled {
     background-color: #bbb;

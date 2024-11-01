@@ -5,7 +5,7 @@ import { Product } from "@/models/Product";
 
 export default async function handler(req, res) {
   await mongooseConnect();
-  const { id, tx_ref } = req.query;
+  const { id, tx_ref, userId } = req.query;
 
   try {
     if (req.method === "GET") {
@@ -16,15 +16,26 @@ export default async function handler(req, res) {
         if (!response) {
           return res.status(404).json({ message: "Order not found with provided ID" });
         }
-      } else if (tx_ref) {
+        return res.status(200).json(response);
+      }
+
+      if (tx_ref) {
         response = await Order.findOne({ tx_ref });
         if (!response) {
           return res.status(404).json({ message: "Order not found with provided transaction reference" });
         }
-      } else {
-        response = await getAllOrders();
+        return res.status(200).json(response);
       }
 
+      if (userId) {
+        response = await Order.find({ userId, status: { $ne: "Delivered" } }).sort({ createdAt: -1 });
+        if (!response || response.length === 0) {
+          return res.status(404).json({ message: "No active orders found for the provided user ID" });
+        }
+        return res.status(200).json(response);
+      }
+
+      response = await Order.find().sort({ createdAt: -1 });
       return res.status(200).json(response);
     }
 
@@ -41,10 +52,8 @@ export default async function handler(req, res) {
         subCity,
         streetAddress,
         cartProducts,
+        userId,
       } = req.body;
-
-      console.log("Request Body:", req.body);
-      console.log("Cart Products:", cartProducts);
 
       if (!cartProducts) {
         return res.status(400).json({ error: "Cart products are required" });
@@ -71,8 +80,6 @@ export default async function handler(req, res) {
         }
       }
 
-      console.log("Line Items:", line_items);
-
       // Create the order document in MongoDB
       const orderDoc = await Order.create({
         line_items,
@@ -84,6 +91,7 @@ export default async function handler(req, res) {
         city,
         subCity,
         streetAddress,
+        userId,
       });
 
       return res.status(201).json(orderDoc);

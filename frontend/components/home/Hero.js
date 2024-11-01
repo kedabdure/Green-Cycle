@@ -1,10 +1,25 @@
-import { Box, Typography, Button } from "@mui/material";
+import React, { useState } from "react";
+
+import { Box, Typography, Button, Popover } from "@mui/material";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import AwarenessSlider from "./AwarenessSlider";
+import { MapPin } from "phosphor-react";
 
 export default function Hero() {
   const router = useRouter();
+
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
+  const id = open ? 'simple-popover' : undefined;
 
   const goToProducts = () => {
     router.push("/products");
@@ -42,6 +57,48 @@ export default function Hero() {
         }}
       />
 
+      {/* Pop over */}
+      {/* <Button
+        position="absolute"
+        top="20px"
+        left="20px"
+        aria-describedby={id}
+        variant="contained"
+        sx={{
+          textTransform: "none",
+          width: "100%",
+          maxWidth: "249px",
+          height: "75px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: 'flex-start',
+          gap: "1rem",
+          backgroundColor: "#fff",
+          borderRadius: "12px",
+        }}
+        onClick={handleClick}
+      >
+        <Box sx={{ display: 'flex', alignContent: 'center', justifyContent: 'center', padding: '8px', background: '#E5E5FE', borderRadius: '50%' }}>
+          <MapPin size={24} color="#5251FA" weight="fill" />
+        </Box>
+        <Box>
+          <Typography variant="h5" sx={{ textAlign: 'left', color: "#111", fontSize: '16px', fontWeight: "700" }}>Shipped</Typography>
+          <Typography variant="body1" sx={{ fontSize: '12px', fontWeight: "400", color: "#555" }}>Track your order</Typography>
+        </Box>
+      </Button>
+      <Popover
+        id={id}
+        open={open}
+        anchorEl={anchorEl}
+        onClose={handleClose}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'right',
+        }}
+      >
+        <Typography sx={{ p: 2 }}>The content of the Popover.</Typography>
+      </Popover> */}
+
       <Box
         sx={{
           position: "absolute",
@@ -55,7 +112,6 @@ export default function Hero() {
           backdropFilter: "blur(360px)",
         }}
       />
-
 
       <Box
         sx={{

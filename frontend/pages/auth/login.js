@@ -81,9 +81,9 @@ const Button = styled.button`
   align-items: center;
   justify-content: center;
   width: 100%;
-  padding: 0.8rem;
+  padding: 0.75rem;
   margin: 2rem 0 1rem 0;
-  background-color: #007bff;
+  background-color: #111;
   color: white;
   border: none;
   border-radius: 4px;
@@ -91,7 +91,7 @@ const Button = styled.button`
   font-size: .9rem;
   transition: background-color 0.3s;
   &:hover {
-    background-color: #0056b3;
+    background-color: #555;
   }
   &:disabled {
     background-color: #bbb;

@@ -6,6 +6,8 @@ import OrderForm from '@/components/order/OrderForm';
 import { Box, Typography, Container, Stack, Paper, Radio, RadioGroup, FormControlLabel, styled } from '@mui/material';
 import OrderPreview from '@/components/order/OrderPreview';
 import { CartContext } from '@/components/cart/CartContext';
+import { useSession } from 'next-auth/react';
+import { useRouter} from 'next/router';
 import axios from 'axios';
 
 const CustomRadio = styled(Radio)(({ theme }) => ({
@@ -27,14 +29,22 @@ const CustomRadio = styled(Radio)(({ theme }) => ({
 export default function Checkout() {
   const { cartProducts, clearCart } = useContext(CartContext);
   const [paymentMethod, setPaymentMethod] = useState('card');
+  const router = useRouter();
+  const { data: session } = useSession();
+
 
   const handleChange = (event) => {
     setPaymentMethod(event.target.value);
   };
 
-
   async function goToPayment(data) {
-    const orderData = { ...data, cartProducts };
+    if (!session) {
+      router.push('/auth/login');
+    }
+
+    const orderData = { ...data, cartProducts, userId: session.user.id };
+
+    console.log(orderData);
 
     let res;
     try {

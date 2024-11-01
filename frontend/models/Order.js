@@ -13,6 +13,7 @@ const OrderSchema = new Schema(
     streetAddress: String,
     paid: {type: Boolean, default: false},
     tx_ref: String,
+    userId: { type: Schema.Types.ObjectId, ref: "User" },
     status: { type: String, default: "Pending" },
   },
   {
