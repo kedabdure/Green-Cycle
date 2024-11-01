@@ -48,16 +48,32 @@ export default function ProductSlide() {
   };
 
   return (
-    <Box sx={{ width: "100%", minHeight: "931px", mx: "auto", p: 4 }}>
+    <Box sx={{ width: "100%", minHeight: "931px", mx: "auto", p: 4, position: "relative" }}>
+      {/* Blob */}
+      <Box
+        sx={{
+          position: "absolute",
+          width: 700,
+          height: 500,
+          borderRadius: "50%",
+          top: "50%",
+          left: "-40%",
+          zIndex: -1,
+          background: "radial-gradient(circle, rgba(80, 227, 194, 0.4) 0%, rgba(80, 227, 194, 0) 80%)",
+          backdropFilter: "blur(360px)",
+        }}
+      />
+
       <Box sx={{ width: "100%", maxWidth: 1200, mx: "auto" }}>
         <Box sx={{ textAlign: "left", display: "flex", alignItems: "center", justifyContent: "space-between", mb: 8, mx: 2 }}>
           <Box>
-            <Typography variant="overline" color="primary" gutterBottom sx={{ mb: 3 }}>Furniture</Typography>
-            <Typography variant="h4" color="textPrimary">Discover the Latest Trends</Typography>
+            <Typography variant="overline" color="grey.600" gutterBottom sx={{ mb: 3 }}>Reusability</Typography>
+            <Typography variant="h4" color="textPrimary">Unlock the Value of Used Materials</Typography>
             <Typography variant="body1" color="textSecondary" sx={{ maxWidth: 600, mt: 1 }}>
-              Stay updated with our insights and engaging blog posts about modern furniture and fashion.
+              Discover how Green Cycle helps you turn used materials into valuable resources. Explore tips, stories, and insights on sustainable reuse and recycling.
             </Typography>
           </Box>
+
           <Button
             onClick={() => router.push("/products")}
             sx={{
@@ -83,7 +99,7 @@ export default function ProductSlide() {
         <Box sx={{ position: "relative", width: "100%", height: "613px" }}>
           <Slider ref={sliderRef} {...settings}>
             {productsData.length > 0 && productsData?.map((product) => (
-              <Box key={product._id} href={`/product/${product._id}`} component={Link} sx={{textDecoration: 'none'}}>
+              <Box key={product._id} href={`/product/${product._id}`} component={Link} sx={{ textDecoration: 'none' }}>
                 <Card
                   sx={{
                     width: { xs: "100%", sm: "370px" },

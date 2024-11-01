@@ -1,4 +1,3 @@
-import LogoWhite from "./icons/LogoWhite";
 import Link from "next/link";
 import styled, { keyframes } from "styled-components";
 import { useContext, useState, useEffect } from "react";
@@ -9,6 +8,7 @@ import { useSession, signOut } from "next-auth/react";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { ShoppingCart } from "phosphor-react";
+import MainLogo from "./icons/Logo";
 
 
 const slideDown = keyframes`
@@ -300,7 +300,7 @@ export default function Header() {
     <StyledHeader $isVisible={isHeaderVisible} $scrollPosition={scrollPosition}>
       <Wrapper>
         <Logo href="/" passHref>
-          <LogoWhite width="100" />
+          <MainLogo width="130" />
         </Logo>
 
         <StyledNav $mobileNavActive={mobileNavActive}>

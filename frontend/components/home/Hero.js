@@ -1,12 +1,19 @@
-import { Box, Typography, Button, autocompleteClasses } from "@mui/material";
+import { Box, Typography, Button } from "@mui/material";
 import Image from "next/image";
+import { useRouter } from "next/router";
 import AwarenessSlider from "./AwarenessSlider";
 
 export default function Hero() {
+  const router = useRouter();
+
+  const goToProducts = () => {
+    router.push("/products");
+  };
+
   return (
     <Box
       sx={{
-        padding: "120px",
+        padding: "0 20px",
         width: "100%",
         minHeight: "100vh",
         color: "#111",
@@ -16,161 +23,188 @@ export default function Hero() {
         backgroundColor: "#fff",
         textAlign: "center",
         position: "relative",
+        pt: "110px",
+        zIndex: 1,
       }}
     >
+      {/* Blob */}
       <Box
         sx={{
-          width: "901px",
-          height: "597px",
+          position: "absolute",
+          width: 700,
+          height: 700,
+          borderRadius: "50%",
+          bottom: "2%",
+          left: "-40%",
+          zIndex: -1,
+          background: "radial-gradient(circle, rgba(80, 227, 194, 0.4) 0%, rgba(80, 227, 194, 0) 70%)",
+          backdropFilter: "blur(360px)",
+        }}
+      />
+
+      <Box
+        sx={{
+          position: "absolute",
+          width: 700,
+          height: 700,
+          borderRadius: "50%",
+          top: "60%",
+          right: "-40%",
+          zIndex: -1,
+          background: "radial-gradient(circle, rgba(80, 227, 194, 0.4) 0%, rgba(80, 227, 194, 0) 70%)",
+          backdropFilter: "blur(360px)",
+        }}
+      />
+
+
+      <Box
+        sx={{
+          width: "100%",
+          maxWidth: "1090px",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          gap: "48px",
+          gap: "24px",
           position: 'relative',
+          padding: "0 20px",
         }}
       >
-        <Box
+        <Typography
+          variant="h2"
           sx={{
-            width: "877px",
-            height: "356px",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
+            fontSize: { xs: "2.5rem", md: "3.5rem" },
+            color: "#111",
+            maxWidth: "800px",
+            fontFamily: "'Outfit', sans-serif",
+            fontWeight: "700",
+            lineHeight: "1.2",
+            textAlign: "center",
           }}
         >
+          Sustain{" "}
           <Box
+            component="span"
             sx={{
-              width: "877px",
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              gap: "12px",
+              padding: "5px 20px",
+              borderRadius: "68px",
+              backgroundColor: "#D7FFB1",
             }}
           >
-            <Typography
-              variant="h1"
-              sx={{
-                fontSize: "4rem",
-                color: "#111",
-                marginBottom: "1rem",
-                fontFamily: "'Outfit', sans-serif",
-                fontWeight: "700",
-                lineHeight: "1.2",
-                textAlign: "center",
-              }}
-            >
-              Efficient{" "}
-              <Box
-                component="span"
-                sx={{
-                  padding: "5px 20px",
-                  borderRadius: "68px",
-                  backgroundColor: "#D7FFB1",
-                }}
-              >
-                Scrap
-              </Box>{" "}
-              Recycling Services Near You
-            </Typography>
-            <Typography
-              variant="body1"
-              sx={{
-                fontSize: "0.9rem",
-                color: "#4f4f4f",
-                marginBottom: "2rem",
-                lineHeight: "1.6",
-                textAlign: "center",
-                maxWidth: "700px",
-              }}
-            >
-              Discover a sustainable way to furnish your home by buying and
-              selling pre-loved furniture. When you choose to reuse, you're
-              giving these pieces a second life and helping reduce waste. Let's
-              make a positive impact on the environment together.
-            </Typography>
-          </Box>
-          <Box
+            Green
+          </Box>{" "}
+          Furniture Rescue & Reuse
+        </Typography>
+
+        <Typography
+          variant="body1"
+          sx={{
+            fontSize: { xs: "0.8rem", md: "1rem" },
+            color: "#4f4f4f",
+            marginBottom: "1rem",
+            lineHeight: "1.6",
+            textAlign: "center",
+            maxWidth: "700px",
+          }}
+        >
+          Support Ethiopia's Green Legacy by choosing pre-loved furniture. Together, we can reduce waste, conserve forests, and protect our environment.
+        </Typography>
+
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            gap: "0.5rem",
+            flexDirection: { xs: "column", md: "row" },
+          }}
+        >
+          <Button
+            variant="transparent"
             sx={{
-              display: "flex",
-              alignItems: "center",
-              gap: "0.5rem",
+              maxWidth: "200px",
+              padding: "0.55rem 2rem",
+              fontSize: ".9rem",
+              color: "#fff",
+              fontWeight: "500",
+              backgroundColor: "#111",
+              border: "1px solid #111",
+              borderRadius: "4px",
             }}
           >
-            <Button
-              variant="contained"
-              sx={{
-                maxWidth: "200px",
-                width: "120px",
-                padding: "0.75rem 1.5rem",
-                fontSize: "1rem",
-                color: "#111",
-                fontWeight: "500",
-                backgroundColor: "#D7FFB1",
-                border: "1px solid #111",
-                borderRadius: "4px",
-                transition: "background-color 0.3s ease",
-                "&:hover": {
-                  backgroundColor: "transparent",
-                },
-              }}
-            >
-              Sell
-            </Button>
-            <Button
-              variant="outlined"
-              sx={{
-                maxWidth: "200px",
-                width: "120px",
-                padding: "0.75rem 1.5rem",
-                fontSize: "1rem",
-                color: "#111",
-                fontWeight: "500",
-                borderColor: "#111",
-                borderRadius: "4px",
-                transition: "background-color 0.3s ease",
-                "&:hover": {
-                  backgroundColor: "#D7FFB1",
-                },
-              }}
-            >
-              Buy
-            </Button>
-          </Box>
+            Sell
+          </Button>
+          <Button
+            onClick={goToProducts}
+            variant="outlined"
+            sx={{
+              maxWidth: "200px",
+              padding: "0.55rem 2rem",
+              fontSize: ".9rem",
+              color: "#111",
+              fontWeight: "500",
+              borderColor: "#111",
+              borderRadius: "4px",
+            }}
+          >
+            Buy
+          </Button>
         </Box>
+
         <Box
           sx={{
             marginTop: "2rem",
             maxWidth: "800px",
             color: "#333",
-            width: "901px",
-            height: "193px",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            gap: "20px",
+            gap: "30px",
+            flexDirection: { xs: "column", md: "row" },
           }}
         >
           <Box
             sx={{
-              width: "252px",
-              height: "202px",
-              overflow: "hidden",
-              borderRadius: "20px",
+              position: 'relative',
+              bgcolor: '#fff',
+              width: '256px',
+              height: '204px',
+              overflow: 'hidden',
+              borderRadius: '16px',
+              boxShadow: 1,
             }}
           >
-            <Image src="/assets/images/Dupe-sofa.jfif" width={252} height={204} alt="Dupe Sofa" />
+            <Image
+              src={'/assets/images/abiy.jpg'}
+              fill
+              alt="Product photo"
+              placeholder="blur"
+              blurDataURL={'/assets/images/abiy.jpg'}
+              style={{ objectFit: "cover" }}
+            />
           </Box>
+
           <Box
             sx={{
-              width: "252px",
-              height: "202px",
-              overflow: "hidden",
-              borderRadius: "20px",
+              position: 'relative',
+              bgcolor: '#fff',
+              width: '256px',
+              height: '204px',
+              overflow: 'hidden',
+              borderRadius: '16px',
+              boxShadow: 1,
             }}
           >
-            <Image src="/assets/images/traditional-style.jfif" width={252} height={204} alt="Traditional Style" />
+            <Image
+              src={'/assets/images/forest.jpg'}
+              fill
+              alt="Product photo"
+              placeholder="blur"
+              blurDataURL={'/assets/images/forest.jpg'}
+              style={{ objectFit: "cover" }}
+            />
           </Box>
         </Box>
+
+        {/* Small Images */}
         <Box
           sx={{
             position: "absolute",
@@ -181,8 +215,8 @@ export default function Hero() {
             flexDirection: "column",
             justifyContent: "center",
             alignItems: "center",
-            width: "1093px",
-            height: "142px",
+            width: "100%",
+            height: "auto",
             gap: "0px",
           }}
         >
@@ -195,26 +229,26 @@ export default function Hero() {
               alignItems: "center",
             }}
           >
-            <Box
-              sx={{
-                width: "60px",
-                height: "60px",
-                overflow: "hidden",
-                borderRadius: "50%",
-              }}
-            >
-              <Image src="/assets/images/forest1.jfif" width={68} height={68} alt="Forest" />
-            </Box>
-            <Box
-              sx={{
-                width: "60px",
-                height: "60px",
-                overflow: "hidden",
-                borderRadius: "50%",
-              }}
-            >
-              <Image src="/assets/images/chair1.jfif" width={68} height={68} alt="Chair" />
-            </Box>
+            {Array.from({ length: 2 }).map((_, index) => (
+              <Box
+                key={index}
+                sx={{
+                  width: "60px",
+                  height: "60px",
+                  overflow: "hidden",
+                  borderRadius: "50%",
+                }}
+              >
+                <Image
+                  src="/assets/images/leaf.jpg"
+                  width={68}
+                  height={68}
+                  alt={`Image ${index + 1}`}
+                  placeholder="blur"
+                  blurDataURL={'/assets/images/leaf.jpg'}
+                />
+              </Box>
+            ))}
           </Box>
           <Box
             sx={{
@@ -225,31 +259,43 @@ export default function Hero() {
               alignItems: "center",
             }}
           >
-            <Box
-              sx={{
-                width: "80px",
-                height: "80px",
-                overflow: "hidden",
-                borderRadius: "50%",
-              }}
-            >
-              <Image src="/assets/images/greenHand.jfif" width={80} height={80} alt="Green Hand" />
-            </Box>
-            <Box
-              sx={{
-                width: "80px",
-                height: "80px",
-                overflow: "hidden",
-                borderRadius: "50%",
-              }}
-            >
-              <Image src="/assets/images/greenWorld.jfif" width={80} height={80} alt="Green World" />
-            </Box>
+            {Array.from({ length: 2 }).map((_, index) => (
+              <Box
+                key={index}
+                sx={{
+                  width: "80px",
+                  height: "80px",
+                  overflow: "hidden",
+                  borderRadius: "50%",
+                }}
+              >
+                <Image
+                  src="/assets/images/greenLegacy1.jpg"
+                  width={80}
+                  height={80}
+                  alt={`Image ${index + 1}`}
+                  placeholder="blur"
+                  blurDataURL={'/assets/images/greenLegacy1.jpg'}
+                />
+              </Box>
+            ))}
           </Box>
         </Box>
 
         {/* Awareness */}
-        <Box sx={{ position: "absolute", bottom: "0", left: "0", width: "100%", height: 'auto', display: "flex", justifyContent: "center", alignItems: "center", backgroundColor: 'transparent' }}>
+        <Box
+          sx={{
+            position: "absolute",
+            bottom: "0",
+            left: "0",
+            width: "100%",
+            height: 'auto',
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            backgroundColor: 'transparent'
+          }}
+        >
           {/* <AwarenessSlider /> */}
         </Box>
       </Box>
