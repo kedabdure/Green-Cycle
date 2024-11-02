@@ -1,15 +1,15 @@
-"use client"
+"use client";
 
 import { useState, useEffect } from "react";
 import Router from "next/router";
 import { createGlobalStyle } from "styled-components";
 import "../styles/globals.css";
 import CartContextProvider from "../components/cart/CartContext";
-import { SessionProvider } from "next-auth/react";
+import { SessionProvider, useSession } from "next-auth/react";
 import PageLoader from "../components/PageLoader";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import OrderStatusNotification from "@/components/order/OrderStatusNotification";
-
+import useUser from "@/components/context/userContex";
 
 const queryClient = new QueryClient();
 
@@ -30,7 +30,6 @@ const GlobalStyles = createGlobalStyle`
 `;
 
 export default function App({ Component, pageProps: { session, ...pageProps } }) {
-  // State to track loading status
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -55,11 +54,21 @@ export default function App({ Component, pageProps: { session, ...pageProps } })
       <QueryClientProvider client={queryClient}>
         <SessionProvider session={session}>
           <CartContextProvider>
-            <Component {...pageProps} />
-            <OrderStatusNotification />
+            <AppWithUser Component={Component} pageProps={pageProps} />
           </CartContextProvider>
         </SessionProvider>
       </QueryClientProvider>
+    </>
+  );
+}
+
+function AppWithUser({ Component, pageProps }) {
+  const user = useUser();
+
+  return (
+    <>
+      <Component {...pageProps} />
+      {user && <OrderStatusNotification />}
     </>
   );
 }

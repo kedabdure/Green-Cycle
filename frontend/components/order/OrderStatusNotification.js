@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Button, Box, Typography, Popover, Stack, Divider } from '@mui/material';
-import { MapPin, Clock, Truck, CheckCircle } from 'phosphor-react';
+import { MapPin, Clock, Truck, CheckCircle, PhoneCall } from 'phosphor-react';
 import { useQuery } from '@tanstack/react-query';
 import { useSession } from 'next-auth/react';
 import axios from 'axios';
@@ -14,12 +14,13 @@ export default function OrderStatusNotification() {
   const { data: session } = useSession();
   const [anchorEl, setAnchorEl] = useState(null);
   const [orderStatus, setOrderStatus] = useState('');
+  const [phoneAnchorEl, setPhoneAnchorEl] = useState(null);
 
   const { data: activeOrders = [] } = useQuery({
     queryKey: ['activeOrder', session?.user?.id],
     queryFn: () => fetchOrders(session?.user?.id),
     enabled: !!session,
-    refetchInterval: 60000, // Refetch every 60 seconds to check for status changes
+    refetchInterval: 60000,
   });
 
   useEffect(() => {
@@ -27,14 +28,19 @@ export default function OrderStatusNotification() {
       const latestOrder = activeOrders[0];
       if (latestOrder.status !== orderStatus && latestOrder.status !== 'Delivered') {
         setOrderStatus(latestOrder.status);
-        setAnchorEl(document.body); // Trigger the popover to open
+        setAnchorEl(document.body);
       }
     }
   }, [activeOrders, orderStatus]);
 
   const handleClose = () => setAnchorEl(null);
+  const handlePhoneClick = (event) => setPhoneAnchorEl(event.currentTarget);
+  const handlePhoneClose = () => setPhoneAnchorEl(null);
+
   const open = Boolean(anchorEl);
   const id = open ? 'order-status-popover' : undefined;
+  const phoneOpen = Boolean(phoneAnchorEl);
+  const phoneId = phoneOpen ? 'phone-popover' : undefined;
 
   const statusList = [
     { label: 'Pending', icon: <Clock size={24} />, description: "Your order is processing" },
@@ -69,7 +75,7 @@ export default function OrderStatusNotification() {
           zIndex: 1000,
         }}
       >
-        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '8px', background: '#E5E5FE', borderRadius: '50%' }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '8px', background: '#5932EA', borderRadius: '50%' }}>
           {statusList.find(status => status.label === orderStatus)?.icon}
         </Box>
         <Box>
@@ -85,7 +91,7 @@ export default function OrderStatusNotification() {
         anchorEl={anchorEl}
         onClose={handleClose}
         anchorReference="anchorPosition"
-        anchorPosition={{ top: 200, left: 400 }}
+        anchorPosition={{ top: 200, left: 600 }}
         anchorOrigin={{
           vertical: 'bottom',
           horizontal: 'left',
@@ -94,21 +100,26 @@ export default function OrderStatusNotification() {
           vertical: 'center',
           horizontal: 'right',
         }}
-        sx={{ mt: 2 }}
+        sx={{ mt: 5 }}
       >
         <Stack
           spacing={2}
           sx={{
-            p: 2,
+            p: 3,
             width: "350px",
           }}
         >
+          <Box>
+            <Typography variant='h6' sx={{ fontSize: '18px', fontWeight: '600', mb: '10px' }}>Your order status</Typography>
+            <Divider />
+          </Box>
           {statusList.map((status, index) => {
             const isActive = orderStatus === status.label;
             const isCompleted = statusList.findIndex(s => s.label === orderStatus) >= index;
+            const nextIndexExists = index < statusList.length - 1;
 
             return (
-              <Box key={status.label}>
+              <Box key={status.label} sx={{ position: 'relative' }}>
                 <Box
                   sx={{
                     display: "flex",
@@ -119,7 +130,15 @@ export default function OrderStatusNotification() {
                     borderRadius: "8px",
                   }}
                 >
-                  <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', p: '8px', background: isCompleted ? '#d3e5ff' : '#E5E5FE', borderRadius: '50%' }}>
+                  <Box sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    p: '10px',
+                    background: isActive ? '#5932EA' : isCompleted ? '#d3e5ff' : '#E5E5FE',
+                    borderRadius: '50%',
+                    color: isActive ? '#fff' : 'inherit'
+                  }}>
                     {status.icon}
                   </Box>
                   <Box>
@@ -127,10 +146,76 @@ export default function OrderStatusNotification() {
                     <Typography variant="body2" sx={{ fontSize: '12px', color: "#555" }}>{status.description}</Typography>
                   </Box>
                 </Box>
-                {index < statusList.length - 1 && <Divider sx={{ borderColor: "#ccc", mt: 1, mb: 1 }} />}
+                {/* Vertical Dashes */}
+                {nextIndexExists && (
+                  <Box
+                    sx={{
+                      position: 'absolute',
+                      left: '29px',
+                      top: '56px',
+                      height: '24px',
+                      borderLeft: '2px dashed',
+                      borderColor: isActive ? '#5932EA' : isCompleted ? '#5932EA' : '#d3e5ff',
+                    }}
+                  />
+                )}
               </Box>
             );
           })}
+          <Divider />
+          <Box sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          }}>
+            <Box>
+              <Typography variant='body1' sx={{ fontSize: '12px', fontWeight: '600', color: '#b0b0b0' }}>Admin</Typography>
+              <Typography variant='body1' sx={{ fontSize: '16px', fontWeight: '600', color: '#111' }}>Green Cycle</Typography>
+              <Typography variant='body1' sx={{ fontSize: '12px', fontWeight: '600', color: '#555' }}>Rescue & Reuse</Typography>
+            </Box>
+            <Box
+              sx={{
+                width: '48px',
+                height: '48px',
+                backgroundColor: '#F7F5FF',
+                borderRadius: '16px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                transition: 'all .3s ease',
+                cursor: 'pointer',
+                ':hover': {
+                  backgroundColor: "#E5E5FE"
+                }
+              }}
+              onClick={handlePhoneClick}
+            >
+              <PhoneCall size={32} color="#5932EA" />
+            </Box>
+
+            {/* Popover for Phone Number */}
+            <Popover
+              id={phoneId}
+              open={phoneOpen}
+              anchorEl={phoneAnchorEl}
+              onClose={handlePhoneClose}
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'center',
+              }}
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'center',
+              }}
+              sx={{ borderRadius: '24px' }}
+            >
+              <Box sx={{ p: 2 }}>
+                <Typography variant="body1" sx={{ color: '#111', fontWeight: '600' }}>
+                  0953431572
+                </Typography>
+              </Box>
+            </Popover>
+          </Box>
         </Stack>
       </Popover>
     </>
