@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { useState, useEffect } from "react";
 import Router from "next/router";
@@ -9,7 +9,7 @@ import { SessionProvider } from "next-auth/react";
 import PageLoader from "../components/PageLoader";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import OrderStatusNotification from "@/components/order/OrderStatusNotification";
-
+import useUser from "@/components/context/userContext";
 
 const queryClient = new QueryClient();
 
@@ -52,14 +52,26 @@ export default function App({ Component, pageProps: { session, ...pageProps } })
     <>
       <GlobalStyles />
       {loading && <PageLoader />}
-      <QueryClientProvider client={queryClient}>
-        <SessionProvider session={session}>
+      <SessionProvider session={session}>
+        <QueryClientProvider client={queryClient}>
           <CartContextProvider>
-            <Component {...pageProps} />
-            <OrderStatusNotification />
+            <UserWrapper>
+              <Component {...pageProps} />
+            </UserWrapper>
           </CartContextProvider>
-        </SessionProvider>
-      </QueryClientProvider>
+        </QueryClientProvider>
+      </SessionProvider>
+    </>
+  );
+}
+
+// Wrapper that ensures useUser is used within the SessionProvider context
+function UserWrapper({ children }) {
+  const user = useUser();
+  return (
+    <>
+      {children}
+      {user && <OrderStatusNotification />}
     </>
   );
 }

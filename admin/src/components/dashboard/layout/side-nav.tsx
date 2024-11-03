@@ -51,8 +51,8 @@ export function SideNav(): React.JSX.Element {
       }}
     >
       <Stack spacing={2} sx={{ p: 3 }}>
-        <Box component={RouterLink} href={paths.home} sx={{ display: 'inline-flex' }}>
-          <Logo color="light" height={32} width={122} />
+        <Box component={RouterLink} href={paths.home} sx={{ display: 'inline-flex', textDecoration: 'none' }}>
+          <Typography variant="h1" sx={{ fontSize: '1.3rem', color: '#fff', fontWeight: '800'}}> <span style={{color: 'green', fontWeight: '800', fontSize: '1.4rem'}}>Green</span>Cycle</Typography>
         </Box>
         <Box
           sx={{
@@ -70,7 +70,7 @@ export function SideNav(): React.JSX.Element {
               Workspace
             </Typography>
             <Typography color="inherit" variant="subtitle1">
-              Nexaddis
+              Green Cycle
             </Typography>
           </Box>
           <CaretUpDownIcon />

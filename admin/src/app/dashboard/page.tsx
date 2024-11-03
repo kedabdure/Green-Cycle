@@ -122,9 +122,9 @@ export default function DashboardPage(): React.JSX.Element {
     : (parseFloat(diffCustomers) > 0 ? "up" : "down");
 
   // TOTAL TRAFFIC DISTRIBUTION
-  const mobileCatId = categories.find((cat) => cat.name === "Mobile")?._id;
-  const pcId = categories.find((cat) => cat.name === "Pc")?._id;
-  const tvId = categories.find((cat) => cat.name === "Tv")?._id;
+  const mobileCatId = categories.find((cat) => cat.name === "Bedroom")?._id;
+  const pcId = categories.find((cat) => cat.name === "Living Room")?._id;
+  const tvId = categories.find((cat) => cat.name === "Storage")?._id;
 
   // calculate the total number of products in each category
   const mobileNumber = (products.filter((product) => product.category === mobileCatId).length / totalProductsNow) * 100;
@@ -167,7 +167,7 @@ export default function DashboardPage(): React.JSX.Element {
       <Grid md={6} xs={12}>
         <Traffic
           chartSeries={[parseFloat(pcNumber.toFixed(2)), parseFloat(mobileNumber.toFixed(2)), parseFloat(tvNumber.toFixed(2))]}
-          labels={["Desktop", "Mobile", "Tv"]}
+          labels={["Living Room", "Office", "Outdoor"]}
           sx={{ height: "100%" }}
         />
       </Grid>

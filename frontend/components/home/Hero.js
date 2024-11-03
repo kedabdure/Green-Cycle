@@ -46,8 +46,8 @@ export default function Hero() {
       <Box
         sx={{
           position: "absolute",
-          width: 700,
-          height: 700,
+          width: 500,
+          height: 500,
           borderRadius: "50%",
           bottom: "2%",
           left: "-40%",
@@ -57,48 +57,6 @@ export default function Hero() {
         }}
       />
 
-      {/* Pop over */}
-      {/* <Button
-        position="absolute"
-        top="20px"
-        left="20px"
-        aria-describedby={id}
-        variant="contained"
-        sx={{
-          textTransform: "none",
-          width: "100%",
-          maxWidth: "249px",
-          height: "75px",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: 'flex-start',
-          gap: "1rem",
-          backgroundColor: "#fff",
-          borderRadius: "12px",
-        }}
-        onClick={handleClick}
-      >
-        <Box sx={{ display: 'flex', alignContent: 'center', justifyContent: 'center', padding: '8px', background: '#E5E5FE', borderRadius: '50%' }}>
-          <MapPin size={24} color="#5251FA" weight="fill" />
-        </Box>
-        <Box>
-          <Typography variant="h5" sx={{ textAlign: 'left', color: "#111", fontSize: '16px', fontWeight: "700" }}>Shipped</Typography>
-          <Typography variant="body1" sx={{ fontSize: '12px', fontWeight: "400", color: "#555" }}>Track your order</Typography>
-        </Box>
-      </Button>
-      <Popover
-        id={id}
-        open={open}
-        anchorEl={anchorEl}
-        onClose={handleClose}
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'right',
-        }}
-      >
-        <Typography sx={{ p: 2 }}>The content of the Popover.</Typography>
-      </Popover> */}
-
       <Box
         sx={{
           position: "absolute",
@@ -107,6 +65,7 @@ export default function Hero() {
           borderRadius: "50%",
           top: "60%",
           right: "-40%",
+          display: {lg: 'none', xl: 'block'},
           zIndex: -1,
           background: "radial-gradient(circle, rgba(80, 227, 194, 0.4) 0%, rgba(80, 227, 194, 0) 70%)",
           backdropFilter: "blur(360px)",

@@ -17,7 +17,7 @@ export default async function handler(req, res) {
   const {
     firstName, lastName, email,
     phone, country, city, subCity,
-    streetAddress, cartProducts,
+    streetAddress, cartProducts, userId
   } = req.body;
 
   const tx_ref = await chapa.genTxRef();
@@ -68,10 +68,12 @@ export default async function handler(req, res) {
     });
 
     // CREATE the order
-    await Order.create({
+    const orderDoc = await Order.create({
       line_items, firstName, lastName, email, phone, country,
-      city, subCity, streetAddress, tx_ref,
+      city, subCity, streetAddress, tx_ref, userId
     });
+
+    console.log(orderDoc)
 
     res.status(200).json({ payment_url: response.data.checkout_url });
   } catch (error) {
