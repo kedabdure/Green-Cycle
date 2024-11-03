@@ -5,11 +5,15 @@ import Router from "next/router";
 import { createGlobalStyle } from "styled-components";
 import "../styles/globals.css";
 import CartContextProvider from "../components/cart/CartContext";
-import { SessionProvider } from "next-auth/react";
+import { SessionProvider, useSession } from "next-auth/react";
 import PageLoader from "../components/PageLoader";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import OrderStatusNotification from "@/components/order/OrderStatusNotification";
+<<<<<<< HEAD
 import useUser from "@/components/context/userContext";
+=======
+import useUser from "@/components/context/userContex";
+>>>>>>> 1294554d25f71b114ae43e0d48d4c3993065a8b3
 
 const queryClient = new QueryClient();
 
@@ -30,7 +34,6 @@ const GlobalStyles = createGlobalStyle`
 `;
 
 export default function App({ Component, pageProps: { session, ...pageProps } }) {
-  // State to track loading status
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -55,9 +58,13 @@ export default function App({ Component, pageProps: { session, ...pageProps } })
       <SessionProvider session={session}>
         <QueryClientProvider client={queryClient}>
           <CartContextProvider>
+<<<<<<< HEAD
             <UserWrapper>
               <Component {...pageProps} />
             </UserWrapper>
+=======
+            <AppWithUser Component={Component} pageProps={pageProps} />
+>>>>>>> 1294554d25f71b114ae43e0d48d4c3993065a8b3
           </CartContextProvider>
         </QueryClientProvider>
       </SessionProvider>
@@ -71,6 +78,17 @@ function UserWrapper({ children }) {
   return (
     <>
       {children}
+      {user && <OrderStatusNotification />}
+    </>
+  );
+}
+
+function AppWithUser({ Component, pageProps }) {
+  const user = useUser();
+
+  return (
+    <>
+      <Component {...pageProps} />
       {user && <OrderStatusNotification />}
     </>
   );
