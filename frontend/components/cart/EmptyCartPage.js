@@ -42,11 +42,13 @@ export default function EmptyCartPage() {
             Looks like you haven’t added anything to your cart yet.
           </Typography>
         </Box>
-        <Link href="/" passHref legacyBehavior>
+        <Link href="/products" passHref legacyBehavior>
           <Button
             color="grey.600"
             size="large"
             sx={{
+              backgroundColor: '#111',
+              color: '#fff',
               borderRadius: "25px",
               textTransform: "none",
               fontSize: "1rem",

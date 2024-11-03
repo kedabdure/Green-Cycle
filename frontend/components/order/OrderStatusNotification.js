@@ -22,9 +22,6 @@ export default function OrderStatusNotification() {
     enabled: !!session,
   });
 
-  console.log(activeOrders)
-  console.log(session)
-
   useEffect(() => {
     if (activeOrders.length > 0) {
       const latestOrder = activeOrders[0];
@@ -36,11 +33,13 @@ export default function OrderStatusNotification() {
           setAnchorEl(document.body);
           setTimeout(() => {
             setAnchorEl(null);
-          }, 3000); // Show 'Delivered' for a short period
+          }, 3000);
         }
       }
     }
   }, [activeOrders, orderStatus]);
+
+  if (!activeOrders.length) return null;
 
   const handleClose = () => setAnchorEl(null);
   const handlePhoneClick = (event) => setPhoneAnchorEl(event.currentTarget);

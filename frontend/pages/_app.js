@@ -74,14 +74,3 @@ function UserWrapper({ children }) {
     </>
   );
 }
-
-function AppWithUser({ Component, pageProps }) {
-  const user = useUser();
-
-  return (
-    <>
-      <Component {...pageProps} />
-      {user && <OrderStatusNotification />}
-    </>
-  );
-}
