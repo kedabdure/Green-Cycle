@@ -31,7 +31,7 @@ export async function GET(req: Request) {
       }
       return NextResponse.json(order, { status: 200 });
     } else {
-      const orders = await Order.find(); // Fetch all orders
+      const orders = await Order.find().sort({createdAt: -1}); // Fetch all orders
       return NextResponse.json(orders, { status: 200 });
     }
   } catch (error) {
