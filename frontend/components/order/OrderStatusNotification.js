@@ -20,10 +20,6 @@ export default function OrderStatusNotification() {
     queryKey: ['activeOrder', session?.user?.id],
     queryFn: () => fetchOrders(session?.user?.id),
     enabled: !!session,
-<<<<<<< HEAD
-=======
-    refetchInterval: 60000,
->>>>>>> 1294554d25f71b114ae43e0d48d4c3993065a8b3
   });
 
   console.log(activeOrders)
@@ -34,7 +30,6 @@ export default function OrderStatusNotification() {
       const latestOrder = activeOrders[0];
       if (latestOrder.status !== orderStatus) {
         setOrderStatus(latestOrder.status);
-<<<<<<< HEAD
         if (latestOrder.status !== 'Delivered') {
           setAnchorEl(document.body);
         } else {
@@ -43,9 +38,6 @@ export default function OrderStatusNotification() {
             setAnchorEl(null);
           }, 3000); // Show 'Delivered' for a short period
         }
-=======
-        setAnchorEl(document.body);
->>>>>>> 1294554d25f71b114ae43e0d48d4c3993065a8b3
       }
     }
   }, [activeOrders, orderStatus]);
@@ -93,11 +85,7 @@ export default function OrderStatusNotification() {
         }}
       >
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '8px', background: '#5932EA', borderRadius: '50%' }}>
-<<<<<<< HEAD
           {statusList.find((status) => status.label === orderStatus)?.icon}
-=======
-          {statusList.find(status => status.label === orderStatus)?.icon}
->>>>>>> 1294554d25f71b114ae43e0d48d4c3993065a8b3
         </Box>
         <Box>
           <Typography variant="h6" sx={{ textAlign: 'left', color: '#111', fontSize: '16px', fontWeight: '700' }}>
@@ -127,32 +115,16 @@ export default function OrderStatusNotification() {
         }}
         sx={{ mt: 5 }}
       >
-<<<<<<< HEAD
         <Stack spacing={2} sx={{ p: 3, width: '350px' }}>
           <Box>
             <Typography variant="h6" sx={{ fontSize: '18px', fontWeight: '600', mb: '10px' }}>
               Your order status
             </Typography>
-=======
-        <Stack
-          spacing={2}
-          sx={{
-            p: 3,
-            width: "350px",
-          }}
-        >
-          <Box>
-            <Typography variant='h6' sx={{ fontSize: '18px', fontWeight: '600', mb: '10px' }}>Your order status</Typography>
->>>>>>> 1294554d25f71b114ae43e0d48d4c3993065a8b3
             <Divider />
           </Box>
           {statusList.map((status, index) => {
             const isActive = orderStatus === status.label;
-<<<<<<< HEAD
             const isCompleted = statusList.findIndex((s) => s.label === orderStatus) >= index;
-=======
-            const isCompleted = statusList.findIndex(s => s.label === orderStatus) >= index;
->>>>>>> 1294554d25f71b114ae43e0d48d4c3993065a8b3
             const nextIndexExists = index < statusList.length - 1;
 
             return (
@@ -167,7 +139,6 @@ export default function OrderStatusNotification() {
                     borderRadius: '8px',
                   }}
                 >
-<<<<<<< HEAD
                   <Box
                     sx={{
                       display: 'flex',
@@ -179,17 +150,6 @@ export default function OrderStatusNotification() {
                       color: isActive ? '#fff' : 'inherit',
                     }}
                   >
-=======
-                  <Box sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    p: '10px',
-                    background: isActive ? '#5932EA' : isCompleted ? '#d3e5ff' : '#E5E5FE',
-                    borderRadius: '50%',
-                    color: isActive ? '#fff' : 'inherit'
-                  }}>
->>>>>>> 1294554d25f71b114ae43e0d48d4c3993065a8b3
                     {status.icon}
                   </Box>
                   <Box>
@@ -218,7 +178,6 @@ export default function OrderStatusNotification() {
             );
           })}
           <Divider />
-<<<<<<< HEAD
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <Box>
               <Typography variant="body1" sx={{ fontSize: '12px', fontWeight: '600', color: '#b0b0b0' }}>
@@ -230,17 +189,6 @@ export default function OrderStatusNotification() {
               <Typography variant="body1" sx={{ fontSize: '12px', fontWeight: '600', color: '#555' }}>
                 Rescue & Reuse
               </Typography>
-=======
-          <Box sx={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-          }}>
-            <Box>
-              <Typography variant='body1' sx={{ fontSize: '12px', fontWeight: '600', color: '#b0b0b0' }}>Admin</Typography>
-              <Typography variant='body1' sx={{ fontSize: '16px', fontWeight: '600', color: '#111' }}>Green Cycle</Typography>
-              <Typography variant='body1' sx={{ fontSize: '12px', fontWeight: '600', color: '#555' }}>Rescue & Reuse</Typography>
->>>>>>> 1294554d25f71b114ae43e0d48d4c3993065a8b3
             </Box>
             <Box
               sx={{
@@ -254,13 +202,8 @@ export default function OrderStatusNotification() {
                 transition: 'all .3s ease',
                 cursor: 'pointer',
                 ':hover': {
-<<<<<<< HEAD
                   backgroundColor: '#E5E5FE',
                 },
-=======
-                  backgroundColor: "#E5E5FE"
-                }
->>>>>>> 1294554d25f71b114ae43e0d48d4c3993065a8b3
               }}
               onClick={handlePhoneClick}
             >
@@ -284,13 +227,7 @@ export default function OrderStatusNotification() {
               sx={{ borderRadius: '24px' }}
             >
               <Box sx={{ p: 2 }}>
-<<<<<<< HEAD
                 <Typography sx={{ color: '#111', fontWeight: '500', letterSpacing: '1.5' }}>0953431572</Typography>
-=======
-                <Typography variant="body1" sx={{ color: '#111', fontWeight: '600' }}>
-                  0953431572
-                </Typography>
->>>>>>> 1294554d25f71b114ae43e0d48d4c3993065a8b3
               </Box>
             </Popover>
           </Box>
