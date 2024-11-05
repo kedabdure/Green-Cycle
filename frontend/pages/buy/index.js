@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import PhoneInput from 'react-phone-number-input';
 import 'react-phone-number-input/style.css';
+import { FadeLoader } from 'react-spinners'
 import {
   TextField
   ,
@@ -17,6 +18,7 @@ import { UploadSimple, X } from 'phosphor-react';
 import Image from 'next/image';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import axios from 'axios'
 
 const initialValues = {
   firstName: '',
@@ -34,8 +36,10 @@ const initialValues = {
 export default function SellFurnitureForm() {
   const [formValues, setFormValues] = useState(initialValues);
   const [formErrors, setFormErrors] = useState({});
-  const [uploadedImages, setUploadedImages] = useState({ image1: null, image2: null, image3: null });
+  const [uploadedImages, setUploadedImages] = useState([]);
   const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isUploading, setIsUploading] = useState(false)
 
   const validate = () => {
     const errors = {};
@@ -70,34 +74,47 @@ export default function SellFurnitureForm() {
     if (formErrors.phone) setFormErrors({ ...formErrors, phone: '' });
   };
 
-  const handleImageChange = (e, imageKey) => {
-    const file = e.target.files[0];
-    if (formErrors[imageKey]) setFormErrors({ ...formErrors, [imageKey]: '' });
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        setUploadedImages({ ...uploadedImages, [imageKey]: reader.result });
-      };
-      reader.readAsDataURL(file);
+
+  const handleImageChange = async (ev) => {
+    const files = ev.target.files;
+    if (!files || files.length === 0) return;
+
+    setIsUploading(true);
+
+    const data = new FormData();
+    Array.from(files).forEach((file) => data.append("file", file));
+    data.append("directory", "/ecommerce/purchased-furniture");
+
+    try {
+      const res = await axios.post("/api/imageUpload", data, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      setUploadedImages((prev) => [...prev, ...res.data.urls]);
+    } catch (error) {
+      setIsUploading(false);
+      console.error("Upload Error:", error);
+    } finally {
+      setIsUploading(false);
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleDeleteImage = (image) => {
+    setUploadedImages((prev) => prev.filter((img) => img !== image));
+  };
+
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (validate()) {
-
-      const formData = { ...formValues, phone: formValues.phone.replace(/^\+251/, '0'), images: Object.values(uploadedImages) };
-      setSubmitted(true);
+      const formData = { ...formValues, phone: formValues.phone.replace(/^\+251/, '0'), images: uploadedImages };
       console.log('Form submitted:', formData);
+      setSubmitted(true);
     } else {
       setSubmitted(false);
     }
   };
-
-  // const handleImageUpload = async () => {
-  //   const images = await axios.post('/api/upload', { images: Object.values(uploadedImages) });
-  //   return images;
-  // }
 
   return (
     <>
@@ -105,7 +122,7 @@ export default function SellFurnitureForm() {
       <Box
         sx={{
           position: 'relative',
-          px: { xs: '1rem', md: '2rem' },
+          px: { xs: '1rem', md: '5rem' },
           py: { xs: '3rem', md: '5rem' },
           minHeight: '100vh',
           overflow: 'hidden',
@@ -267,7 +284,6 @@ export default function SellFurnitureForm() {
 
               {/* Estimated Price and Additional Info */}
               <TextField
-
                 label="Estimated Price"
                 name="estimatedPrice"
                 value={formValues.estimatedPrice}
@@ -289,69 +305,112 @@ export default function SellFurnitureForm() {
               />
 
               {/* Image Upload */}
-              <Typography variant="body2" mt='2rem'>Upload Three Side Of The Furniture</Typography>
-              <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', gap: { xs: ".5rem", md: "1rem" } }}>
-                {[1, 2, 3].map((i) => (
+              <Typography variant="body2" mt="1.5rem" fontSize={{ xs: '1rem', md: '1.1rem' }}>
+                Upload At Least Three Sides of the Furniture!
+              </Typography>
+              <Box sx={{ display: "flex", flexWrap: "wrap", gap: 2, mb: 2 }}>
+                {uploadedImages.map((image, index) => (
                   <Box
-                    key={i}
+                    key={index}
                     sx={{
-                      position: 'relative',
-                      width: 'calc(33.33% - .7rem)',
-                      aspectRatio: '1 / 1',
-                      overflow: 'hidden',
-                      display: 'flex',
-                      justifyContent: 'center',
-                      backgroundColor: '#DAE8FF',
-                      borderRadius: '16px',
-                      alignItems: 'center',
-                      borderColor: formErrors[`image${i}`] ? 'tomato' : 'transparent',
+                      position: "relative",
+                      width: { xs: "96px", md: "118px" },
+                      height: { xs: "96px", md: "118px" },
+                      overflow: "hidden",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      backgroundColor: "#DAE8FF",
+                      borderRadius: "16px",
                     }}
                   >
-                    {uploadedImages[`image${i}`] ? (
-                      <>
-                        <Box component="img" src={uploadedImages[`image${i}`]} alt={`Uploaded Image ${i}`} sx={{ width: '100%', height: '150px', objectFit: 'contain' }} />
-                        <Box>
-                          <X size={24} color="#111" style={{ position: 'absolute', top: '10px', right: '10px', cursor: 'pointer' }} onClick={() => setUploadedImages({ ...uploadedImages, [`image${i}`]: null })} />
-                        </Box>
-                      </>
-                    ) : (
-                      <Button
-                        component="label"
-                        variant="outlined"
-                        sx={{
-                          width: '85%',
-                          height: '85%',
-                          border: '2px dashed',
-                          display: 'flex',
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                          flexDirection: 'column',
-                          textTransform: 'none',
-                          gap: '.4rem',
-                          borderColor: formErrors[`image${i}`] ? 'tomato' : '#aaa',
-                        }}
-                      >
-                        <UploadSimple size={32} color={formErrors[`image${i}`] ? 'tomato' : '#18BFF9'} />
-                        <Typography color={formErrors[`image${i}`] ? 'tomato' : '#18BFF9'} fontSize={{ xs: ".45rem", md: ".9rem" }}>Upload image {i}</Typography>
-                        <input type="file" hidden accept="image/*" onChange={(e) => handleImageChange(e, `image${i}`)} />
-                      </Button>
-                    )}
+                    {/* Uploaded Image */}
+                    <Box
+                      component="img"
+                      src={image}
+                      alt={`Uploaded Image ${index + 1}`}
+                      sx={{
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "contain",
+                      }}
+                    />
+                    {/* Delete Button */}
+                    <X
+                      size={22}
+                      color="red"
+                      style={{
+                        position: "absolute",
+                        top: "10px",
+                        right: "10px",
+                        cursor: "pointer",
+                      }}
+                      onClick={() => handleDeleteImage(image)}
+                    />
                   </Box>
                 ))}
+
+                {/* Upload Button */}
+                <Box
+                  sx={{
+                    position: "relative",
+                    width: { xs: "96px", md: "118px" },
+                    height: { xs: "96px", md: "118px" },
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    borderRadius: "16px",
+                    backgroundColor: "#DAE8FF",
+                  }}
+                >
+                  {isUploading ? (
+                    <FadeLoader />
+                  ) : (
+                    <Button
+                      component="label"
+                      variant="outlined"
+                      sx={{
+                        width: "80%",
+                        height: "80%",
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        borderColor: "#aaa",
+                        border: '2px dashed #aaa',
+                        borderRadius: "16px",
+                        textTransform: "none",
+                      }}
+                    >
+                      <UploadSimple size={32} color="#18BFF9" />
+                      <Typography color="#18BFF9" fontSize={{ xs: ".4rem", md: ".6rem" }}>
+                        Upload image
+                      </Typography>
+                      <input
+                        type="file"
+                        multiple
+                        hidden
+                        onChange={handleImageChange}
+                      />
+                    </Button>
+                  )}
+                </Box>
               </Box>
+
 
               <Button
                 type="submit"
                 variant="contained"
                 sx={{
-                  mt: '2rem',
-                  borderRadius: '5px',
+                  mt: '1.5rem',
+                  mr: 'auto',
+                  width: { xs: '100%', md: '20%' },
+                  borderRadius: '33px',
                   backgroundColor: '#111',
                   color: '#fff',
-                  padding: '10px 20px',
+                  padding: '8px 16px',
                   fontSize: '.9rem',
                   alignSelf: 'center',
-                  size: 'small',
                 }}
               >
                 Submit
@@ -364,10 +423,10 @@ export default function SellFurnitureForm() {
               )}
             </Box>
           </form>
-        </Box>
+        </Box >
 
         {/* Right Section */}
-        <Box
+        < Box
           sx={{
             position: 'relative',
             borderRadius: '16px',
@@ -377,7 +436,8 @@ export default function SellFurnitureForm() {
             mx: 'auto',
             mt: { xs: '2rem' },
             order: { xs: 1, md: 2 },
-          }}
+          }
+          }
         >
           <Image
             src={'/assets/images/furniture-storey.svg'}
@@ -388,10 +448,10 @@ export default function SellFurnitureForm() {
             blurDataURL='/assets/images/furniture-storey.svg'
             style={{ objectFit: "contain" }}
           />
-        </Box>
+        </Box >
 
         {/* Background SVG Top Right*/}
-        <Box
+        < Box
           sx={{
             position: 'absolute',
             top: { xs: '-67%', md: '-50%' },
@@ -409,10 +469,10 @@ export default function SellFurnitureForm() {
             layout="fill"
             objectFit="cover"
           />
-        </Box>
+        </Box >
 
         {/* Background SVG bottom left*/}
-        <Box
+        < Box
           sx={{
             position: 'absolute',
             bottom: { xs: '-70%', md: '-70%' },
@@ -430,7 +490,7 @@ export default function SellFurnitureForm() {
             layout="fill"
             objectFit="cover"
           />
-        </Box>
+        </Box >
       </Box >
       <Footer />
     </>
