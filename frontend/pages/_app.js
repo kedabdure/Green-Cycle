@@ -15,10 +15,11 @@ const queryClient = new QueryClient();
 
 const GlobalStyles = createGlobalStyle`
   body {
-    background-color: #f1f1f1;
+    background-color: #f9f9f9;
     padding: 0;
     margin: 0;
     font-family: 'Poppins', sans-serif;
+    position: 'relative';
   }
 
   .PhoneInput {
