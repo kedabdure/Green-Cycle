@@ -12,6 +12,7 @@ const BuySchema = new Schema({
   estimatedPrice: { type: Number, required: true },
   additionalInfo: { type: String },
   images: { type: [String], required: true },
+  userId: { type: Schema.Types.ObjectId, ref: 'User', required: true }
 }, {
   timestamps: true
 });
