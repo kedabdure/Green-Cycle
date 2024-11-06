@@ -1,34 +1,15 @@
-import React, { useState } from "react";
-
-import { Box, Typography, Button, Popover } from "@mui/material";
+import React from "react";
+import { Box, Typography, Button } from "@mui/material";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { MapPin } from "phosphor-react";
 
 export default function Hero() {
   const router = useRouter();
 
-  const [anchorEl, setAnchorEl] = useState(null);
-
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  const open = Boolean(anchorEl);
-  const id = open ? 'simple-popover' : undefined;
-
-  const goToProducts = () => {
-    router.push("/products");
-  };
-
   return (
     <Box
       sx={{
-        padding: "0 20px",
+        padding: "0 10px",
         width: "100%",
         minHeight: "100vh",
         color: "#111",
@@ -42,36 +23,6 @@ export default function Hero() {
         zIndex: 1,
       }}
     >
-      {/* Blob */}
-      <Box
-        sx={{
-          position: "absolute",
-          width: 500,
-          height: 500,
-          borderRadius: "50%",
-          bottom: "2%",
-          left: "-40%",
-          zIndex: -1,
-          background: "radial-gradient(circle, rgba(80, 227, 194, 0.4) 0%, rgba(80, 227, 194, 0) 70%)",
-          backdropFilter: "blur(360px)",
-        }}
-      />
-
-      <Box
-        sx={{
-          position: "absolute",
-          width: 700,
-          height: 700,
-          borderRadius: "50%",
-          top: "60%",
-          right: "-40%",
-          display: {lg: 'none', xl: 'block'},
-          zIndex: -1,
-          background: "radial-gradient(circle, rgba(80, 227, 194, 0.4) 0%, rgba(80, 227, 194, 0) 70%)",
-          backdropFilter: "blur(360px)",
-        }}
-      />
-
       <Box
         sx={{
           width: "100%",
@@ -87,7 +38,7 @@ export default function Hero() {
         <Typography
           variant="h2"
           sx={{
-            fontSize: { xs: "2.5rem", md: "3.5rem" },
+            fontSize: { xs: "1.8rem", md: "3rem", lg: '3.5rem' },
             color: "#111",
             maxWidth: "800px",
             fontFamily: "'Outfit', sans-serif",
@@ -100,7 +51,7 @@ export default function Hero() {
           <Box
             component="span"
             sx={{
-              padding: "5px 20px",
+              padding: "5px 15px",
               borderRadius: "68px",
               backgroundColor: "#D7FFB1",
             }}
@@ -113,7 +64,7 @@ export default function Hero() {
         <Typography
           variant="body1"
           sx={{
-            fontSize: { xs: "0.8rem", md: "1rem" },
+            fontSize: { xs: "0.6rem", md: "1rem" },
             color: "#4f4f4f",
             marginBottom: "1rem",
             lineHeight: "1.6",
@@ -128,36 +79,49 @@ export default function Hero() {
           sx={{
             display: "flex",
             alignItems: "center",
-            gap: "0.5rem",
-            flexDirection: { xs: "column", md: "row" },
+            gap: { xs: "0.5rem", md: "1rem", lg: "1.5rem" },
+            flexDirection: { xs: "row", md: "row" },
+            zIndex: 2,
           }}
         >
           <Button
-            variant="transparent"
+            variant="contained"
+            onClick={() => router.push("/sell-furniture")}
             sx={{
-              maxWidth: "200px",
-              padding: "0.55rem 2rem",
-              fontSize: ".9rem",
+              maxWidth: { xs: "180px", md: "200px", lg: "220px" },
+              padding: { xs: "0.3rem 1rem", md: "0.55rem 2rem" },
+              fontSize: { xs: "0.8rem", md: ".9rem" },
               color: "#fff",
               fontWeight: "500",
               backgroundColor: "#111",
               border: "1px solid #111",
               borderRadius: "4px",
+              transition: "all .3s ease-in-out",
+              "&:hover": {
+                backgroundColor: "#fff",
+                color: "#111",
+              },
             }}
           >
             Sell
           </Button>
+
           <Button
-            onClick={goToProducts}
+            onClick={() => router.push("/products")}
             variant="outlined"
             sx={{
-              maxWidth: "200px",
-              padding: "0.55rem 2rem",
-              fontSize: ".9rem",
+              maxWidth: { xs: "180px", md: "200px", lg: "220px" },
+              padding: { xs: "0.3rem 1rem", md: "0.55rem 2rem" },
+              fontSize: { xs: "0.8rem", md: ".9rem" },
               color: "#111",
               fontWeight: "500",
               borderColor: "#111",
               borderRadius: "4px",
+              transition: "all .3s ease-in-out",
+              "&:hover": {
+                backgroundColor: "#111",
+                color: "#fff",
+              },
             }}
           >
             Buy
@@ -199,6 +163,7 @@ export default function Hero() {
 
           <Box
             sx={{
+              display: { xs: "none", lg: "flex" },
               position: 'relative',
               bgcolor: '#fff',
               width: '256px',
@@ -226,7 +191,7 @@ export default function Hero() {
             top: "50%",
             left: "50%",
             transform: "translate(-50%, -50%)",
-            display: "flex",
+            display: { xs: "none", lg: "flex" },
             flexDirection: "column",
             justifyContent: "center",
             alignItems: "center",
@@ -313,6 +278,28 @@ export default function Hero() {
         >
           {/* <AwarenessSlider /> */}
         </Box>
+
+      </Box>
+
+      {/* Background SVG Top Right */}
+      <Box
+        sx={{
+          position: 'absolute',
+          top: { xs: '-67%', md: '-50%' },
+          right: { xs: '0%', md: '-77%' },
+          zIndex: -1,
+          overflow: 'hidden',
+          width: '100%',
+          height: '100%',
+        }}
+      >
+        <Image
+          src="/assets/images/greenGradient.svg"
+          fill
+          alt="Background SVG"
+          layout="fill"
+          objectFit="cover"
+        />
       </Box>
     </Box>
   );
