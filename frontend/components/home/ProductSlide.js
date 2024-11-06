@@ -49,21 +49,6 @@ export default function ProductSlide() {
 
   return (
     <Box sx={{ width: "100%", minHeight: "931px", mx: "auto", p: 4, position: "relative" }}>
-      {/* Blob */}
-      <Box
-        sx={{
-          position: "absolute",
-          width: 700,
-          height: 500,
-          borderRadius: "50%",
-          top: "50%",
-          left: "-40%",
-          zIndex: -1,
-          background: "radial-gradient(circle, rgba(80, 227, 194, 0.4) 0%, rgba(80, 227, 194, 0) 80%)",
-          backdropFilter: "blur(360px)",
-        }}
-      />
-
       <Box sx={{ width: "100%", maxWidth: 1200, mx: "auto" }}>
         <Box sx={{ textAlign: "left", display: "flex", alignItems: "center", justifyContent: "space-between", mb: 8, mx: 2 }}>
           <Box>

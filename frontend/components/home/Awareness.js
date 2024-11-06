@@ -12,6 +12,7 @@ export default function TransformingScrap() {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
+        overflow: 'hidden',
         zIndex: 1,
       }}
     >

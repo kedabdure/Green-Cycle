@@ -7,278 +7,264 @@ export default function Hero() {
   const router = useRouter();
 
   return (
-    <Box
-      sx={{
-        padding: "0 10px",
-        width: "100%",
-        minHeight: "100vh",
-        color: "#111",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        backgroundColor: "#fff",
-        textAlign: "center",
-        position: "relative",
-        pt: "110px",
-        zIndex: 1,
-      }}
-    >
+    <Box sx={{
+      width: "100%",
+      minHeight: "100vh",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      position: "relative",
+      py: { xs: "90px", md: "130px" },
+      px: { xs: "1rem", md: "2rem", lg: "5rem" },
+      zIndex: 1,
+    }}>
       <Box
         sx={{
           width: "100%",
-          maxWidth: "1090px",
+          height: "100%",
           display: "flex",
-          flexDirection: "column",
           alignItems: "center",
-          gap: "24px",
-          position: 'relative',
-          padding: "0 20px",
+          justifyContent: "center",
+          position: "relative",
+          flexDirection: { xs: "column", md: "row" },
+          gap: { xs: "2rem", md: "3rem" },
+          zIndex: 1,
         }}
       >
-        <Typography
-          variant="h2"
-          sx={{
-            fontSize: { xs: "1.8rem", md: "3rem", lg: '3.5rem' },
-            color: "#111",
-            maxWidth: "800px",
-            fontFamily: "'Outfit', sans-serif",
-            fontWeight: "700",
-            lineHeight: "1.2",
-            textAlign: "center",
-          }}
-        >
-          Sustain{" "}
-          <Box
-            component="span"
-            sx={{
-              padding: "5px 15px",
-              borderRadius: "68px",
-              backgroundColor: "#D7FFB1",
-            }}
-          >
-            Green
-          </Box>{" "}
-          Furniture Rescue & Reuse
-        </Typography>
-
-        <Typography
-          variant="body1"
-          sx={{
-            fontSize: { xs: "0.6rem", md: "1rem" },
-            color: "#4f4f4f",
-            marginBottom: "1rem",
-            lineHeight: "1.6",
-            textAlign: "center",
-            maxWidth: "700px",
-          }}
-        >
-          Support Ethiopia's Green Legacy by choosing pre-loved furniture. Together, we can reduce waste, conserve forests, and protect our environment.
-        </Typography>
-
+        {/* Left Section */}
         <Box
           sx={{
+            width: { xs: "100%", md: "50%" },
+            height: { xs: "190px", md: "420px" },
+            textAlign: { xs: "center", md: "left" },
             display: "flex",
-            alignItems: "center",
-            gap: { xs: "0.5rem", md: "1rem", lg: "1.5rem" },
-            flexDirection: { xs: "row", md: "row" },
-            zIndex: 2,
+            flexDirection: "column",
+            justifyContent: "space-between",
+            alignItems: { xs: "center", md: "flex-start" },
           }}
         >
-          <Button
-            variant="contained"
-            onClick={() => router.push("/sell-furniture")}
+          <Box
             sx={{
-              maxWidth: { xs: "180px", md: "200px", lg: "220px" },
-              padding: { xs: "0.3rem 1rem", md: "0.55rem 2rem" },
-              fontSize: { xs: "0.8rem", md: ".9rem" },
-              color: "#fff",
-              fontWeight: "500",
-              backgroundColor: "#111",
-              border: "1px solid #111",
-              borderRadius: "4px",
-              transition: "all .3s ease-in-out",
-              "&:hover": {
-                backgroundColor: "#fff",
+              display: "flex",
+              flexDirection: "column",
+              gap: "1rem",
+              alignItems: { xs: "center", md: "flex-start" },
+            }}
+          >
+            <Typography
+              variant="h2"
+              sx={{
+                fontSize: { xs: "2rem", md: "3.4rem", lg: "3.5rem" },
                 color: "#111",
-              },
-            }}
-          >
-            Sell
-          </Button>
+                maxWidth: { xs: "500px", sm: "400px", lg: "700px" },
+                fontFamily: "'Outfit', sans-serif",
+                fontWeight: "700",
+                lineHeight: { xs: "2.5rem", md: "4.3rem" },
+              }}
+            >
+              Sustain{" "}
+              <Box
+                component="span"
+                sx={{
+                  padding: "4px 14px",
+                  borderRadius: "68px",
+                  backgroundColor: "#D7FFB1",
+                }}
+              >
+                Green
+              </Box>{" "}
+              Furniture Rescue & Reuse
+            </Typography>
 
-          <Button
-            onClick={() => router.push("/products")}
-            variant="outlined"
+            <Typography
+              variant="body1"
+              sx={{
+                fontSize: { xs: "0.7rem", md: ".9rem" },
+                color: "#4f4f4f",
+                lineHeight: "1.6",
+                maxWidth: { xs: "230px", md: "700px" },
+                mb: { xs: "2rem", md: ".6rem" },
+              }}
+            >
+              Support Ethiopia’s Green Legacy with sustainable furniture choices.
+            </Typography>
+          </Box>
+
+          <Box
             sx={{
-              maxWidth: { xs: "180px", md: "200px", lg: "220px" },
-              padding: { xs: "0.3rem 1rem", md: "0.55rem 2rem" },
-              fontSize: { xs: "0.8rem", md: ".9rem" },
-              color: "#111",
-              fontWeight: "500",
-              borderColor: "#111",
-              borderRadius: "4px",
-              transition: "all .3s ease-in-out",
-              "&:hover": {
-                backgroundColor: "#111",
-                color: "#fff",
-              },
+              display: { xs: 'none', sm: 'flex' },
+              justifyContent: { xs: "center", md: "space-between" },
+              gap: { xs: "0.5rem", md: "1rem" },
+              width: { xs: "100%", sm: "auto" },
+              flexDirection: { xs: "column", sm: "row" },
+              alignItems: "center",
             }}
           >
-            Buy
-          </Button>
+            <Button
+              variant="contained"
+              onClick={() => router.push("/sell-furniture")}
+              sx={{
+                padding: { xs: "0.4rem 1.5rem", md: "0.6rem 2rem" },
+                fontSize: { xs: "0.8rem", md: "0.9rem" },
+                color: "#fff",
+                backgroundColor: "#111",
+                border: "1px solid #111",
+                borderRadius: "4px",
+                "&:hover": {
+                  backgroundColor: "#fff",
+                  color: "#111",
+                },
+                width: { xs: "100%", sm: "auto" },
+              }}
+            >
+              Sell
+            </Button>
+
+            <Button
+              variant="outlined"
+              onClick={() => router.push("/products")}
+              sx={{
+                padding: { xs: "0.4rem 1.5rem", md: "0.6rem 2rem" },
+                fontSize: { xs: "0.8rem", md: "0.9rem" },
+                color: "#111",
+                borderColor: "#111",
+                borderRadius: "4px",
+                "&:hover": {
+                  backgroundColor: "#111",
+                  color: "#fff",
+                },
+                width: { xs: "100%", sm: "auto" },
+              }}
+            >
+              Buy
+            </Button>
+          </Box>
         </Box>
 
+        {/* Right Section: Image Layout */}
         <Box
           sx={{
-            marginTop: "2rem",
-            maxWidth: "800px",
-            color: "#333",
+            width: { xs: "100%", md: "50%" },
+            maxWidth: '580px',
             display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            gap: "30px",
-            flexDirection: { xs: "column", md: "row" },
+            flexDirection: "column",
+            gap: { xs: ".9rem", md: "1rem" },
           }}
         >
+          {/* Top Two Images */}
+          <Box sx={{ display: "flex", alignItems: "center", justifyContent: 'space-between', gap: { xs: ".9rem", md: "1rem" }, }}>
+            <Box
+              sx={{
+                position: "relative",
+                width: "100%",
+                height: { xs: "140px", md: "230px" },
+                overflow: "hidden",
+                borderRadius: "32px",
+                boxShadow: 1,
+              }}
+            >
+              <Image
+                src={'/assets/images/abiy.jpg'}
+                fill
+                alt="Product photo 1"
+                placeholder="blur"
+                blurDataURL={'/assets/images/abiy.jpg'}
+                style={{ objectFit: "cover" }}
+              />
+            </Box>
+            <Box
+              sx={{
+                position: "relative",
+                width: "100%",
+                height: { xs: "140px", md: "230px" },
+                overflow: "hidden",
+                borderRadius: "32px",
+                boxShadow: 1,
+              }}
+            >
+              <Image
+                src={'/assets/images/forest.jpg'}
+                fill
+                alt="Product photo 2"
+                placeholder="blur"
+                blurDataURL={'/assets/images/forest.jpg'}
+                style={{ objectFit: "cover" }}
+              />
+            </Box>
+          </Box>
+
+          {/* Bottom Large Image */}
           <Box
             sx={{
-              position: 'relative',
-              bgcolor: '#fff',
-              width: '256px',
-              height: '204px',
-              overflow: 'hidden',
-              borderRadius: '16px',
+              position: "relative",
+              width: "100%",
+              height: { xs: "140px", md: "230px" },
+              overflow: "hidden",
+              borderRadius: "32px",
               boxShadow: 1,
             }}
           >
             <Image
               src={'/assets/images/abiy.jpg'}
               fill
-              alt="Product photo"
+              alt="Product photo 3"
               placeholder="blur"
               blurDataURL={'/assets/images/abiy.jpg'}
               style={{ objectFit: "cover" }}
             />
           </Box>
-
-          <Box
-            sx={{
-              display: { xs: "none", lg: "flex" },
-              position: 'relative',
-              bgcolor: '#fff',
-              width: '256px',
-              height: '204px',
-              overflow: 'hidden',
-              borderRadius: '16px',
-              boxShadow: 1,
-            }}
-          >
-            <Image
-              src={'/assets/images/forest.jpg'}
-              fill
-              alt="Product photo"
-              placeholder="blur"
-              blurDataURL={'/assets/images/forest.jpg'}
-              style={{ objectFit: "cover" }}
-            />
-          </Box>
         </Box>
 
-        {/* Small Images */}
+        {/* Button on Small Screen */}
         <Box
           sx={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            display: { xs: "none", lg: "flex" },
-            flexDirection: "column",
-            justifyContent: "center",
+            display: { xs: "flex", sm: "none" },
             alignItems: "center",
-            width: "100%",
-            height: "auto",
-            gap: "0px",
+            justifyContent: "space-between",
+            width: '60%',
+            mt: 3,
+            gap: 1,
           }}
         >
-          <Box
+          <Button
+            variant="contained"
+            onClick={() => router.push("/sell-furniture")}
             sx={{
-              width: "100%",
-              height: "40%",
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
+              padding: { xs: "0.6rem 1.6rem", md: "0.6rem 2rem" },
+              fontSize: { xs: "0.8rem", md: "0.9rem" },
+              color: "#fff",
+              backgroundColor: "#111",
+              border: "1px solid #111",
+              borderRadius: "4px",
+              "&:hover": {
+                backgroundColor: "#fff",
+                color: "#111",
+              },
+              width: { xs: "100%", sm: "auto" },
             }}
           >
-            {Array.from({ length: 2 }).map((_, index) => (
-              <Box
-                key={index}
-                sx={{
-                  width: "60px",
-                  height: "60px",
-                  overflow: "hidden",
-                  borderRadius: "50%",
-                }}
-              >
-                <Image
-                  src="/assets/images/leaf.jpg"
-                  width={68}
-                  height={68}
-                  alt={`Image ${index + 1}`}
-                  placeholder="blur"
-                  blurDataURL={'/assets/images/leaf.jpg'}
-                />
-              </Box>
-            ))}
-          </Box>
-          <Box
+            Sell
+          </Button>
+
+          <Button
+            variant="outlined"
+            onClick={() => router.push("/products")}
             sx={{
-              width: "80%",
-              height: "60%",
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
+              padding: { xs: "0.6rem 1.6rem", md: "0.6rem 2rem" },
+              fontSize: { xs: "0.8rem", md: "0.9rem" },
+              color: "#111",
+              borderColor: "#111",
+              borderRadius: "4px",
+              "&:hover": {
+                backgroundColor: "#111",
+                color: "#fff",
+              },
+              width: { xs: "100%", sm: "auto" },
             }}
           >
-            {Array.from({ length: 2 }).map((_, index) => (
-              <Box
-                key={index}
-                sx={{
-                  width: "80px",
-                  height: "80px",
-                  overflow: "hidden",
-                  borderRadius: "50%",
-                }}
-              >
-                <Image
-                  src="/assets/images/greenLegacy1.jpg"
-                  width={80}
-                  height={80}
-                  alt={`Image ${index + 1}`}
-                  placeholder="blur"
-                  blurDataURL={'/assets/images/greenLegacy1.jpg'}
-                />
-              </Box>
-            ))}
-          </Box>
+            Buy
+          </Button>
         </Box>
-
-        {/* Awareness */}
-        <Box
-          sx={{
-            position: "absolute",
-            bottom: "0",
-            left: "0",
-            width: "100%",
-            height: 'auto',
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            backgroundColor: 'transparent'
-          }}
-        >
-          {/* <AwarenessSlider /> */}
-        </Box>
-
       </Box>
 
       {/* Background SVG Top Right */}
@@ -286,11 +272,33 @@ export default function Hero() {
         sx={{
           position: 'absolute',
           top: { xs: '-67%', md: '-50%' },
-          right: { xs: '0%', md: '-77%' },
+          right: { xs: '0%', md: '-67%' },
           zIndex: -1,
           overflow: 'hidden',
           width: '100%',
           height: '100%',
+        }}
+      >
+        <Image
+          src="/assets/images/greenGradient.svg"
+          fill
+          alt="Background SVG"
+          layout="fill"
+          objectFit="cover"
+        />
+      </Box>
+
+      {/* Background SVG Bottom left */}
+      <Box
+        sx={{
+          position: 'absolute',
+          bottom: { xs: '-67%', md: '-50%' },
+          left: { xs: '0%', md: '-70%' },
+          zIndex: -1,
+          overflow: 'hidden',
+          width: '100%',
+          height: '100%',
+          opacity: 0.9,
         }}
       >
         <Image
