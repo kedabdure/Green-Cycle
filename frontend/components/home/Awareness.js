@@ -7,7 +7,8 @@ export default function TransformingScrap() {
       sx={{
         width: '100%',
         minHeight: '100vh',
-        padding: '50px 20px',
+        py: { xs: '90px', md: '100px' },
+        px: { xs: '1rem', md: '2rem', lg: '5rem' },
         backgroundColor: '#fff',
         display: 'flex',
         flexDirection: 'column',
@@ -19,8 +20,7 @@ export default function TransformingScrap() {
       <Box
         sx={{
           position: 'relative',
-          marginTop: '80px',
-          maxWidth: '1133px',
+          width: '100%',
           display: 'flex',
           flexDirection: 'column',
           gap: { xs: '20px', md: '50px' },
@@ -30,21 +30,23 @@ export default function TransformingScrap() {
           sx={{
             display: 'flex',
             alignItems: 'center',
-            gap: '12px',
+            gap: { xs: '2rem', md: "12px" },
             flexDirection: { xs: 'column', md: 'row' },
             textAlign: { xs: 'center', md: 'left' },
-            marginBottom: '20px',
+            marginBottom: '40px',
+            textAlign: "left",
           }}
         >
           <Typography
             variant="h1"
             sx={{
               width: { xs: '100%', md: '60%' },
-              fontSize: { xs: '1.5rem', md: '2rem' },
-              fontWeight: 600,
+              fontSize: { xs: '1.6rem', md: '2.2rem' },
+              fontWeight: 700,
+              lineHeight: "2.5rem"
             }}
           >
-            Transforming Discarded Items into Value
+            Transforming Old and Discarded Furniture Items into Value
           </Typography>
           <Typography
             variant="body1"
@@ -63,7 +65,8 @@ export default function TransformingScrap() {
           sx={{
             width: '100%',
             display: 'flex',
-            gap: { xs: '20px', md: '24px' },
+            // gap: { xs: '20px', md: '54px' },
+            justifyContent: 'space-between',
             flexDirection: { xs: 'column', md: 'row' },
           }}
         >
@@ -77,18 +80,20 @@ export default function TransformingScrap() {
           >
             <Box
               sx={{
-                width: '100%',
-                height: 'auto',
-                overflow: 'hidden',
-                borderRadius: '16px',
+                position: "relative",
+                width: "100%",
+                height: { xs: "500px", md: "560px" },
+                overflow: "hidden",
+                borderRadius: "16px",
               }}
             >
               <Image
-                width={460}
-                height={600}
-                src="https://ik.imagekit.io/gfpycoip3/ecommerce/Furniture/b446cb91e44ffc679639f63320e04c4a%201.svg"
-                alt="featured"
-                style={{ borderRadius: '16px', objectFit: 'cover' }}
+                src="/assets/images/before-and-after.jpg"
+                fill
+                alt="Big image"
+                placeholder="blur"
+                blurDataURL={'/assets/images/before-and-after.jpg'}
+                style={{ objectFit: "cover" }}
               />
             </Box>
           </Box>
@@ -103,7 +108,7 @@ export default function TransformingScrap() {
           >
             <Box
               sx={{
-                width: '429px',
+                width: '100%',
                 display: 'flex',
                 flexDirection: 'column',
                 gap: '10px',
@@ -141,7 +146,7 @@ export default function TransformingScrap() {
                 <Image
                   width={364}
                   height={250}
-                  src="https://ik.imagekit.io/gfpycoip3/ecommerce/Furniture/3926834d92ba09828639ed4927bd7ea6%201%20(1).png"
+                  src="/assets/images/furniture-garbage.jpg"
                   alt="featured"
                   style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '16px' }}
                 />
@@ -157,7 +162,7 @@ export default function TransformingScrap() {
                 <Image
                   width={267}
                   height={150}
-                  src="https://ik.imagekit.io/gfpycoip3/ecommerce/Furniture/3926834d92ba09828639ed4927bd7ea6%202%20(1).png"
+                  src="/assets/images/furniture-industry.jpg"
                   alt="featured"
                   style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '16px' }}
                 />
@@ -165,7 +170,7 @@ export default function TransformingScrap() {
             </Box>
             <Box
               sx={{
-                padding: '30px',
+                padding: { xs: "22px", md: "30px" },
                 backgroundColor: '#f5f5f5',
                 borderRadius: '16px',
                 display: 'flex',
@@ -184,8 +189,8 @@ export default function TransformingScrap() {
             <Button
               variant="contained"
               sx={{
-                width: '150px',
-                height: '46px',
+                maxWidth: '130px',
+                padding: '7px 4px 7px 10px',
                 fontSize: '.9rem',
                 borderRadius: '5px',
                 backgroundColor: '#111',
@@ -203,22 +208,12 @@ export default function TransformingScrap() {
                 },
               }}
             >
-              Learn More
-              <Image width={32} height={32} src="/assets/images/arrow-right.svg" alt="arrow" />
+              Buy Now
+              <Image width={30} height={30} src="/assets/images/arrow-right.svg" alt="arrow" />
             </Button>
           </Box>
         </Box>
-        <Box
-          sx={{
-            position: 'absolute',
-            top: { xs: '5%', md: '13%' },
-            left: { xs: '20%', md: '4%' },
-          }}
-        >
-          <Image src="/assets/images/curv-arrow.svg" width={1300} height={230.67} alt="Curved Arrow" />
-        </Box>
       </Box>
-
     </Box>
   );
 }

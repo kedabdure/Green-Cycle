@@ -292,13 +292,14 @@ export default function Hero() {
       <Box
         sx={{
           position: 'absolute',
-          bottom: { xs: '-67%', md: '-50%' },
-          left: { xs: '0%', md: '-70%' },
+          bottom: { xs: '-40%', md: '-50%' },
+          left: { xs: '-100%', md: '-70%' },
           zIndex: -1,
           overflow: 'hidden',
-          width: '100%',
+          width: {xs: '150%', md: '100%'},
           height: '100%',
           opacity: 0.9,
+          overflow: 'hidden',
         }}
       >
         <Image
