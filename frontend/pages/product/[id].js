@@ -9,7 +9,7 @@ import CartIcon from "../../components/icons/CartIcon";
 import Currency from "../../components/Currency";
 import Header from "../../components/Header";
 import { X as CloseIcon } from "phosphor-react";
-import ProductsBox from "@/components/product/ProductsBox";
+import ProductsBox from "../../components/product/ProductsBox";
 
 
 const fetchProduct = async (id) => {

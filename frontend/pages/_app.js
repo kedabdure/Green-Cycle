@@ -8,8 +8,8 @@ import CartContextProvider from "../components/cart/CartContext";
 import { SessionProvider, useSession } from "next-auth/react";
 import PageLoader from "../components/PageLoader";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import OrderStatusNotification from "@/components/order/OrderStatusNotification";
-import useUser from "@/components/context/userContext";
+import OrderStatusNotification from "../components/order/OrderStatusNotification";
+import useUser from "../components/context/userContext";
 
 const queryClient = new QueryClient();
 

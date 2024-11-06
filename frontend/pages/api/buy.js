@@ -1,5 +1,5 @@
-import { mongooseConnect } from "@/lib/mongoose";
-import { Buy } from "@/models/Buy";
+import { mongooseConnect } from "../../lib/mongoose";
+import { Buy } from "../../models/Buy";
 
 export default async (req, res) => {
   await mongooseConnect();

@@ -1,11 +1,11 @@
 import React, { useState, useContext } from 'react';
 import Image from 'next/image';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
-import OrderForm from '@/components/order/OrderForm';
+import Header from '../components/Header';
+import Footer from '../components/Footer';
+import OrderForm from '../components/order/OrderForm';
 import { Box, Typography, Container, Stack, Paper, Radio, RadioGroup, FormControlLabel, styled } from '@mui/material';
-import OrderPreview from '@/components/order/OrderPreview';
-import { CartContext } from '@/components/cart/CartContext';
+import OrderPreview from '../components/order/OrderPreview';
+import { CartContext } from '../components/cart/CartContext';
 import { useSession } from 'next-auth/react';
 import { useRouter} from 'next/router';
 import axios from 'axios';

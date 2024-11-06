@@ -16,8 +16,8 @@ import {
 } from '@mui/material';
 import { UploadSimple, X } from 'phosphor-react';
 import Image from 'next/image';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
+import Header from '../../components/Header';
+import Footer from '../../components/Footer';
 import axios from 'axios'
 
 const initialValues = {

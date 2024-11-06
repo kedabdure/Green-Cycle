@@ -6,7 +6,7 @@ import { Paper, Typography, Divider, Grid, Box, Button, CircularProgress } from 
 import { DownloadSimple, House } from 'phosphor-react';
 import { useRouter } from 'next/router';
 import { useContext } from 'react';
-import { CartContext } from '@/components/cart/CartContext';
+import { CartContext } from '../components/cart/CartContext';
 import dayjs from 'dayjs';
 
 const fetchOrderByTxRef = async (tx_ref) => {

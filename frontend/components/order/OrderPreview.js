@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { CartContext } from "@/components/cart/CartContext";
+import { CartContext } from "../../components/cart/CartContext";
 import { Box, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, Stack, useMediaQuery } from "@mui/material";
 import { Plus as PlusIcon, Minus as XIcon, Trash as DeleteIcon, Minus } from "phosphor-react";
 import Image from "next/image";

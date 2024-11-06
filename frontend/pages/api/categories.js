@@ -1,5 +1,5 @@
-import { mongooseConnect } from "@/lib/mongoose";
-import { Category } from "@/models/Category";
+import { mongooseConnect } from "../../lib/mongoose";
+import { Category } from "../../models/Category";
 
 export default async function handler(req, res) {
   if (req.method !== "GET") {
