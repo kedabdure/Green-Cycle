@@ -1,74 +1,21 @@
 import React, { useEffect, useState } from "react";
-import styled from "styled-components";
+import { Box, Container, Typography, Grid, Divider, IconButton } from "@mui/material";
 import Link from "next/link";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
-
-const StyledBox = styled.footer`
-  background-color: #111;
-  color: #ccc;
-`;
-
-const StyledContainer = styled.div`
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 1rem;
-`;
-
-const FooterText = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 1rem 0;
-`;
-
-const Text = styled.p`
-  color: #ccc;
-  font-size: 0.85rem;
-
-  @media screen and (min-width: 768px) {
-    font-size: 0.9rem;
-  }
-`;
-
-const ScrollToTopButton = styled.button`
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  background-color: rgba(0, 0, 0, 0.5);
-  color: white;
-  border: none;
-  cursor: pointer;
-  z-index: 999;
-  width: 35px;
-  height: 35px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 4px;
-  opacity: ${({ $isVisible }) => ($isVisible ? 1 : 0)};
-  transform: ${({ $isVisible }) => ($isVisible ? "translateY(0)" : "translateY(20px)")};
-  transition: opacity 0.3s ease, transform 0.3s ease, background-color 0.3s ease;
-  pointer-events: ${({ $isVisible }) => ($isVisible ? "auto" : "none")};
-  &:hover {
-    background-color: #fb8122;
-    opacity: 0.8;
-  }
-`;
-
-const Powered = styled(Link)`
-  color: #fb8122;
-  text-decoration: none;
-  &:hover {
-    text-decoration: underline;
-  }
-`;
+import PhoneIcon from "@mui/icons-material/Phone";
+import EmailIcon from "@mui/icons-material/Email";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
+import Logo from "./icons/Logo";
 
 export default function Contact() {
   const [showScrollToTop, setShowScrollToTop] = useState(false);
 
   const handleScroll = () => {
-    // Show the button if user scrolls down 200 pixels or more.
-    setShowScrollToTop(window.scrollY > 200);
+    if (window.scrollY > window.innerHeight) {
+      setShowScrollToTop(true);
+    } else {
+      setShowScrollToTop(false);
+    }
   };
 
   useEffect(() => {
@@ -85,23 +32,242 @@ export default function Contact() {
     });
   };
 
-  const getCurrentYear = () => new Date().getFullYear();
+  const getCurrentYear = () => {
+    return new Date().getFullYear();
+  };
 
   return (
-    <StyledBox>
-      <StyledContainer>
-        <FooterText>
-          <Text>
-            © {getCurrentYear()} Nexaddis | All right reserved
-            {/* <Powered href="http://localhost:3000/">nexaddis</Powered> */}
-          </Text>
-        </FooterText>
+    <Box
+      sx={{
+        width: "100%",
+        bgcolor: "#1c2229",
+        color: "#e1e2e2",
+        pt: { xs: 4, sm: 4 },
+        position: "relative",
+      }}
+    >
+      <Container maxWidth="lg">
+        <Grid container spacing={4} justifyContent="center">
+          <Grid item xs={12} sm={6} md={3}>
+            <Link href="/#home" passHref legacyBehavior>
+              <a
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  textDecoration: "none",
+                  color: "white",
+                  marginBottom: "1.1rem",
+                  marginTop: ".4rem",
+                }}
+              >
+                <Logo />
+              </a>
+            </Link>
+            <Typography
+              variant="body2"
+              sx={{
+                mt: 2,
+                color: "white",
+                fontSize: { xs: "0.5rem", sm: "0.6rem", md: ".7rem" },
+                maxWidth: "200px",
+              }}
+            >
+              Rescuing furniture to reduce waste and conserve trees for a sustainable future.
+              Contact us to sell and buy used furniture.
+            </Typography>
+          </Grid>
 
-        {/* Always render the button but control its visibility through styles */}
-        <ScrollToTopButton $isVisible={showScrollToTop} onClick={scrollToTop}>
+          {/* Company Links */}
+          <Grid item xs={6} md={3}>
+            <Typography variant="h6" sx={{ mb: 1, fontWeight: "bold", fontSize: { xs: "1rem", sm: "1.2rem" } }}>
+              Company
+            </Typography>
+            <Link href="/" passHref legacyBehavior>
+              <a style={{ textDecoration: "none", color: "white" }}>
+                <Typography
+                  variant="body2"
+                  sx={{
+                    mb: 1,
+                    fontSize: { xs: "0.875rem", sm: ".8rem" },
+                    transition: "color 0.3s ease",
+                    "&:hover": {
+                      color: "#48cb66",
+                    },
+                  }}
+                >
+                  Home
+                </Typography>
+              </a>
+            </Link>
+            <Link href="/about" passHref legacyBehavior>
+              <a style={{ textDecoration: "none", color: "white" }}>
+                <Typography
+                  variant="body2"
+                  sx={{
+                    mb: 1,
+                    fontSize: { xs: "0.875rem", sm: ".8rem" },
+                    transition: "color 0.3s ease",
+                    "&:hover": {
+                      color: "#48cb66",
+                    },
+                  }}
+                >
+                  About Us
+                </Typography>
+              </a>
+            </Link>
+            <Link href="/#testimonial" passHref legacyBehavior>
+              <a style={{ textDecoration: "none", color: "white" }}>
+                <Typography
+                  variant="body2"
+                  sx={{
+                    mb: 1,
+                    fontSize: { xs: "0.875rem", sm: ".8rem" },
+                    transition: "color 0.3s ease",
+                    "&:hover": {
+                      color: "#48cb66",
+                    },
+                  }}
+                >
+                  Testimonial
+                </Typography>
+              </a>
+            </Link>
+            <Link href="/#contact" passHref legacyBehavior>
+              <a style={{ textDecoration: "none", color: "white" }}>
+                <Typography
+                  variant="body2"
+                  sx={{
+                    mb: 1,
+                    fontSize: { xs: "0.875rem", sm: ".8rem" },
+                    transition: "color 0.3s ease",
+                    "&:hover": {
+                      color: "#48cb66",
+                    },
+                  }}
+                >
+                  Contact Us
+                </Typography>
+              </a>
+            </Link>
+          </Grid>
+
+          {/* Services */}
+          <Grid item xs={6} md={3}>
+            <Typography variant="h6" sx={{ mb: 1, fontWeight: "bold", fontSize: { xs: "1rem", sm: "1.2rem" } }}>
+              Our Services
+            </Typography>
+            <Link href="/sell-furniture" passHref legacyBehavior>
+              <a style={{ textDecoration: "none", color: "white" }}>
+                <Typography
+                  variant="body2"
+                  sx={{
+                    mb: 1,
+                    fontSize: { xs: "0.875rem", sm: ".8rem" },
+                    transition: "color 0.3s ease",
+                    "&:hover": {
+                      color: "#48cb66",
+                    },
+                  }}
+                >
+                  Sell your used furniture
+                </Typography>
+              </a>
+            </Link>
+            <Link href="/products" passHref legacyBehavior>
+              <a style={{ textDecoration: "none", color: "white" }}>
+                <Typography
+                  variant="body2"
+                  sx={{
+                    mb: 1,
+                    fontSize: { xs: "0.875rem", sm: ".8rem" },
+                    transition: "color 0.3s ease",
+                    "&:hover": {
+                      color: "#48cb66",
+                    },
+                  }}
+                >
+                  Buy renewed furniture
+                </Typography>
+              </a>
+            </Link>
+          </Grid>
+
+          {/* Find Us */}
+          <Grid item xs={12} sm={6} md={3}>
+            <Typography variant="h6" sx={{ mb: 1, fontWeight: "bold", fontSize: { xs: "1rem", sm: "1.2rem" } }}>
+              Find Us
+            </Typography>
+            <Typography
+              variant="body2"
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                mb: 1,
+                fontSize: { xs: "0.875rem", sm: ".8rem" },
+              }}
+            >
+              <PhoneIcon sx={{ mr: 1, fontSize: "1rem", color: "#48cb66" }} />
+              Phone: +251-953-431-572
+            </Typography>
+            <Typography
+              variant="body2"
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                mb: 1,
+                fontSize: { xs: "0.875rem", sm: ".8rem" },
+              }}
+            >
+              <EmailIcon sx={{ mr: 1, fontSize: "1rem", color: "#48cb66" }} />
+              Email: greencycle@gmail.com
+            </Typography>
+            <Typography
+              variant="body2"
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                mb: 1,
+                fontSize: { xs: "0.875rem", sm: ".8rem" },
+              }}
+            >
+              <LocationOnIcon sx={{ mr: 1, fontSize: "1rem", color: "#48cb66" }} />
+              Address: Addis Ababa, Ethiopia
+            </Typography>
+          </Grid>
+        </Grid>
+
+        <Divider sx={{ my: 2, borderColor: "#b3ffbf" }} />
+
+        <Box sx={{ display: "flex", justifyContent: { xs: "left", md: "center" }, alignItems: "center", py: 2 }}>
+          <Typography variant="body2" sx={{ mb: "1rem", fontSize: { xs: "0.65rem", sm: "0.875rem", md: ".8rem" }, color: "#e1e2e2" }}>
+            &copy; {getCurrentYear()} Green Cycle. All Rights Reserved. Powered by <Link href={'http://t.me/kedabdure'} style={{ color: "#48cb66" }} >Abdurehim</Link>
+          </Typography>
+        </Box>
+      </Container>
+
+      {/* Scroll to Top Button */}
+
+      {showScrollToTop && (
+        <IconButton
+          onClick={scrollToTop}
+          sx={{
+            position: "fixed",
+            bottom: { xs: 20, sm: 30 },
+            right: { xs: 20, sm: 30 },
+            color: "white",
+            bgcolor: "rgba(0, 0, 0, 0.5)",
+            zIndex: "1000 !important",
+            "&:hover": {
+              bgcolor: "#48cb66",
+              color: "#fff",
+            },
+          }}
+        >
           <ArrowUpwardIcon />
-        </ScrollToTopButton>
-      </StyledContainer>
-    </StyledBox>
+        </IconButton>
+      )}
+
+    </Box>
   );
 }
