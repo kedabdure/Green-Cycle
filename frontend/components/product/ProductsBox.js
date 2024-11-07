@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
-import Currency from "../Currency";
 import { primary } from "../../lib/colors";
-import { Box, Typography, Chip, Stack, Alert, Snackbar, IconButton } from "@mui/material";
+import { Box, Typography, Chip, Alert, Snackbar, IconButton } from "@mui/material";
 import { X as CloseIcon } from "phosphor-react";
 import Image from "next/image";
 import { useContext } from "react";
@@ -46,7 +45,7 @@ export default function ProductBox({ _id, title, price, images, badge }) {
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
-            width: { xs: '85%', sm: '100%'},
+            width: { xs: '75%', sm: '100%' },
             fontSize: '1rem',
             padding: '0.4rem 1rem',
           }}
@@ -76,7 +75,7 @@ export default function ProductBox({ _id, title, price, images, badge }) {
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'space-between',
-          p: 2,
+          p: 1,
           borderRadius: 2,
           zIndex: 1,
         }}
@@ -87,8 +86,7 @@ export default function ProductBox({ _id, title, price, images, badge }) {
           sx={{
             position: 'relative',
             bgcolor: '#fff',
-            p: 2,
-            height: '180px',
+            height: {xs: '130px', md: '180px'},
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -145,16 +143,17 @@ export default function ProductBox({ _id, title, price, images, badge }) {
                   fontWeight: 600,
                   fontSize: { xs: '0.9rem', md: '1.1rem' },
                   color: 'inherit',
-                  textDecoration: 'none',
-                  textOverflow: 'ellipsis',
-                  overflow: 'hidden',
-                  whiteSpace: 'nowrap',
+                  overflow: "hidden",
+                  whiteSpace: "nowrap",
+                  textOverflow: "ellipsis",
+                  maxWidth: '100%',
                   '&:hover': { textDecoration: 'underline' },
                 }}
               >
                 {title}
               </Typography>
             </Link>
+
             <Box mt={1}>
               <Image width={50} height={10} src="/assets/images/dot-underline.svg" alt="" />
             </Box>
@@ -175,17 +174,16 @@ export default function ProductBox({ _id, title, price, images, badge }) {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
-              mt: 1.5,
+              mt: { xs: '.5rem', md: "1.5rem" },
               borderRadius: '8px',
               width: '100%',
-              p: 1,
             }}
           >
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', flexWrap: "wrap", gap: 0.5 }}>
               <Typography variant="body1" fontSize="18px" fontWeight="600" component="span">
                 {formatPrice(price)}
               </Typography>
-              <Currency>ETB</Currency>
+              <Typography variant="subtitle2" sx={{ fontSize: ".5rem" }}>ETB</Typography>
             </Box>
 
             <Box
@@ -196,10 +194,8 @@ export default function ProductBox({ _id, title, price, images, badge }) {
                 justifyContent: 'center',
                 bgcolor: '#D4DCFB',
                 borderRadius: '36px',
-                width: '65px',
-                height: '34px',
-                padding: '8px',
-                fontSize: '0.9rem',
+                padding: { xs: '5px 6px', md: '8px 10px' },
+                fontSize: { xs: '.7rem', md: '0.9rem' },
                 cursor: 'pointer',
               }}
             >

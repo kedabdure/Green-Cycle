@@ -14,6 +14,7 @@ export default function TransformingScrap() {
         alignItems: 'center',
         overflow: 'hidden',
         position: 'relative',
+        zIndex: -2,
       }}
     >
       <Box

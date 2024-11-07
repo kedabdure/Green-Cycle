@@ -16,8 +16,8 @@ export default function Hero() {
       position: "relative",
       py: { xs: "90px", md: "130px" },
       px: { xs: "1rem", md: "2rem", lg: "5rem" },
-      zIndex: 1,
       overFlow: "hidden",
+      zIndex: 1,
     }}>
       <Box
         sx={{
@@ -29,7 +29,6 @@ export default function Hero() {
           position: "relative",
           flexDirection: { xs: "column", md: "row" },
           gap: { xs: "2rem", md: "3rem" },
-          zIndex: 1,
         }}
       >
         {/* Left Section */}
@@ -289,22 +288,21 @@ export default function Hero() {
         />
       </Box>
 
-      {/* Background SVG Bottom left */}
+      {/* Blobs SVG Bottom Left */}
       <Box
         sx={{
+          display: { xs: 'none', md: 'block' },
           position: 'absolute',
-          bottom: { xs: '-40%', md: '-50%' },
-          left: { xs: '-100%', md: '-70%' },
+          bottom: { xs: '0%', md: '-7%' },
+          left: { xs: '0%', md: '-15%' },
           zIndex: -1,
           overflow: 'hidden',
-          width: {xs: '150%', md: '100%'},
-          height: '100%',
-          opacity: 0.9,
-          overflow: 'hidden',
+          width: '30%',
+          height: '40%',
         }}
       >
         <Image
-          src="/assets/images/greenGradient.svg"
+          src="/assets/blobs/blob.svg"
           fill
           alt="Background SVG"
           layout="fill"

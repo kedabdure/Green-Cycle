@@ -81,7 +81,9 @@ export default function ProductSlide() {
         minHeight: "auto",
         py: { xs: "3rem", md: "4rem", lg: "5rem" },
         px: { xs: "1rem", md: "2rem", lg: "5rem" },
-        position: "relative"
+        backgroundColor: "#f5f5f5",
+        position: "relative",
+        zIndex: 1,
       }}
     >
       <Box sx={{ width: '100%' }}>
@@ -116,7 +118,7 @@ export default function ProductSlide() {
                 sx={{
                   fontSize: { xs: "1.6rem", md: "2rem", lg: "2rem" },
                   fontWeight: 700,
-                  maxWidth: {xs: "300px", md: "400px"},
+                  maxWidth: { xs: "300px", md: "400px" },
                   mb: 2,
                 }}
               >
@@ -170,12 +172,12 @@ export default function ProductSlide() {
                     textDecoration: 'none',
                     display: 'flex',
                     justifyContent: 'space-between',
-                    padding: {xs: ".5rem .1rem", sm: ".8rem", md: ".8rem"}
+                    padding: { xs: ".5rem .5rem", sm: ".8rem", md: ".8rem" }
                   }}
                 >
                   <Card
                     sx={{
-                      minHeight: {xs: '450px',sm: "470px", md: "490px"},
+                      minHeight: { xs: '460px', sm: "470px", md: "490px" },
                       display: "flex",
                       flexDirection: "column",
                       overflow: "hidden",
@@ -207,7 +209,7 @@ export default function ProductSlide() {
                       sx={{
                         textAlign: "left",
                         width: "100%",
-                        height:"100%",
+                        height: "100%",
                         py: { xs: '10px', md: '16px' },
                         px: { xs: '16px', sm: '24px', lg: '32px' },
                         display: 'flex',
@@ -228,7 +230,7 @@ export default function ProductSlide() {
                         sx={{
                           mt: 2,
                           mb: 1,
-                          fontSize: { xs: '1.3rem', sm: '1.2rem', lg: '2rem' },
+                          fontSize: { xs: '1.3rem', md: '1.1rem', lg: '1.2rem' },
                           overflow: "hidden",
                           fontWeight: '700',
                           whiteSpace: "nowrap",
@@ -321,6 +323,29 @@ export default function ProductSlide() {
           </Box>
         </Box>
       </Box >
+
+      {/* Blobs SVG Top Right */}
+      <Box
+        sx={{
+          display: { xs: 'none', md: 'block' },
+          position: 'absolute',
+          top: { xs: '0%', md: '-10%' },
+          right: { xs: '0%', md: '-10%' },
+          zIndex: -1,
+          overflow: 'hidden',
+          width: '30%',
+          height: '30%',
+        }}
+      >
+        <Image
+          src="/assets/blobs/blob.svg"
+          fill
+          alt="Background SVG"
+          layout="fill"
+          objectFit="cover"
+        />
+      </Box>
+
     </Box >
   );
 }

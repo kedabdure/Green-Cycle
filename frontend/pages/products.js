@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useState } from "react";
 import { Box, Typography, Button, Grid } from "@mui/material";
+import Image from "next/image";
 
 // Fetch function for products
 const fetchProducts = async () => {
@@ -40,8 +41,8 @@ export default function Products() {
       <Header />
       <Box
         sx={{
-          p: "120px 20px",
-          minHeight: "100vh",
+          py: { xs: '90px', md: '130px' },
+          px: { xs: '1rem', sm: "3rem", md: "4rem", lg: '5rem' },
           backgroundColor: "#EEF2FB",
           overflow: "hidden",
           position: "relative",
@@ -53,13 +54,13 @@ export default function Products() {
             <Typography variant="h4" fontWeight="600" gutterBottom sx={{ color: "#333" }}>
               Collection of Used Furniture
             </Typography>
-            <Typography variant="body1" sx={{ color: "#666", lineHeight: 1.5 }}>
+            <Typography variant="body1" sx={{ color: "#666", lineHeight: 1.5, fontSize: ".9rem", maxWidth: "450px" }}>
               Stay updated with our information and engaging blog posts about modern Furniture and Fashion in the industry.
             </Typography>
           </Box>
 
           {/* Category Filter Buttons */}
-          <Box sx={{ maxWidth: "800px", display: "flex", flexWrap: "wrap", gap: 2, mb: 5 }}>
+          <Box sx={{ maxWidth: "800px", display: "flex", flexWrap: "wrap", gap: 1, mb: 5 }}>
             <Button
               variant={!selectedCategory ? "contained" : "outlined"}
               onClick={() => setSelectedCategory(null)}
@@ -103,40 +104,36 @@ export default function Products() {
           {/* Products Grid */}
           <Grid container spacing={1}>
             {filteredProducts.map((product) => (
-              <Grid item xs={12} sm={4} md={4} lg={3} key={product._id}>
+              <Grid item xs={6} sm={4} md={4} lg={3} key={product._id}>
                 <ProductsBox {...product} />
               </Grid>
             ))}
           </Grid>
         </Box>
 
-        {/* Background Circles */}
+
+        {/* Background SVG Top Right */}
         <Box
           sx={{
-            position: "absolute",
-            width: 600,
-            height: 600,
-            borderRadius: "50%",
-            top: "1%",
-            right: "-25%",
+            position: 'absolute',
+            top: { xs: '-67%', md: '-50%' },
+            right: { xs: '0%', md: '-67%' },
             zIndex: -1,
-            background: "radial-gradient(circle, rgba(80, 227, 194, 0.4) 0%, rgba(80, 227, 194, 0) 70%)",
-            backdropFilter: "blur(360px)",
+            overflow: 'hidden',
+            width: '100%',
+            height: '100%',
           }}
-        />
-        <Box
-          sx={{
-            position: "absolute",
-            width: 700,
-            height: 700,
-            borderRadius: "50%",
-            bottom: "2%",
-            left: "-40%",
-            zIndex: -1,
-            background: "radial-gradient(circle, rgba(80, 227, 194, 0.4) 0%, rgba(80, 227, 194, 0) 70%)",
-            backdropFilter: "blur(360px)",
-          }}
-        />
+        >
+          <Image
+            src="/assets/images/greenGradient.svg"
+            fill
+            alt="Background SVG"
+            layout="fill"
+            objectFit="cover"
+          />
+        </Box>
+
+
       </Box >
       <Footer />
     </>
