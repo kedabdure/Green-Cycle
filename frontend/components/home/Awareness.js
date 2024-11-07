@@ -6,15 +6,14 @@ export default function TransformingScrap() {
     <Box
       sx={{
         width: '100%',
-        minHeight: '100vh',
-        py: { xs: '90px', md: '100px' },
+        minHeight: 'auto',
+        py: { xs: '50px', md: '100px' },
         px: { xs: '1rem', md: '2rem', lg: '5rem' },
-        backgroundColor: '#fff',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
         overflow: 'hidden',
-        zIndex: 1,
+        position: 'relative',
       }}
     >
       <Box
@@ -65,7 +64,7 @@ export default function TransformingScrap() {
           sx={{
             width: '100%',
             display: 'flex',
-            // gap: { xs: '20px', md: '54px' },
+            gap: { xs: '20px', md: '20px' },
             justifyContent: 'space-between',
             flexDirection: { xs: 'column', md: 'row' },
           }}

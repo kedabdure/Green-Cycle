@@ -21,7 +21,6 @@ const fetchProducts = async () => {
 export default function ProductSlide() {
   const router = Router;
   const theme = useTheme();
-  const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
   const sliderRef = useRef(null);
 
   const { data: productsData = [], error, isError } = useQuery({
@@ -38,110 +37,257 @@ export default function ProductSlide() {
     return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   }
 
-  const settings = {
+  var settings = {
     dots: false,
-    infinite: true,
-    speed: 500,
-    slidesToShow: isSmallScreen ? 1 : 3,
-    slidesToScroll: 1,
     arrows: false,
+    infinite: false,
+    speed: 500,
+    slidesToShow: 3,
+    slidesToScroll: 3,
+    initialSlide: 0,
+    responsive: [
+      {
+        breakpoint: 1024,
+        settings: {
+          slidesToShow: 3,
+          slidesToScroll: 3,
+          infinite: true,
+        }
+      },
+      {
+        breakpoint: 820,
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 2,
+          initialSlide: 2,
+          infinite: true,
+        }
+      },
+      {
+        breakpoint: 580,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1,
+          infinite: true,
+        }
+      }
+    ]
   };
 
   return (
-    <Box sx={{ width: "100%", minHeight: "931px", mx: "auto", p: 4, position: "relative" }}>
-      <Box sx={{ width: "100%", maxWidth: 1200, mx: "auto" }}>
-        <Box sx={{ textAlign: "left", display: "flex", alignItems: "center", justifyContent: "space-between", mb: 8, mx: 2 }}>
-          <Box>
-            <Typography variant="overline" color="grey.600" gutterBottom sx={{ mb: 3 }}>Reusability</Typography>
-            <Typography variant="h4" color="textPrimary">Unlock the Value of Used Materials</Typography>
-            <Typography variant="body1" color="textSecondary" sx={{ maxWidth: 600, mt: 1 }}>
-              Discover how Green Cycle helps you turn used materials into valuable resources. Explore tips, stories, and insights on sustainable reuse and recycling.
-            </Typography>
-          </Box>
-
-          <Button
-            onClick={() => router.push("/products")}
+    <Box
+      sx={{
+        width: "100%",
+        minHeight: "auto",
+        py: { xs: "3rem", md: "4rem", lg: "5rem" },
+        px: { xs: "1rem", md: "2rem", lg: "5rem" },
+        position: "relative"
+      }}
+    >
+      <Box sx={{ width: '100%' }}>
+        <Box sx={{ width: "100%", maxWidth: 1200, mx: "auto" }}>
+          <Box
             sx={{
-              backgroundColor: '#111',
-              padding: '10px 20px',
-              textTransform: 'capitalize',
-              textAlign: 'center',
-              display: 'flex',
-              gap: '5px',
-              color: '#fff',
-              borderRadius: '5px',
-              transition: 'all 0.3s ease',
-              '&:hover': {
-                backgroundColor: '#333',
-                transform: 'scale(1.03)',
-              }
+              textAlign: { xs: "center", md: "left" },
+              display: "flex",
+              flexDirection: { xs: "column", md: "row" },
+              alignItems: "center",
+              justifyContent: "space-between",
+              mb: 4,
             }}
-            color="primary">
-            Explore <ArrowRight size={18} />
-          </Button>
+          >
+            <Box
+              sx={{
+                textAlign: { xs: "center", md: "left" },
+                maxWidth: { xs: "100%", md: "600px" },
+                mx: { xs: "auto", md: 0 },
+                mb: { xs: 4, md: 0 },
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+              }}
+            >
+              <Typography variant="overline" color="grey.600" gutterBottom>
+                Furniture
+              </Typography>
+              <Typography
+                variant="h1"
+                color="textPrimary"
+                sx={{
+                  fontSize: { xs: "1.6rem", md: "2rem", lg: "2rem" },
+                  fontWeight: 700,
+                  maxWidth: {xs: "300px", md: "400px"},
+                  mb: 2,
+                }}
+              >
+                New Arrival Secondhand Furniture!
+              </Typography>
+              <Typography
+                variant="body1"
+                color="textSecondary"
+                sx={{
+                  fontSize: { xs: ".8rem", md: "1rem" },
+                  lineHeight: { xs: 1.4, md: 1.6 },
+                  maxWidth: { xs: "250px", md: "400px" },
+                  margin: { xs: '0 auto', md: '0' },
+                }}
+              >
+                Purchasing used furniture helps protect forests and the environment.              </Typography>
+            </Box>
+
+            <Button
+              onClick={() => router.push("/products")}
+              sx={{
+                backgroundColor: "#111",
+                padding: "10px 20px",
+                textTransform: "capitalize",
+                display: "flex",
+                gap: "5px",
+                color: "#fff",
+                borderRadius: "5px",
+                transition: "all 0.3s ease",
+                "&:hover": {
+                  backgroundColor: "#333",
+                  transform: "scale(1.03)",
+                },
+              }}
+            >
+              Show More <ArrowRight size={18} />
+            </Button>
+          </Box>
         </Box>
 
-        <Box sx={{ position: "relative", width: "100%", height: "613px" }}>
+        <Box sx={{ width: "100%", display: "flex", flexDirection: "column", gap: { xs: "2rem", md: "2rem" } }}>
           <Slider ref={sliderRef} {...settings}>
-            {productsData.length > 0 && productsData?.map((product) => (
-              <Box key={product._id} href={`/product/${product._id}`} component={Link} sx={{ textDecoration: 'none' }}>
-                <Card
+            {productsData.length > 0 &&
+              productsData.map((product) => (
+                <Box
+                  key={product._id}
+                  href={`/product/${product._id}`}
+                  component={Link}
                   sx={{
-                    width: { xs: "100%", sm: "370px" },
-                    maxHeight: "499px",
-                    display: "flex",
-                    flexDirection: "column",
-                    overflow: "hidden",
-                    boxShadow: 3,
-                    margin: "0 auto",
-                    borderRadius: 1,
-                    transition: "transform 0.3s ease",
-                    "&:hover": { transform: "scale(1.01)" },
+                    position: 'relative',
+                    textDecoration: 'none',
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    padding: {xs: ".5rem .1rem", sm: ".8rem", md: ".8rem"}
                   }}
                 >
-                  <Box sx={{ width: "100%", height: '254px !important', overflow: "hidden", borderRadius: 2 }}>
-                    <Image
-                      src={product?.images[0]}
-                      alt="Product Image"
-                      width={379}
-                      height={254}
-                      placeholder="blur"
-                      blurDataURL={`${product.images[0]}?tr=w-10,h-10,bl`}
-                      style={{ objectFit: "contain" }}
-                    />
-                  </Box>
-                  <CardContent sx={{ textAlign: "left", width: "100%", height: "auto", p: '32px' }}>
-                    <Typography variant="overline" color="gray" fontSize=".6rem" mb="1rem" gutterBottom>Furniture</Typography>
-                    <Typography variant="h5" color="textPrimary" sx={{ mb: 2, fontSize: '24px', fontWeight: '700', lineHeight: '25.38px' }}>
-                      {product.title}
-                    </Typography>
-                    <Typography variant="body2" color="textSecondary" sx={{ overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis" }}>
-                      {product.description}
-                    </Typography>
-                    <Typography variant="h6" color="grey.800" sx={{ mt: 2 }}>
-                      {formattedPrice(product.price.toFixed(2))} <Typography variant="body1" display="inline-block">ETB</Typography>
-                    </Typography>
-                    <Typography variant="caption" sx={{ mt: '1rem', textAlign: 'left' }} color="textSecondary">
-                      {dayjs(product.updatedAt).fromNow()}
-                    </Typography>
-                  </CardContent>
-                </Card>
-              </Box>
-            ))}
+                  <Card
+                    sx={{
+                      minHeight: {xs: '450px',sm: "470px", md: "490px"},
+                      display: "flex",
+                      flexDirection: "column",
+                      overflow: "hidden",
+                      boxShadow: 3,
+                      borderRadius: "5px",
+                      transition: "transform 0.3s ease",
+                      "&:hover": { transform: "scale(1.01)" },
+                    }}
+                  >
+                    <Box
+                      sx={{
+                        position: "relative",
+                        width: "100%",
+                        height: { xs: "235px", md: "250px" },
+                        overflow: "hidden",
+                      }}
+                    >
+                      <Image
+                        src={product?.images[0]}
+                        fill
+                        alt="Product photo"
+                        placeholder="blur"
+                        blurDataURL={`${product.images[0]}?tr=w-10,h-10,bl`}
+                        style={{ objectFit: "cover" }}
+                      />
+                    </Box>
+
+                    <CardContent
+                      sx={{
+                        textAlign: "left",
+                        width: "100%",
+                        height:"100%",
+                        py: { xs: '10px', md: '16px' },
+                        px: { xs: '16px', sm: '24px', lg: '32px' },
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'space-between',
+                      }}
+                    >
+                      <Typography
+                        variant="overline"
+                        color="gray"
+                        fontSize={{ xs: '.6rem', md: '.7rem' }}
+                      >
+                        Furniture
+                      </Typography>
+                      <Typography
+                        variant="h5"
+                        color="textPrimary"
+                        sx={{
+                          mt: 2,
+                          mb: 1,
+                          fontSize: { xs: '1.3rem', sm: '1.2rem', lg: '2rem' },
+                          overflow: "hidden",
+                          fontWeight: '700',
+                          whiteSpace: "nowrap",
+                          textOverflow: "ellipsis",
+                        }}
+                      >
+                        {product.title}
+                      </Typography>
+                      <Typography
+                        variant="body2"
+                        color="textSecondary"
+                        sx={{
+                          display: '-webkit-box',
+                          overflow: 'hidden',
+                          WebkitBoxOrient: 'vertical',
+                          WebkitLineClamp: 2,
+                          fontSize: { xs: '0.7rem', sm: '0.8rem', lg: '0.8rem' },
+                        }}
+                      >
+                        {product.description}
+                      </Typography>
+
+                      <Typography
+                        variant="h6"
+                        color="grey.800"
+                        sx={{
+                          mt: "1rem",
+                          fontSize: { xs: '1.15rem', sm: '1.1rem', lg: '1.2rem', fontWeight: "600" },
+                        }}
+                      >
+                        {formattedPrice(product.price)}{" "}
+                        <Typography variant="h6" fontSize=".7rem" display="inline-block">
+                          ETB
+                        </Typography>
+                      </Typography>
+                      <Typography
+                        variant="caption"
+                        sx={{
+                          mt: '1rem',
+                          textAlign: 'left',
+                          fontSize: { xs: '0.6rem', sm: '0.7rem', lg: '0.8rem' },
+                        }}
+                        color="textSecondary"
+                      >
+                        {dayjs(product.updatedAt).fromNow()}
+                      </Typography>
+                    </CardContent>
+                  </Card>
+                </Box>
+              ))}
           </Slider>
 
 
           {/* Custom Arrow Controls */}
           <Box
-            position="absolute"
-            right="0"
-            bottom="0"
             sx={{
               width: '100%',
               height: 'auto',
               display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'flex-end',
               gap: 2,
               paddingRight: '1rem',
             }}
@@ -152,7 +298,8 @@ export default function ProductSlide() {
                 minWidth: "unset",
                 backgroundColor: theme.palette.background.default,
                 borderRadius: "50%",
-                p: 1,
+                border: "1px solid #aaa",
+                p: "10px",
                 "&:hover": { backgroundColor: theme.palette.action.hover },
               }}
             >
@@ -161,10 +308,11 @@ export default function ProductSlide() {
             <Button
               onClick={() => sliderRef.current.slickNext()}
               sx={{
+                border: "1px solid #aaa",
                 minWidth: "unset",
                 backgroundColor: theme.palette.background.default,
                 borderRadius: "50%",
-                p: 1,
+                p: "10px",
                 "&:hover": { backgroundColor: theme.palette.action.hover },
               }}
             >

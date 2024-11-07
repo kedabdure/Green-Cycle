@@ -13,7 +13,7 @@ const PageLoader = () => (
       position: 'fixed',
       top: 0,
       left: 0,
-      zIndex: 1000,
+      zIndex: 1000000,
     }}
   >
     <CircularProgress size={50} thickness={3} sx={{ color: 'white'}}/>

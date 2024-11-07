@@ -17,6 +17,7 @@ export default function Hero() {
       py: { xs: "90px", md: "130px" },
       px: { xs: "1rem", md: "2rem", lg: "5rem" },
       zIndex: 1,
+      overFlow: "hidden",
     }}>
       <Box
         sx={{
@@ -94,7 +95,7 @@ export default function Hero() {
             sx={{
               display: { xs: 'none', sm: 'flex' },
               justifyContent: { xs: "center", md: "space-between" },
-              gap: { xs: "0.5rem", md: "1rem" },
+              gap: { xs: "0.5rem", md: ".5rem" },
               width: { xs: "100%", sm: "auto" },
               flexDirection: { xs: "column", sm: "row" },
               alignItems: "center",

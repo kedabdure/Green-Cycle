@@ -9,8 +9,7 @@ export default function EmptyCartPage() {
       display="flex"
       justifyContent="center"
       alignItems="center"
-      height="100vh"
-      padding={2}
+      sx={{ mt: { xs: '10rem', md: '6rem' } }}
     >
       <Paper
         elevation={6}
@@ -53,9 +52,7 @@ export default function EmptyCartPage() {
               textTransform: "none",
               fontSize: "1rem",
               paddingX: 4,
-              boxShadow: `0px 4px 10px rgba(0, 123, 255, 0.3)`,
               ":hover": {
-                boxShadow: `0px 6px 15px rgba(0, 123, 255, 0.4)`,
                 opacity: 0.9,
               },
             }}

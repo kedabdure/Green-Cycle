@@ -58,42 +58,59 @@ export default function Cart() {
   return (
     <>
       <Header />
-      <Box p={"5rem"} sx={{ p: { xs: '5rem 1rem', md: '5rem' }, position: 'relative', minHeight: '100vh' }}>
+      <Box p={"5rem"} sx={{ p: { xs: '5rem 1rem', md: '5rem' }, position: 'relative', minHeight: '100vh', overflow: 'hidden' }}>
         {!cartProducts?.length && (
-          <>
+          <Box sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
             <EmptyCartPage />
-          </>
+          </Box>
         )}
 
-        {/* Background Circles */}
+        {/* Background SVG Top Right */}
         <Box
           sx={{
-            position: "absolute",
-            width: 600,
-            height: 600,
-            borderRadius: "50%",
-            top: { xs: "-30%", md: "-30%" },
-            right: { xs: "-60%", md: "-30%" },
+            position: 'absolute',
+            top: { xs: '-67%', md: '-50%' },
+            right: { xs: '0%', md: '-67%' },
             zIndex: -1,
-            background: "radial-gradient(circle, rgba(80, 227, 194, 0.4) 0%, rgba(80, 227, 194, 0) 70%)",
-            backdropFilter: "blur(360px)",
+            overflow: 'hidden',
+            width: '100%',
+            height: '100%',
           }}
-        />
+        >
+          <Image
+            src="/assets/images/greenGradient.svg"
+            fill
+            alt="Background SVG"
+            layout="fill"
+            objectFit="cover"
+          />
+        </Box>
 
+        {/* Background SVG Bottom Left */}
         <Box
           sx={{
-            position: "absolute",
-            width: { xs: "400px", md: "600px" },
-            height: { xs: "400px", md: "600px" },
-            borderRadius: "50%",
-            top: { xs: "73%", md: "30%" },
-            left: { xs: "-60%", md: "-30%" },
+            display: { xs: 'block', md: 'none' },
+            position: 'absolute',
+            bottom: { xs: '-67%'},
+            left: { xs: '10%'},
             zIndex: -1,
-            background: "radial-gradient(circle, rgba(80, 227, 194, 0.4) 0%, rgba(80, 227, 194, 0) 70%)",
-            backdropFilter: "blur(360px)",
+            overflow: 'hidden',
+            width: '150%',
+            height: '100%',
           }}
-        />
-
+        >
+          <Image
+            src="/assets/images/greenGradient.svg"
+            fill
+            alt="Background SVG"
+            layout="fill"
+            objectFit="cover"
+          />
+        </Box>
 
         {cartProducts?.length > 0 && (<Typography variant="h4" sx={{ fontSize: '34px', fontWeight: '700', m: '3rem 0' }}>Your Shopping</Typography>)}
         <Box>
