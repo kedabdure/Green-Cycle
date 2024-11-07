@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import styled, { keyframes } from "styled-components";
 import { useContext, useState, useEffect } from "react";
