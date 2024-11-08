@@ -2,6 +2,7 @@ import React from "react";
 import { Box, Typography, Button } from "@mui/material";
 import Image from "next/image";
 import { useRouter } from "next/router";
+import ClientSlider from "./QuoteSlider";
 
 export default function Hero() {
   const router = useRouter();
@@ -14,7 +15,7 @@ export default function Hero() {
       alignItems: "center",
       justifyContent: "center",
       position: "relative",
-      py: { xs: "90px", md: "130px" },
+      py: { xs: "90px", md: "120px" },
       px: { xs: "1rem", md: "2rem", lg: "5rem" },
       overFlow: "hidden",
       zIndex: 1,
@@ -288,26 +289,14 @@ export default function Hero() {
         />
       </Box>
 
-      {/* Blobs SVG Bottom Left */}
-      <Box
-        sx={{
-          display: { xs: 'none', md: 'block' },
-          position: 'absolute',
-          bottom: { xs: '0%', md: '-7%' },
-          left: { xs: '0%', md: '-15%' },
-          zIndex: -1,
-          overflow: 'hidden',
-          width: '30%',
-          height: '40%',
-        }}
-      >
-        <Image
-          src="/assets/blobs/blob.svg"
-          fill
-          alt="Background SVG"
-          layout="fill"
-          objectFit="cover"
-        />
+      {/* Quote Slider */}
+      <Box sx={{
+        width: '100%',
+        position: 'absolute',
+        bottom: { xs: '0', md: '0%' },
+        left: 0,
+      }}>
+        <ClientSlider />
       </Box>
     </Box>
   );
