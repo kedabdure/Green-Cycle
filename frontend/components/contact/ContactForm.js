@@ -3,10 +3,11 @@ import { Grid, Typography, Box, Paper, Container, TextField, Alert, Button, Circ
 import PhoneInput from 'react-phone-number-input';
 import 'react-phone-number-input/style.css';
 import Swal from 'sweetalert2';
-import emailjs from '@emailjs/browser';
 import Image from 'next/image';
 import Map from '../map/MyMap';
+import { sendEmail } from '../../lib/sendEmail';
 import { PhoneCall } from 'phosphor-react';
+import { Phone, MapPin, Envelope } from "phosphor-react";
 
 
 const initialValues = {
@@ -38,6 +39,9 @@ const ContactUsSection = () => {
       errors.email = 'Email is required!';
     } else if (!emailRegex.test(values.email)) {
       errors.email = 'Invalid email format!';
+    }
+    if (!values.message) {
+      errors.message = 'Message is required!';
     }
     if (!values.phone) {
       errors.phone = 'Phone number is required!';
@@ -71,12 +75,8 @@ const ContactUsSection = () => {
       try {
         setIsSubmitting(true);
 
-        const serviceId = process.env.REACT_APP_SERVICE_ID;
-        const templateId = process.env.REACT_APP_TEMPLATE_ID;
-        const publicKey = process.env.REACT_APP_PUBLIC_KEY;
-
         const templateParams = {
-          recipient_name: 'Nexa Addis',
+          recipient_name: 'Green Cycle',
           from_email: formValues.email,
           first_name: formValues.firstName,
           last_name: formValues.lastName,
@@ -84,29 +84,36 @@ const ContactUsSection = () => {
           message: formValues.message,
         };
 
-        // Sending the email
-        const response = await emailjs.send(serviceId, templateId, templateParams, publicKey);
-        setFormValues(initialValues);
+        const res = await sendEmail(templateParams);
 
-        // Display success message
-        Swal.fire({
-          title: 'Good job!',
-          text: 'Thank you for reaching out! We will contact you soon.',
-          icon: 'success',
-          confirmButtonColor: '#fb8122',
-          background: '#f7f7f7',
-        });
+        if (res) {
+          setFormValues(initialValues);
 
-        console.log('Email successfully sent:', response);
+          Swal.fire({
+            title: 'Good job!',
+            text: 'Thank you for reaching out! We will contact you soon.',
+            icon: 'success',
+            confirmButtonColor: '#fb8122',
+            background: '#f7f7f7',
+          });
+
+          console.log('Email successfully sent');
+        } else {
+          Swal.fire({
+            title: 'Error!',
+            text: 'Something went wrong, please try again later.',
+            icon: 'error',
+            confirmButtonColor: '#48cb66',
+          });
+        }
       } catch (error) {
         console.error('Error occurred while submitting the form:', error);
 
-        // Display error message
         Swal.fire({
           title: 'Error!',
-          text: 'Something went wrong, please try again later.',
+          text: 'Oops! Something went wrong, please try again later.',
           icon: 'error',
-          confirmButtonColor: '#fb8122',
+          confirmButtonColor: '#48cb66',
         });
       } finally {
         setIsSubmitting(false);
@@ -116,7 +123,7 @@ const ContactUsSection = () => {
 
 
   return (
-    <Box sx={{ backgroundColor: '#fff', p: {xs: "6rem 0 1rem 0", md: "8rem 0"}, position: 'relative' }}>
+    <Box sx={{ backgroundColor: '#fff', p: { xs: "6rem 0 1rem 0", md: "8rem 0 5rem 0" }, position: 'relative' }}>
       <Container>
         <Grid container spacing={4}>
           {/* Left Image Section */}
@@ -126,7 +133,7 @@ const ContactUsSection = () => {
                 position: 'relative',
                 width: '100%',
                 maxWidth: { xs: '500px', md: '600px' },
-                height: { xs: '300px', md: '500px' },
+                height: { xs: '400px', md: '500px' },
               }}
             >
               <Image
@@ -139,7 +146,6 @@ const ContactUsSection = () => {
               />
             </Box>
           </Grid>
-
 
           {/* Right Contact Form Section */}
           <Grid item xs={12} md={6}>
@@ -260,8 +266,13 @@ const ContactUsSection = () => {
                   name="message"
                   placeholder="my project is about..."
                   value={formValues.message}
-                  onChange={(e) => setFormValues({ ...formValues, message: e.target.value })}
+                  onChange={handleChange}
                 />
+                {formErrors.message && (
+                  <Alert severity="error" sx={{ mt: 1, p: 0, backgroundColor: 'transparent', color: '#f44336' }}>
+                    {formErrors.message}
+                  </Alert>
+                )}
               </Grid>
 
               <Grid item xs={12} sx={{ textAlign: { xs: 'left', md: 'left' } }}>
@@ -290,122 +301,121 @@ const ContactUsSection = () => {
           </Grid>
         </Grid>
 
-        <Grid container spacing={4} alignItems="center">
-
+        <Grid container spacing={{ xs: 2, sm: 4 }} alignItems="center">
           {/* Contact Information */}
           <Grid item xs={12} md={6}>
-            <Paper
+            <Box
               sx={{
-                my: {xs: 5, md: 0},
-                px: { xs: 3, md: 5 },
-                py: { xs: "3rem", md: 5 },
-                height: '100%',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
+                mt: { xs: 4, md: 0 },
+                px: { xs: 3, md: 4 },
+                py: { xs: 2, md: 4 },
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
                 borderRadius: 2,
-                boxShadow: 3,
-                backgroundColor: '#ffffff',
-                lineHeight: 1.8,
+                boxShadow: 1,
+                backgroundColor: "#ffffff",
+                textAlign: "center",
               }}
             >
-              <PhoneCall size={68} color="#111" weight="bold" />
+              <Phone size={68} color="green" />
               <Typography
                 variant="h4"
                 color="#111"
                 sx={{
-                  fontWeight: 'bold',
-                  fontSize: { xs: '1.4rem', sm: '1.75rem', md: '2rem' },
-                  my: 1,
-                  textAlign: 'center',
+                  fontWeight: "bold",
+                  fontSize: { xs: "1.4rem", sm: "1.8rem", md: "1.9rem" },
+                  mt: 1,
                 }}
               >
-                Call Us Directly!
+                Contact Us!
               </Typography>
-              <Box sx={{ textAlign: 'center' }}>
-                <Typography
-                  variant="body1"
-                  color="textSecondary"
+
+              <Typography
+                variant="body1"
+                color="textSecondary"
+                sx={{
+                  fontSize: { xs: "0.875rem", sm: "1rem" },
+                  m: '1rem 0 2rem 0',
+                  px: { xs: 1, sm: 3 },
+                  maxWidth: { xs: "100%", sm: "80%" },
+                  fontWeight: "600",
+                }}
+              >
+                Have questions? Reach out, and we’ll be happy to assist.
+              </Typography>
+
+              <Box sx={{ textAlign: "left", width: {xs: "80%", md: "40%"} }}>
+                <Box
                   sx={{
-                    fontSize: { xs: '0.875rem', md: '1rem' },
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "left",
+                    mb: 2,
+                  }}
+                >
+                  <MapPin size={24} color="#111" weight="fill" style={{ marginRight: 8 }} />
+                  <Typography variant="body1" color="textSecondary">
+                    Garment, Addis Ababa
+                  </Typography>
+                </Box>
+
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "left",
+                    mb: 2,
+                  }}
+                >
+                  <Envelope size={24} color="#111" weight="fill" style={{ marginRight: 8 }} />
+                  <Typography variant="body1" color="textSecondary">
+                    info@greencycle.com
+                  </Typography>
+                </Box>
+
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "left",
                     mb: 3,
                   }}
                 >
-                  We’re here to help with any questions about buying, selling, or reusing furniture and wood materials. Our team is ready to assist you every step of the way for a smooth and rewarding experience.
-                </Typography>
-
-                <Typography
-                  variant="h6"
-                  color="green"
-                  sx={{
-                    fontSize: { xs: '1.2rem', sm: '1.5rem', md: '1.5rem' },
-                    fontWeight: 'bold',
-                    mb: 1,
-                  }}
-                >
-                  +251-953-431-572
-                </Typography>
+                  <Phone size={24} color="#111" weight="fill" style={{ marginRight: 8 }} />
+                  <Typography variant="body1" color="textSecondary">
+                    +251-953-431-572
+                  </Typography>
+                </Box>
               </Box>
-            </Paper>
+            </Box>
           </Grid>
 
-          {/* Map */}
+          {/* Map Section */}
           <Grid item xs={12} md={6}>
-            <Box sx={{ my: 7, px: { xs: 1, md: 2 } }}>
-              <Typography
-                variant="h4"
-                color="#111"
+            <Box
+              sx={{
+                my: { xs: 1, sm: 6, md: 7 },
+                px: { xs: 1, md: 2 },
+              }}
+            >
+              <Box
                 sx={{
-                  fontWeight: 'bold',
-                  fontSize: { xs: '1.6rem', sm: '1.75rem', md: '2rem' },
-                  mb: 2,
-                  textAlign: 'left',
+                  mt: 1,
+                  borderRadius: 1,
+                  overflow: "hidden",
+                  boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
+                  width: "100%",
+                  height: { xs: 200, sm: 300, md: 400 },
                 }}
               >
-                Or Visit Us at Our Office
-              </Typography>
-              <Box sx={{ textAlign: { xs: 'left', md: 'left' }, mb: 3 }}>
-                <Typography
-                  variant="body1"
-                  color="textSecondary"
-                  sx={{
-                    fontSize: { xs: '0.875rem', md: '1rem' },
-                    mb: 1,
-                    fontWeight: 500,
-                  }}
-                >
-                  <strong>Office Address:</strong> Garment, Addis Ababa
-                </Typography>
-                <Typography
-                  variant="body1"
-                  color="textSecondary"
-                  sx={{
-                    fontSize: { xs: '0.875rem', md: '1rem' },
-                    mb: 1,
-                    fontWeight: 500,
-                  }}
-                >
-                  <strong>Email:</strong> info@greencycle.com
-                </Typography>
-                <Typography
-                  variant="body1"
-                  color="textSecondary"
-                  sx={{
-                    fontSize: { xs: '0.875rem', md: '1rem' },
-                    mb: 3,
-                    fontWeight: 500,
-                  }}
-                >
-                  <strong>Phone:</strong> +251-953-431-572
-                </Typography>
-              </Box>
-              <Box sx={{ mt: 1, borderRadius: 2, overflow: 'hidden', boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)' }}>
                 <Map />
               </Box>
             </Box>
           </Grid>
         </Grid>
+
       </Container>
     </Box>
   );
