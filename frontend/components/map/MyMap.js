@@ -9,9 +9,9 @@ const MyGoogleMap = () => {
       title="Google Maps Embed"
       sx={{
         width: '100%',
-        height: { xs: '300px', sm: '400px', md: '450px' },
+        height: '100%',
         border: 0,
-        borderRadius: 2,
+        borderRadius: 1,
         boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
       }}
       allowFullScreen
