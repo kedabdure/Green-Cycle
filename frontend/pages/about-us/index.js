@@ -12,7 +12,7 @@ export default function AboutUs() {
   return (
     <div style={{ position: "relative" }}>
       <Header />
-      <HeroSection />
+      {/* <HeroSection /> */}
       <AboutUsContent />
       <Footer />
     </div>
