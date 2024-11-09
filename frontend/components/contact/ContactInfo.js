@@ -37,10 +37,29 @@ export default function ContactInfo() {
 
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: { xs: '1rem', md: '2rem' } }}>
         <Box sx={{ maxWidth: '350px', padding: '32px', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-          <Typography variant='h4' sx={{ fontSize: '1.1rem', fontWeight: '700', }}>
+          <Typography
+            variant="h4"
+            sx={{
+              mb: '.5rem',
+              fontSize: '1.1rem',
+              fontWeight: '700',
+              position: 'relative',
+              display: 'inline-block',
+              '&::after': {
+                content: '""',
+                display: 'block',
+                width: '10%',
+                borderBottom: '3px solid #111',
+                position: 'absolute',
+                bottom: '-8px',
+                borderRadius: '36px',
+                left: 0,
+              },
+            }}
+          >
             Email Address
-            <span style={{ borderBottom: '2px solid #111' }}></span>
           </Typography>
+
           <Typography variant='h4' sx={{ fontSize: '1.1rem', fontWeight: '700', }}>
             info@greencycle.com
           </Typography>
@@ -52,9 +71,27 @@ export default function ContactInfo() {
 
         <Box sx={{ maxWidth: '350px', display: 'flex', alignItems: 'center', gap: { xs: '1rem', md: '1rem' } }}>
           <Box sx={{ padding: '32px', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-            <Typography variant='h4' sx={{ fontSize: '1.2rem', fontWeight: '700', }}>
+            <Typography
+              variant="h4"
+              sx={{
+                mb: '.5rem',
+                fontSize: '1.1rem',
+                fontWeight: '700',
+                position: 'relative',
+                display: 'inline-block',
+                '&::after': {
+                  content: '""',
+                  display: 'block',
+                  width: '10%',
+                  borderBottom: '3px solid #111',
+                  position: 'absolute',
+                  bottom: '-8px',
+                  borderRadius: '36px',
+                  left: 0,
+                },
+              }}
+            >
               Number
-              <span style={{ borderBottom: '2px solid #111' }}></span>
             </Typography>
             <Typography variant='h4' sx={{ fontSize: '1.2rem', fontWeight: '700', }}>
               +251-953-431-572
