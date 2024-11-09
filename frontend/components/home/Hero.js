@@ -102,7 +102,6 @@ export default function Hero() {
             }}
           >
             <Button
-              variant="contained"
               onClick={() => router.push("/sell-furniture")}
               sx={{
                 padding: { xs: "0.4rem 1.5rem", md: "0.6rem 2rem" },
@@ -228,7 +227,6 @@ export default function Hero() {
           }}
         >
           <Button
-            variant="contained"
             onClick={() => router.push("/sell-furniture")}
             sx={{
               padding: { xs: "0.6rem 1.6rem", md: "0.6rem 2rem" },

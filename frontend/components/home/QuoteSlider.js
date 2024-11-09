@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from 'react';
 import Slider from 'react-slick';
-import { Box, Typography, Container } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import {
   Tree,
   Leaf,
