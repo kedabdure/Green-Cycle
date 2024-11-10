@@ -58,7 +58,7 @@ export default function Cart() {
   return (
     <>
       <Header />
-      <Box p={"5rem"} sx={{ p: { xs: '5rem 1rem', md: '5rem' }, position: 'relative', minHeight: '100vh', overflow: 'hidden' }}>
+      <Box p={"5rem"} sx={{ p: { xs: '5rem 1rem', md: '5rem' }, position: 'relative', overflow: 'hidden' }}>
         {!cartProducts?.length && (
           <Box sx={{
             display: 'flex',
@@ -248,7 +248,7 @@ export default function Cart() {
 
               <Box
                 sx={{
-                  maxWidth: '330px',
+                  maxWidth: {xs: '100%', md: '330px'},
                   width: '100%',
                   maxHeight: '349px',
                   display: 'flex',

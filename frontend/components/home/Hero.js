@@ -279,7 +279,7 @@ export default function Hero() {
         }}
       >
         <Image
-          src="/assets/images/greenGradient.svg"
+          src="/assets/blobs/small-green-gradient.svg"
           fill
           alt="Background SVG"
           layout="fill"
