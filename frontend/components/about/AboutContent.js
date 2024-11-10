@@ -9,36 +9,36 @@ const AboutContent = () => {
       sx={{
         width: '100%',
         height: 'auto',
-        pt: { xs: '2rem', sm: '4rem', md: '8rem' },
-        pb: { xs: '2rem', sm: '4rem', md: '12rem' },
+        pt: { xs: '6rem', sm: '4rem', md: '8rem' },
+        pb: { xs: '6rem', sm: '4rem', md: '12rem' },
         px: { xs: '1.5rem', sm: '3rem', md: '5rem' },
         display: 'flex',
+        flexDirection: { xs: 'column', md: 'row' },
         justifyContent: 'space-between',
         alignItems: 'center',
-        flexDirection: { xs: 'column', md: 'row' },
         gap: { xs: '2rem', md: '4rem' },
       }}
     >
       {/* Text Content */}
-      <Box sx={{ flex: 1, textAlign: { xs: 'center', md: 'left' } }}>
+      <Box sx={{ flex: 1, textAlign: { xs: 'center', md: 'left' }, order: { xs: '2', md: '1' } }} >
         <Typography variant="h6" sx={{
           fontSize: { xs: '.7rem', sm: '.8rem', md: '1.2rem' },
           fontWeight: '600',
           color: '#2c8e41',
-          mb: { xs: '0.5rem', md: '2rem' },
+          mb: { xs: '1rem', md: '2rem' },
         }}>
-          -- Who We Are
+          -- Who We Are --
         </Typography>
         <Typography
           variant="h1"
           sx={{
-            fontSize: { xs: '1.75rem', sm: '2rem', md: '2.3rem' },
+            fontSize: { xs: '1.35rem', sm: '2rem', md: '2.3rem' },
             fontWeight: 'bold',
-            mb: { xs: '1rem', md: '1.5rem' },
+            mb: { xs: '1.2rem', md: '1.5rem' },
             lineHeight: 1.3,
           }}
         >
-          Repurposing Used furniture to Preserve Trees
+          Repurposing Used Furniture to Preserve Trees
         </Typography>
         <Typography
           variant="body1"
@@ -67,8 +67,8 @@ const AboutContent = () => {
             textTransform: "capitalize",
             border: "1px solid #34A853",
             fontWeight: "600",
-            px: 4,
-            py: 1.5,
+            px: { xs: 3, md: 4 },
+            py: { xs: 1.2, md: 1.5 },
             fontSize: { xs: "0.875rem", sm: "1rem" },
             backgroundColor: "#34A853",
             color: "#fff",
@@ -79,7 +79,7 @@ const AboutContent = () => {
             },
           }}
         >
-          Let's Get Started
+          Let's Talk
         </Button>
       </Box>
 
@@ -91,19 +91,22 @@ const AboutContent = () => {
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
-          maxWidth: { xs: '100%', md: '50%' },
+          width: '100%',
+          maxWidth: { xs: '300px', sm: '400px', md: '500px' },
+          order: { xs: '1', md: '2' },
+          mb: { xs: '2rem', md: '0' },
         }}
       >
         <Box
           sx={{
-            width: { xs: '100%', sm: '80%', md: '90%' },
-            height: { xs: '300px', sm: '400px', md: '600px' },
+            width: { xs: '100%' },
+            height: { xs: '350px', sm: '400px', md: '500px', lg: '550px' },
             position: 'relative',
           }}
         >
           <Image
             src="/assets/images/about-image.jpg"
-            alt="green cycle"
+            alt="Green Cycle"
             fill
             sizes="100%"
             placeholder="blur"
@@ -112,15 +115,15 @@ const AboutContent = () => {
           />
           <Box
             sx={{
-              display: { xs: 'none', sm: 'flex' },
+              display: 'flex',
               flexDirection: 'column',
               justifyContent: 'center',
               alignItems: 'center',
               position: 'absolute',
-              bottom: '-20%',
-              left: '-30%',
+              bottom: { xs: '-15%', md: "-20%" },
+              left: { xs: '-6%', md: '-25%' },
               width: { xs: '150px', sm: '180px', md: '300px' },
-              height: { xs: '150px', sm: '180px', md: '250px' },
+              height: { xs: '140px', sm: '180px', md: '230px' },
               backgroundColor: '#d9f8e5',
               borderRadius: '16px',
               boxShadow: '0 8px 20px rgba(0, 0, 0, 0.15)',
@@ -130,14 +133,14 @@ const AboutContent = () => {
               overflow: 'hidden',
             }}
           >
-            <LightbulbIcon size={36} color="#fb8122" style={{ marginBottom: '1rem' }} /> {/* Phosphor Icon for visual appeal */}
+            <LightbulbIcon size={32} color="#fb8122" style={{ marginBottom: { xs: '.5rem', md: '1rem' } }} />
             <Typography
               variant="h2"
               sx={{
                 fontWeight: '700',
                 color: '#2e2e2e',
-                fontSize: { xs: '1rem', sm: '1.2rem', md: '1.6rem' },
-                mb: '0.8rem',
+                fontSize: { xs: '.7rem', sm: '1.2rem', md: '1.6rem' },
+                mb: { xs: '.4rem', md: '0.8rem' },
               }}
             >
               Join the Green Movement
@@ -146,7 +149,7 @@ const AboutContent = () => {
               variant="body2"
               sx={{
                 color: '#555',
-                fontSize: { xs: '0.75rem', sm: '0.875rem' },
+                fontSize: { xs: '0.5rem', sm: '0.875rem' },
                 lineHeight: 1.4,
               }}
             >
