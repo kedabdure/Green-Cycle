@@ -87,7 +87,7 @@ export default function Hero() {
                 mb: { xs: "2rem", md: ".6rem" },
               }}
             >
-              Support Ethiopia’s Green Legacy with sustainable furniture choices.
+              Support Ethiopia’s Green Legacy with sustainable furniture choices—embrace eco-friendly materials and reduce waste with every purchase.
             </Typography>
           </Box>
 
