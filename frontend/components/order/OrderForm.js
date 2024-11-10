@@ -115,7 +115,7 @@ export default function OrderForm({ onFormSubmit, paymentMethod }) {
           </FormControl>
         </Box>
 
-        <Box sx={{ display: 'flex', flexDirection: { md: 'column', lg: 'row' }, gap: 1.5 }}>
+        <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, gap: 1.5 }}>
           <FormControl fullWidth>
             <PhoneInput
               placeholder="Enter phone number"

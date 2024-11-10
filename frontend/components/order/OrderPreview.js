@@ -156,15 +156,15 @@ export default function OrderPreview() {
       <Box
         sx={{
           width: "100%",
-          maxWidth: "348px",
+          maxWidth: {xs: "100%", md: "348px"},
           alignSelf: "flex-end",
           display: "flex",
           flexDirection: "column",
           gap: "1rem",
         }}>
         <Box display="flex" justifyContent="space-between">
-          <Typography variant="h5" fontSize="28px" fontWeight="700">Total</Typography>
-          <Typography variant="h5" fontSize="28px" fontWeight="700">
+          <Typography variant="h5" sx={{ fontSize: { xs: "22px", md: "28px" } }} fontWeight="700">Total</Typography>
+          <Typography variant="h5" sx={{ fontSize: { xs: "22px", md: "28px" } }} fontWeight="700">
             {formatPrice(total)} <span style={{ fontSize: '18px', fontWeight: '700', color: '#444' }}>ETB</span>
           </Typography>
         </Box>

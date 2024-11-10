@@ -7,7 +7,7 @@ import { Box, Typography, Container, Stack, Paper, Radio, RadioGroup, FormContro
 import OrderPreview from '../components/order/OrderPreview';
 import { CartContext } from '../components/cart/CartContext';
 import { useSession } from 'next-auth/react';
-import { useRouter} from 'next/router';
+import { useRouter } from 'next/router';
 import axios from 'axios';
 
 const CustomRadio = styled(Radio)(({ theme }) => ({
@@ -80,37 +80,51 @@ export default function Checkout() {
           minHeight: '100vh',
           py: '130px',
           position: 'relative',
+          overflow: 'hidden',
         }}
       >
-
-        {/* Blobs */}
+        {/* Background SVG Top Right */}
         <Box
           sx={{
-            position: "absolute",
-            width: 600,
-            height: 600,
-            borderRadius: "50%",
-            top: "-20%",
-            right: "-40%",
+            position: 'absolute',
+            top: { xs: '-67%', md: '-50%' },
+            right: { xs: '0%', md: '-67%' },
             zIndex: -1,
-            background: "radial-gradient(circle, rgba(0, 255, 123, 0.4) 0%, rgba(0, 255, 123, 0) 60%)", // Changed to greenish
-            backdropFilter: "blur(360px)",
+            overflow: 'hidden',
+            width: '100%',
+            height: '100%',
           }}
-        />
+        >
+          <Image
+            src="/assets/images/greenGradient.svg"
+            fill
+            alt="Background SVG"
+            layout="fill"
+            objectFit="cover"
+          />
+        </Box>
 
+        {/* Background SVG Bottom Left */}
         <Box
           sx={{
-            position: "absolute",
-            width: 600,
-            height: 600,
-            borderRadius: "50%",
-            bottom: "-8%",
-            left: "-43%",
+            display: { xs: 'block', md: 'none' },
+            position: 'absolute',
+            bottom: { xs: '-67%' },
+            left: { xs: '10%' },
             zIndex: -1,
-            background: "radial-gradient(circle, rgba(0, 255, 123, 0.4) 0%, rgba(0, 255, 123, 0) 60%)", // Changed to greenish
-            backdropFilter: "blur(360px)",
+            overflow: 'hidden',
+            width: '150%',
+            height: '100%',
           }}
-        />
+        >
+          <Image
+            src="/assets/images/greenGradient.svg"
+            fill
+            alt="Background SVG"
+            layout="fill"
+            objectFit="cover"
+          />
+        </Box>
 
         <Typography variant="h5" sx={{ mb: 3, fontSize: '32px', fontWeight: '700' }}>
           Checkout
@@ -242,7 +256,7 @@ export default function Checkout() {
               maxWidth: "561.65px",
             }}
           >
-            <Typography variant="h5" sx={{ mb: 5, fontSize: '18px', fontWeight: '700', display: 'flex', alignItems: 'center' }}>
+            <Typography variant="h5" sx={{ mb: { xs: 2, md: 5 }, mt: { xs: 8, md: 0 }, fontSize: { xs: '18px', md: '18px' }, fontWeight: '700', display: 'flex', alignItems: 'center' }}>
               Order Preview
             </Typography>
             <Box>
