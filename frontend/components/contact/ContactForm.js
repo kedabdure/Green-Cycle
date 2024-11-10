@@ -122,11 +122,9 @@ const ContactUsSection = () => {
   return (
     <Box
       sx={{
-        backgroundColor: '#fff',
         position: 'relative',
         px: { xs: '1rem', md: '3rem', lg: '5rem' },
         py: { xs: '1rem', md: '2rem', lg: '2rem' },
-
       }}
     >
       {/* Form */}
@@ -281,7 +279,7 @@ const ContactUsSection = () => {
         {/* Image*/}
         <Grid item xs={12} md={6}
           sx={{
-            display: 'flex',
+            display: {xs: 'none', md: 'flex'},
             justifyContent: 'flex-end',
             alignItems: 'flex-start',
           }}>

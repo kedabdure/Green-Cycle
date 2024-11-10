@@ -8,7 +8,6 @@ export default function NewsLetter() {
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
-    // Clear the error when typing
     setFormError('');
   };
 
@@ -40,11 +39,11 @@ export default function NewsLetter() {
         flexDirection: { xs: 'column', md: 'row' },
         alignItems: 'center',
         justifyContent: 'space-between',
-        py: { xs: '1rem', md: '3rem' },
+        py: { xs: '3rem', md: '3rem' },
         px: { xs: '1rem', md: '5rem' },
         width: '100%',
         height: '500px',
-        gap: '3rem',
+        gap: {xs: '2rem', md: '3rem'},
       }}
     >
       <Box
@@ -53,10 +52,10 @@ export default function NewsLetter() {
           textAlign: { xs: 'center', md: 'left' },
         }}
       >
-        <Typography variant="h1" sx={{ fontSize: { xs: '1.5rem', md: '2rem' }, fontWeight: '700' }}>
+        <Typography variant="h1" sx={{ fontSize: { xs: '1.3rem', md: '2rem' }, fontWeight: '700' }}>
           Subscribe To Our Newsletter
         </Typography>
-        <Typography variant="body1" sx={{ fontSize: { xs: '0.9rem', md: '1rem' }, mt: 1 }}>
+        <Typography variant="body1" sx={{ fontSize: { xs: '0.8rem', md: '1rem' }, mt: 1 }}>
           Stay updated with our latest company news, insights, and exclusive updates directly to your inbox.
         </Typography>
         <Box

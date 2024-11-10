@@ -1,6 +1,6 @@
 import { Box, Typography } from '@mui/material';
 import { TelegramLogo as TelegramIcon, TwitterLogo as XIcon, LinkedinLogo as LinkedinIcon } from 'phosphor-react';
-
+import Image from 'next/image';
 
 export default function ContactLinks() {
   return (
@@ -11,27 +11,29 @@ export default function ContactLinks() {
         alignItems: 'center',
         justifyContent: 'space-between',
         px: { xs: '1rem', md: '3rem', lg: '5rem' },
-        pt: { xs: '1rem', md: '2rem', lg: '130px' },
-        pb: { xs: '1rem', md: '2rem', lg: '20px' },
+        pt: { xs: '90px', md: '110', lg: '130px' },
+        pb: { xs: '2rem', md: '2rem', lg: '20px' },
         mb: 1,
+        position: 'relative',
       }}
     >
       <Box sx={{
-        maxWidth: '60%',
+        maxWidth: { xs: '80%', 'md': '60%' },
         display: 'flex',
         flexDirection: 'column',
-        gap: { xs: '1rem', md: '2rem' },
+        gap: { xs: '.8rem', md: '2rem' },
       }}>
-        <Typography variant='h6' sx={{ color: '#1c2229', fontSize: '16px' }}>
-          Get Started
+        <Typography variant='h6' sx={{ color: '#1c2229', fontSize: { xs: '12px', md: '16px' } }}>
+          Contact Us
         </Typography>
-        <Typography variant='h4' sx={{ color: '#1c2229', fontSize: '2.5rem', fontWeight: 'bold' }}>Get In touch with us we are here to assist you.</Typography>
+        <Typography variant='h4' sx={{ color: '#1c2229', fontSize: { xs: '1.5rem', md: '3rem' }, fontWeight: 'bold' }}>Get In touch with us we are here to assist you.</Typography>
       </Box>
+
       <Box
         sx={{
           display: 'flex',
           flexDirection: 'column',
-          gap: '1rem',
+          gap: { xs: '.3rem', md: '1rem' },
         }}
       >
         <Box
@@ -41,8 +43,8 @@ export default function ContactLinks() {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            width: '40px',
-            height: '40px',
+            width: { xs: '30px', md: '40px' },
+            height: { xs: '30px', md: '40px' },
             border: '1px solid #666',
             borderRadius: '50%',
             transition: 'transform 0.3s ease, background-color 0.3s ease, color 0.3s ease',
@@ -63,8 +65,8 @@ export default function ContactLinks() {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            width: '40px',
-            height: '40px',
+            width: { xs: '30px', md: '40px' },
+            height: { xs: '30px', md: '40px' },
             border: '1px solid #666',
             borderRadius: '50%',
             transition: 'transform 0.3s ease, background-color 0.3s ease, color 0.3s ease',
@@ -85,8 +87,8 @@ export default function ContactLinks() {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            width: '40px',
-            height: '40px',
+            width: { xs: '30px', md: '40px' },
+            height: { xs: '30px', md: '40px' },
             border: '1px solid #666',
             borderRadius: '50%',
             transition: 'transform 0.3s ease, background-color 0.3s ease, color 0.3s ease',
@@ -100,6 +102,29 @@ export default function ContactLinks() {
         >
           <XIcon size={18} color="#1c2229" />
         </Box>
+      </Box>
+
+      {/* Background SVG Top Right */}
+      <Box
+        sx={{
+          position: 'absolute',
+          top: { xs: '27%', sm: '20%', md: '20%', lg: '2%' },
+          left: { xs: '-30%', sm: '-20%', md: '-20%', lg: '-20%' },
+          zIndex: -1,
+          overflow: 'hidden',
+          width: { xs: '200px', md: '300px', lg: '400px' },
+          height: { xs: '200px', md: '300px', lg: '400px' },
+        }}
+      >
+        <Image
+          src="/assets/blobs/blob.svg"
+          fill
+          alt="Background SVG"
+          priority
+          style={{ objectFit: 'contained' }}
+          placeholder='blur'
+          blurDataURL='/assets/blobs/blob.svg'
+        />
       </Box>
     </Box>
   )
