@@ -5,6 +5,7 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import styled from "styled-components";
 import Image from "next/image";
+import Head from "next/head";
 import Button from "../components/Button";
 import { CircularProgress, Snackbar, Alert, Stack, IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
@@ -267,6 +268,9 @@ export default function Account() {
 
   return (
     <>
+      <Head>
+        <title>Profile - Green Cycle</title>
+      </Head>
       <Header />
       <ProfileWrapper>
         <Center>

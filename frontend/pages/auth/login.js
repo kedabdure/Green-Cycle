@@ -10,6 +10,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import CircularProgress from '@mui/material/CircularProgress';
 import Alert from '@mui/material/Alert';
 import Stack from '@mui/material/Stack';
+import Head from "next/head";
 
 
 // Styled Components
@@ -205,6 +206,9 @@ export default function RegisterPage() {
 
   return (
     <>
+      <Head>
+        <title>Log In - Auth - Green Cycle</title>
+      </Head>
       <Stack padding="1rem" spacing={2}>
         <Snackbar
           open={open}
@@ -247,7 +251,7 @@ export default function RegisterPage() {
             Now you can{" "}
             <Link href="/login" passHref>
               <button style={{ textDecoration: "underline", color: "green" }}>
-                Login &raquo;
+                Log In &raquo;
               </button>
             </Link>
           </Message>

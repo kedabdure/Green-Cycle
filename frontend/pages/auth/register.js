@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
+import Head from "next/head";
 import styled from "styled-components";
 import Google from "../../components/icons/Google";
 import axios from "axios";
@@ -207,6 +208,9 @@ export default function RegisterPage() {
 
   return (
     <>
+      <Head>
+        <title>Sign Up - Auth - Green Cycle</title>
+      </Head>
       <Stack padding="1rem" spacing={2}>
         <Snackbar
           open={open && !userCreated}
@@ -283,7 +287,7 @@ export default function RegisterPage() {
 
       <Section>
         <Form onSubmit={handleFormSubmit}>
-          <Title>Register</Title>
+          <Title>Sign Up</Title>
           <Input
             type="text"
             placeholder="Full name"
@@ -325,7 +329,7 @@ export default function RegisterPage() {
           {passwordError && <ErrorText>{passwordError}</ErrorText>}
           <Button type="submit" disabled={creatingUser}>
             {creatingUser && <CircularProgress size={17} style={{ marginRight: "1rem", color: "white" }} />}
-            Register
+            Sign Up
           </Button>
           <SmallText>or login with provider</SmallText>
           <ProviderButton type="button" onClick={() => signIn("google", { callbackUrl: "/" })}>

@@ -50,11 +50,13 @@ export default function OrderPreview() {
   };
 
   return (
-    <Stack
-      spacing={12}
+    <Box
       sx={{
         width: "100%",
         maxWidth: "561.65px",
+        display: "flex",
+        flexDirection: "column",
+        gap: { xs: 1, md: 3 },
       }}>
       {products?.length > 0 && !isMobile && (
         <TableContainer component={Box} sx={{ display: { sm: 'none', md: 'block' } }}>
@@ -156,7 +158,7 @@ export default function OrderPreview() {
       <Box
         sx={{
           width: "100%",
-          maxWidth: {xs: "100%", md: "348px"},
+          maxWidth: { xs: "100%", md: "348px" },
           alignSelf: "flex-end",
           display: "flex",
           flexDirection: "column",
@@ -165,28 +167,28 @@ export default function OrderPreview() {
         <Box display="flex" justifyContent="space-between">
           <Typography variant="h5" sx={{ fontSize: { xs: "22px", md: "28px" } }} fontWeight="700">Total</Typography>
           <Typography variant="h5" sx={{ fontSize: { xs: "22px", md: "28px" } }} fontWeight="700">
-            {formatPrice(total)} <span style={{ fontSize: '18px', fontWeight: '700', color: '#444' }}>ETB</span>
+            {formatPrice(total)} <span style={{ fontSize: '14px', fontWeight: '700', color: '#444' }}>ETB</span>
           </Typography>
         </Box>
         <Box display="flex" justifyContent="space-between" borderBottom="1px solid #ddd">
-          <Typography variant="h6" fontSize='16px' fontWeight="700" color="#aaa">Subtotal</Typography>
-          <Typography variant="h6" fontSize='16px' fontWeight="700" color="#aaa">
-            {formatPrice(total)} <span style={{ fontSize: '14px', fontWeight: '700' }}>ETB</span>
+          <Typography variant="h6" fontSize='14px' fontWeight="500" color="#aaa">Subtotal</Typography>
+          <Typography variant="h6" fontSize='14px' fontWeight="500" color="#aaa">
+            {formatPrice(total)} <span style={{ fontSize: '12px', fontWeight: '500' }}>ETB</span>
           </Typography>
         </Box>
         <Box display="flex" justifyContent="space-between" borderBottom="1px solid #ddd">
-          <Typography variant="h6" fontSize='16px' fontWeight="700" color="#aaa">Delivery Fee</Typography>
-          <Typography variant="h6" fontSize='16px' fontWeight="700" color="#aaa">
+          <Typography variant="h6" fontSize='14px' fontWeight="500" color="#aaa">Delivery Fee</Typography>
+          <Typography variant="h6" fontSize='14px' fontWeight="500" color="#aaa">
             Free
           </Typography>
         </Box>
         <Box display="flex" justifyContent="space-between" borderBottom="1px solid #ddd">
-          <Typography variant="h6" fontSize='16px' fontWeight="700" color="#aaa">Tax</Typography>
-          <Typography variant="h6" fontSize='16px' fontWeight="700" color="#aaa">
+          <Typography variant="h6" fontSize='14px' fontWeight="500" color="#aaa">Tax</Typography>
+          <Typography variant="h6" fontSize='14px' fontWeight="500" color="#aaa">
             --
           </Typography>
         </Box>
       </Box>
-    </Stack>
+    </Box>
   );
 }

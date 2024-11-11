@@ -1,9 +1,10 @@
 import React, { useState, useContext } from 'react';
 import Image from 'next/image';
+import Head from 'next/head';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import OrderForm from '../components/order/OrderForm';
-import { Box, Typography, Container, Stack, Paper, Radio, RadioGroup, FormControlLabel, styled } from '@mui/material';
+import { Box, Typography, Stack, Paper, Radio, RadioGroup, FormControlLabel, styled } from '@mui/material';
 import OrderPreview from '../components/order/OrderPreview';
 import { CartContext } from '../components/cart/CartContext';
 import { useSession } from 'next-auth/react';
@@ -31,7 +32,6 @@ export default function Checkout() {
   const [paymentMethod, setPaymentMethod] = useState('card');
   const router = useRouter();
   const { data: session } = useSession();
-
 
   const handleChange = (event) => {
     setPaymentMethod(event.target.value);
@@ -74,11 +74,16 @@ export default function Checkout() {
 
   return (
     <>
+      <Head>
+        <title>Checkout - Green Cycle</title>
+      </Head>
       <Header />
-      <Container
+      <Box
         sx={{
           minHeight: '100vh',
-          py: '130px',
+          pt: '130px',
+          pb: '60px',
+          px: { xs: '1rem', md: '3rem', lg: '5rem' },
           position: 'relative',
           overflow: 'hidden',
         }}
@@ -88,7 +93,7 @@ export default function Checkout() {
           sx={{
             position: 'absolute',
             top: { xs: '-67%', md: '-50%' },
-            right: { xs: '0%', md: '-67%' },
+            right: { xs: '0%', md: '-70%' },
             zIndex: -1,
             overflow: 'hidden',
             width: '100%',
@@ -98,9 +103,9 @@ export default function Checkout() {
           <Image
             src="/assets/images/greenGradient.svg"
             fill
+            sizes="100%"
             alt="Background SVG"
-            layout="fill"
-            objectFit="cover"
+            style={{ objectFit: 'cover' }}
           />
         </Box>
 
@@ -110,10 +115,10 @@ export default function Checkout() {
             display: { xs: 'block', md: 'none' },
             position: 'absolute',
             bottom: { xs: '-67%' },
-            left: { xs: '10%' },
+            left: { xs: '0%' },
             zIndex: -1,
             overflow: 'hidden',
-            width: '150%',
+            width: '100%',
             height: '100%',
           }}
         >
@@ -140,16 +145,16 @@ export default function Checkout() {
           {/* Left Section */}
           <Box sx={{ flex: 1, maxWidth: { xs: '100%', md: '504px' } }}>
             <Typography variant="h5" sx={{ mb: 5, fontSize: '24px', fontWeight: '700', display: 'flex', alignItems: 'center' }}>
-              <Typography component="span" sx={{ fontSize: '16px', fontWeight: '600', color: '#aaa' }}>
+              <Typography component="span" sx={{ fontSize: { xs: '14px', md: '16px' }, fontWeight: '600', color: '#aaa' }}>
                 Home
               </Typography>
-              <Typography component="span" sx={{ fontSize: '16px', fontWeight: '600', color: '#aaa', mx: 1 }}>
+              <Typography component="span" sx={{ fontSize: { xs: '14px', md: '16px' }, fontWeight: '600', color: '#aaa', mx: ".2rem" }}>
                 /
               </Typography>
-              <Typography component="span" sx={{ fontSize: '16px', fontWeight: '600', color: '#aaa' }}>
+              <Typography component="span" sx={{ fontSize: { xs: '14px', md: '16px' }, fontWeight: '600', color: '#aaa' }}>
                 My Cart
               </Typography>
-              <Typography component="span" sx={{ fontSize: '16px', fontWeight: '600', color: '#333', mx: 1 }}>
+              <Typography component="span" sx={{ fontSize: { xs: '14px', md: '16px' }, fontWeight: '600', color: '#333', mx: ".2rem" }}>
                 /
               </Typography>
               <Typography component="span" sx={{ fontSize: '18px', fontWeight: '600', color: '#333' }}>
@@ -243,7 +248,28 @@ export default function Checkout() {
                 </Box>
               </Paper>
             </Box>
+
+            {/* order preview */}
+            <Box
+              sx={{
+                display: { xs: 'block', md: 'none' },
+                flex: 1,
+                width: "100%",
+                maxWidth: "561.65px",
+              }}
+            >
+              <Typography variant="h5" sx={{ mb: { xs: '1.3rem', md: "2rem" }, mt: { xs: 4, md: 0 }, fontSize: { xs: '18px', md: '18px' }, fontWeight: '700', display: 'flex', alignItems: 'center' }}>
+                Order Preview
+              </Typography>
+              <Box>
+                <OrderPreview />
+              </Box>
+            </Box>
+
             <Box sx={{ mt: 6 }}>
+              <Typography variant="h5" sx={{ mb: { xs: '1.3rem', md: "2rem" }, mt: { xs: 4, md: 0 }, fontSize: { xs: '18px', md: '18px' }, fontWeight: '700', display: 'flex', alignItems: 'center' }}>
+                Payment Info
+              </Typography>
               <OrderForm onFormSubmit={goToPayment} paymentMethod={paymentMethod} />
             </Box>
           </Box>
@@ -251,12 +277,13 @@ export default function Checkout() {
           {/* Right Section */}
           <Box
             sx={{
+              display: { xs: 'none', md: 'block' },
               flex: 1,
               width: "100%",
               maxWidth: "561.65px",
             }}
           >
-            <Typography variant="h5" sx={{ mb: { xs: 2, md: 5 }, mt: { xs: 8, md: 0 }, fontSize: { xs: '18px', md: '18px' }, fontWeight: '700', display: 'flex', alignItems: 'center' }}>
+            <Typography variant="h5" sx={{ mb: { xs: '1.3rem', md: "2rem" }, mt: { xs: 4, md: 0 }, fontSize: { xs: '18px', md: '18px' }, fontWeight: '700', display: 'flex', alignItems: 'center' }}>
               Order Preview
             </Typography>
             <Box>
@@ -264,7 +291,7 @@ export default function Checkout() {
             </Box>
           </Box>
         </Stack>
-      </Container>
+      </Box>
       <Footer />
     </>
   );

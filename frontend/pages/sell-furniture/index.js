@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PhoneInput from 'react-phone-number-input';
 import 'react-phone-number-input/style.css';
 import { FadeLoader } from 'react-spinners'
+import Head from 'next/head';
 import {
   TextField
   ,
@@ -38,7 +39,6 @@ export default function SellFurnitureForm() {
   const [formErrors, setFormErrors] = useState({});
   const [uploadedImages, setUploadedImages] = useState([]);
   const [submitted, setSubmitted] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [isUploading, setIsUploading] = useState(false)
 
   const validate = () => {
@@ -118,6 +118,9 @@ export default function SellFurnitureForm() {
 
   return (
     <>
+      <Head>
+        <title>Sell Form - Green Cycle</title>
+      </Head>
       <Header />
       <Box
         sx={{

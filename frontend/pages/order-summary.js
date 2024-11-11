@@ -1,3 +1,4 @@
+import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import jsPDF from 'jspdf';
@@ -5,8 +6,6 @@ import autoTable from 'jspdf-autotable';
 import { Paper, Typography, Divider, Grid, Box, Button, CircularProgress } from '@mui/material';
 import { DownloadSimple, House } from 'phosphor-react';
 import { useRouter } from 'next/router';
-import { useContext } from 'react';
-import { CartContext } from '../components/cart/CartContext';
 import dayjs from 'dayjs';
 
 const fetchOrderByTxRef = async (tx_ref) => {
@@ -17,6 +16,10 @@ const fetchOrderByTxRef = async (tx_ref) => {
 export default function OrderSummary() {
   const router = useRouter();
   const { tx_ref } = router.query;
+
+  React.useEffect(() => {
+    document.title = "Order Summary - Green Cycle";
+  }, [])
 
   const { data: order, isLoading, error } = useQuery({
     queryKey: ['order', tx_ref],
@@ -33,8 +36,11 @@ export default function OrderSummary() {
     );
   }
 
-  if (error) return <Typography color="error">Error loading order.</Typography>;
-  if (!order) return <Typography>No order found for this transaction.</Typography>;
+  if (!order) return (
+    <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
+      <Typography>No order found for this transaction.😔</Typography>
+    </Box>
+  );
 
   const totalAmount = order.line_items.reduce((sum, item) => sum + item.quantity * item.price_data.amount, 0);
 
@@ -96,6 +102,10 @@ export default function OrderSummary() {
     doc.save(`Order_${tx_ref}.pdf`);
   };
 
+  const formattedPrice = (value) => {
+    return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  };
+
 
   return (
     <Paper
@@ -113,10 +123,10 @@ export default function OrderSummary() {
         <Typography
           variant="h5"
           sx={{
-            color: '#388E3C',
+            color: '#111',
             fontWeight: 'bold',
-            mb: 1,
-            fontSize: { xs: '1.5rem', md: '2rem' }
+            mb: 2,
+            fontSize: { xs: '2rem', md: '2.5rem' }
           }}
         >
           Green Cycle
@@ -125,14 +135,14 @@ export default function OrderSummary() {
           variant="subtitle1"
           sx={{ color: '#555', fontSize: { xs: '0.9rem', md: '1rem' } }}
         >
-          Thank you for your purchase, {order.firstName}!
+          Thank you for your purchase, {order.firstName}!😊
         </Typography>
       </Box>
 
       <Divider sx={{ my: 2 }} />
 
       {/* Order Information and Delivery Address */}
-      <Grid container spacing={2} sx={{ textAlign: { xs: 'center', md: 'left' } }}>
+      <Grid container spacing={4} sx={{ textAlign: { xs: 'center', md: 'left' } }}>
         <Grid item xs={12} md={6}>
           <Typography
             variant="subtitle1"
@@ -180,8 +190,8 @@ export default function OrderSummary() {
             sx={{ py: 1, borderBottom: '1px solid #e0e0e0', fontSize: { xs: '0.85rem', md: '1rem' } }}
           >
             <Typography variant="body2" sx={{ fontWeight: 'medium' }}>{item.price_data.product_data.name}</Typography>
-            <Typography variant="body2">{item.quantity} x ETB {item.price_data.amount.toFixed(2)}</Typography>
-            <Typography variant="body2" sx={{ fontWeight: 'bold' }}>ETB {(item.quantity * item.price_data.amount).toFixed(2)}</Typography>
+            <Typography variant="body2">{item.quantity} x {formattedPrice(item.price_data.amount.toFixed(2))} <span style={{ fontSize: '10px' }}>ETB</span></Typography>
+            <Typography variant="body2" sx={{ fontWeight: 'bold' }}>{formattedPrice((item.quantity * item.price_data.amount).toFixed(2))} <span style={{ fontSize: '10px' }}>ETB</span></Typography>
           </Box>
         ))}
       </Box>
@@ -192,15 +202,15 @@ export default function OrderSummary() {
           variant="h6"
           sx={{ fontWeight: 'bold', color: '#388E3C', fontSize: { xs: '1rem', md: '1.2rem' } }}
         >
-          Total Amount: ETB {totalAmount.toFixed(2)}
+          Total Amount: {formattedPrice(totalAmount.toFixed(2))} <span style={{ fontSize: '12px' }}>ETB</span>
         </Typography>
       </Box>
 
       {/* Buttons */}
       <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2, mt: 2 }}>
         <Button
-          variant="contained"
-          sx={{ backgroundColor: '#388E3C', color: '#FFF', minWidth: 120, fontSize: { xs: '0.8rem', md: '0.9rem' }, textTransform: 'none' }}
+          variant="outlined"
+          sx={{ borderColor: '#111', color: '#111', minWidth: 120, fontSize: { xs: '0.8rem', md: '0.9rem' }, textTransform: 'none' }}
           onClick={exportToPDF}
           startIcon={<DownloadSimple size={20} />}
         >
@@ -208,7 +218,7 @@ export default function OrderSummary() {
         </Button>
         <Button
           variant="contained"
-          sx={{ backgroundColor: '#388E3C', color: '#FFF', minWidth: 120, fontSize: { xs: '0.8rem', md: '0.9rem' }, textTransform: 'none' }}
+          sx={{ backgroundColor: '#111', color: '#fff', minWidth: 120, fontSize: { xs: '0.8rem', md: '0.9rem' }, textTransform: 'none' }}
           href="/"
           startIcon={<House size={20} />}
         >

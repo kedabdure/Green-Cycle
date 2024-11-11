@@ -1,3 +1,6 @@
+"use client";
+
+import React, { useEffect } from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import ProductsBox from "../components/product/ProductsBox";
@@ -21,6 +24,10 @@ const fetchCategories = async () => {
 
 export default function Products() {
   const [selectedCategory, setSelectedCategory] = useState(null);
+
+  useEffect(() => {
+    document.title = "Shop - Green Cycle";
+  }, [])
 
   const { data: products = [], isLoading: productsLoading } = useQuery({
     queryKey: ["products"],

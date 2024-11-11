@@ -28,7 +28,6 @@ const initialValues = {
 export default function OrderForm({ onFormSubmit, paymentMethod }) {
   const [formValues, setFormValues] = useState(initialValues);
   const [formErrors, setFormErrors] = useState({});
-  const [submitSuccess, setSubmitSuccess] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const validate = (values) => {
@@ -206,7 +205,7 @@ export default function OrderForm({ onFormSubmit, paymentMethod }) {
           sx={{
             mt: 3,
             width: "100%",
-            maxWidth: '250px',
+            maxWidth: { xs: '160px', md: '250px' },
             backgroundColor: '#111',
             color: '#fff',
             borderRadius: '33px',

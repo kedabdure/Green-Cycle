@@ -5,6 +5,7 @@ import { Box, Button, IconButton, Table, TableBody, TableCell, TableContainer, T
 import Footer from "../components/Footer";
 import EmptyCartPage from "../components/cart/EmptyCartPage";
 import Image from "next/image";
+import Head from 'next/head';
 import { Plus as PlusIcon, Minus as XIcon, Trash as DeleteIcon } from "phosphor-react";
 import router from "next/router";
 import axios from 'axios';
@@ -57,6 +58,9 @@ export default function Cart() {
 
   return (
     <>
+      <Head>
+        <title>Cart - Green Cycle</title>
+      </Head>
       <Header />
       <Box p={"5rem"} sx={{ p: { xs: '5rem 1rem', md: '5rem' }, position: 'relative', overflow: 'hidden' }}>
         {!cartProducts?.length && (
@@ -95,8 +99,8 @@ export default function Cart() {
           sx={{
             display: { xs: 'block', md: 'none' },
             position: 'absolute',
-            bottom: { xs: '-67%'},
-            left: { xs: '10%'},
+            bottom: { xs: '-67%' },
+            left: { xs: '10%' },
             zIndex: -1,
             overflow: 'hidden',
             width: '150%',
@@ -248,7 +252,7 @@ export default function Cart() {
 
               <Box
                 sx={{
-                  maxWidth: {xs: '100%', md: '330px'},
+                  maxWidth: { xs: '100%', md: '330px' },
                   width: '100%',
                   maxHeight: '349px',
                   display: 'flex',
