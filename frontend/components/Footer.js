@@ -5,7 +5,7 @@ import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import PhoneIcon from "@mui/icons-material/Phone";
 import EmailIcon from "@mui/icons-material/Email";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
-import Logo from "./icons/Logo";
+import Image from "next/image";
 
 export default function Contact() {
   const [showScrollToTop, setShowScrollToTop] = useState(false);
@@ -53,14 +53,11 @@ export default function Contact() {
               <a
                 style={{
                   display: "flex",
-                  alignItems: "center",
                   textDecoration: "none",
                   color: "white",
-                  marginBottom: "1.1rem",
-                  marginTop: ".4rem",
                 }}
               >
-                <Logo />
+                <Image src="/main-logo-white.png" alt="Green Cycle Logo" width={160} height={50} />
               </a>
             </Link>
             <Typography
