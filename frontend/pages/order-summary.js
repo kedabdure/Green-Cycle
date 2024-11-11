@@ -56,7 +56,8 @@ export default function OrderSummary() {
       ["Phone", order.phone],
       ["Address", `${order.streetAddress}, ${order.subCity}, ${order.city}, ${order.country}`],
       ["Order Date", dayjs(order.createdAt).format('MMM D, YYYY')],
-      ["Status", order.status],
+      ["Order Status", order.status],
+      ["Payment Status", order.paid]
     ];
 
     doc.setFontSize(16);
@@ -78,8 +79,8 @@ export default function OrderSummary() {
     const productRows = order.line_items.map((item) => [
       item.price_data.product_data.name,
       item.quantity,
-      `${item.price_data.amount.toFixed(2)} ETB`,
-      `${(item.quantity * item.price_data.amount).toFixed(2)} ETB`,
+      `${formattedPrice(item.price_data.amount.toFixed(2))} ETB`,
+      `${formattedPrice((item.quantity * item.price_data.amount).toFixed(2))} ETB`,
     ]);
 
     autoTable(doc, {
@@ -94,7 +95,7 @@ export default function OrderSummary() {
     // Total Amount
     doc.setFontSize(12);
     doc.text(
-      `Total Amount: ${totalAmount.toFixed(2)} ETB`,
+      `Total Amount: ${formattedPrice(totalAmount.toFixed(2))} ETB`,
       14,
       doc.autoTable.previous.finalY + 10
     );
@@ -133,9 +134,9 @@ export default function OrderSummary() {
         </Typography>
         <Typography
           variant="subtitle1"
-          sx={{ color: '#555', fontSize: { xs: '0.9rem', md: '1rem' } }}
+          sx={{ color: '#555', fontSize: { xs: '0.9rem', md: '1.1rem' } }}
         >
-          Thank you for your purchase, {order.firstName}!😊
+          Thank you for your purchase, {order.firstName}!
         </Typography>
       </Box>
 
@@ -151,9 +152,10 @@ export default function OrderSummary() {
             Order Information
           </Typography>
           <Box sx={{ pl: { md: 2 } }}>
-            <Typography variant="body2"><strong>Transaction Reference:</strong> {order.tx_ref}</Typography>
+            <Typography variant="body2"><strong>Transaction Ref:</strong> {order.tx_ref}</Typography>
             <Typography variant="body2"><strong>Order Date:</strong> {dayjs(order.createdAt).format('MMM D, YYYY')}</Typography>
-            <Typography variant="body2"><strong>Status:</strong> {order.status}</Typography>
+            <Typography variant="body2"><strong>Order Status:</strong> {order.status}</Typography>
+            <Typography variant="body2"><strong>Payment Status:</strong> {order?.paid === false ? 'Not Payed' : 'Payed'}</Typography>
           </Box>
         </Grid>
         <Grid item xs={12} md={6}>

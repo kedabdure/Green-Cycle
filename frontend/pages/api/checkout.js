@@ -17,7 +17,7 @@ export default async function handler(req, res) {
   const {
     firstName, lastName, email,
     phone, country, city, subCity,
-    streetAddress, cartProducts, userId
+    streetAddress, cartProducts, userId, paymentMethod
   } = req.body;
 
   const tx_ref = await chapa.genTxRef();
@@ -57,28 +57,41 @@ export default async function handler(req, res) {
     return acc + price;
   }, 0);
 
-  try {
-    const response = await initializePayment({
-      first_name: firstName,
-      last_name: lastName,
-      email,
-      phone_number: phone,
-      tx_ref,
-      total,
-    });
+  if (total === 0) {
+    return res.status(400).json({ error: "Total price should be > 0" })
+  }
 
-    // CREATE the order
+  if (paymentMethod === 'card') {
+    try {
+      const response = await initializePayment({
+        first_name: firstName,
+        last_name: lastName,
+        email,
+        phone_number: phone,
+        tx_ref,
+        total,
+      });
+
+      // CREATE the order
+      const orderDoc = await Order.create({
+        line_items, firstName, lastName, email, phone, country,
+        city, subCity, streetAddress, tx_ref, userId
+      });
+
+      res.status(200).json({ payment_url: response.data.checkout_url });
+    } catch (error) {
+      console.error("Error during payment initialization:", error.message);
+      res.status(500).json({ error: error.message });
+    }
+  } else {
     const orderDoc = await Order.create({
       line_items, firstName, lastName, email, phone, country,
       city, subCity, streetAddress, tx_ref, userId
     });
 
-    console.log(orderDoc)
-
-    res.status(200).json({ payment_url: response.data.checkout_url });
-  } catch (error) {
-    console.error("Error during payment initialization:", error.message);
-    res.status(500).json({ error: error.message });
+    if (orderDoc) {
+      const returnUrl = `${process.env.BASE_URL}/order-summary?tx_ref=${tx_ref}`;
+      return res.status(201).json({ returnUrl });
+    }
   }
-
 }

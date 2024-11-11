@@ -4,7 +4,7 @@ import Head from 'next/head';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import OrderForm from '../components/order/OrderForm';
-import { Box, Typography, Stack, Paper, Radio, RadioGroup, FormControlLabel, styled } from '@mui/material';
+import { Box, Typography, Stack, Paper, Radio, RadioGroup, FormControlLabel, styled, Alert, Snackbar } from '@mui/material';
 import OrderPreview from '../components/order/OrderPreview';
 import { CartContext } from '../components/cart/CartContext';
 import { useSession } from 'next-auth/react';
@@ -30,8 +30,20 @@ const CustomRadio = styled(Radio)(({ theme }) => ({
 export default function Checkout() {
   const { cartProducts, clearCart } = useContext(CartContext);
   const [paymentMethod, setPaymentMethod] = useState('card');
+  const [open, setOpen] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
   const router = useRouter();
   const { data: session } = useSession();
+
+
+  function showError(message) {
+    setErrorMessage(message);
+    setOpen(true);
+  }
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   const handleChange = (event) => {
     setPaymentMethod(event.target.value);
@@ -40,11 +52,10 @@ export default function Checkout() {
   async function goToPayment(data) {
     if (!session) {
       router.push('/auth/login');
+      return;
     }
 
-    const orderData = { ...data, cartProducts, userId: session.user.id };
-
-    console.log(orderData);
+    const orderData = { ...data, cartProducts, userId: session.user.id, paymentMethod };
 
     let res;
     try {
@@ -55,20 +66,22 @@ export default function Checkout() {
           clearCart();
           window.location.href = res.data.payment_url;
         } else {
-          console.error("No payment URL returned");
+          showError("There was an issue with your payment setup. Please try again later.");
         }
       } else {
-        res = await axios.post('/api/orders', orderData);
+        res = await axios.post('/api/checkout', orderData);
 
         if (res.status === 201) {
-          // window.location.href = "/success";
           clearCart();
-          console.log("Order created successfully");
+          window.location.href = res.data.returnUrl;
+        } else {
+          showError("Order not sent successfully!. Please try again.");
         }
       }
 
     } catch (error) {
       console.error("Payment Initialization Failed:", error.message);
+      showError("An unexpected error occurred. Please try again later.");
     }
   }
 
@@ -88,6 +101,35 @@ export default function Checkout() {
           overflow: 'hidden',
         }}
       >
+        {/* Snackbar to display error message */}
+        <Snackbar
+          open={open}
+          autoHideDuration={5000}
+          onClose={handleClose}
+          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        >
+          <Alert
+            severity="error"
+            onClose={handleClose}
+            sx={{
+              width: '100%',
+              borderRadius: '8px',
+              padding: '16px',
+              boxShadow: 3,
+              backgroundColor: '#ff3b3b',
+              color: '#fff',
+              fontWeight: '400',
+              fontSize: '16px',
+              transition: 'transform 0.3s ease-in-out',
+              '&:hover': {
+                transform: 'scale(1.05)',
+              },
+            }}
+          >
+            {errorMessage}
+          </Alert>
+        </Snackbar>
+
         {/* Background SVG Top Right */}
         <Box
           sx={{
