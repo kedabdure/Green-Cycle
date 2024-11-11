@@ -113,24 +113,7 @@ export default function Contact() {
                 </Typography>
               </a>
             </Link>
-            <Link href="/#testimonial" passHref legacyBehavior>
-              <a style={{ textDecoration: "none", color: "white" }}>
-                <Typography
-                  variant="body2"
-                  sx={{
-                    mb: 1,
-                    fontSize: { xs: "0.875rem", sm: ".8rem" },
-                    transition: "color 0.3s ease",
-                    "&:hover": {
-                      color: "#48cb66",
-                    },
-                  }}
-                >
-                  Testimonial
-                </Typography>
-              </a>
-            </Link>
-            <Link href="/#contact" passHref legacyBehavior>
+            <Link href="/contact" passHref legacyBehavior>
               <a style={{ textDecoration: "none", color: "white" }}>
                 <Typography
                   variant="body2"
@@ -144,6 +127,23 @@ export default function Contact() {
                   }}
                 >
                   Contact Us
+                </Typography>
+              </a>
+            </Link>
+            <Link href="/account" passHref legacyBehavior>
+              <a style={{ textDecoration: "none", color: "white" }}>
+                <Typography
+                  variant="body2"
+                  sx={{
+                    mb: 1,
+                    fontSize: { xs: "0.875rem", sm: ".8rem" },
+                    transition: "color 0.3s ease",
+                    "&:hover": {
+                      color: "#48cb66",
+                    },
+                  }}
+                >
+                  Account
                 </Typography>
               </a>
             </Link>

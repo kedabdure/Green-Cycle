@@ -266,27 +266,6 @@ export default function Hero() {
         </Box>
       </Box>
 
-      {/* Background SVG Top Right */}
-      <Box
-        sx={{
-          position: 'absolute',
-          top: { xs: '-67%', md: '-50%' },
-          right: { xs: '0%', md: '-67%' },
-          zIndex: -1,
-          overflow: 'hidden',
-          width: '100%',
-          height: '100%',
-        }}
-      >
-        <Image
-          src="/assets/blobs/small-green-gradient.svg"
-          fill
-          alt="Background SVG"
-          layout="fill"
-          objectFit="cover"
-        />
-      </Box>
-
       {/* Quote Slider */}
       <Box sx={{
         width: '100%',

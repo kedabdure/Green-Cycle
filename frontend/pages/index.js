@@ -7,7 +7,7 @@ import Head from "next/head";
 
 export default function Home() {
   return (
-    <div>
+    <div style={{ overflow: "hidden" }}>
       <Head>
         <title>Home - Green Cycle</title>
       </Head>
