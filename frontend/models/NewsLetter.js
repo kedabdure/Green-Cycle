@@ -1,5 +1,4 @@
 import { model, models, Schema } from "mongoose";
-import NewsLetter from "../components/contact/Newsletter";
 
 const NewsLetterSchema = new Schema(
   {
