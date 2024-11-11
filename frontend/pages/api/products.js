@@ -20,9 +20,9 @@ export default async function handler(req, res) {
         return res.json(relatedProducts);
       }
 
-      const products = await Product.find();
+      const products = await Product.find().sort({ updatedAt: -1 });
       return res.json(products);
-      
+
     } catch (error) {
       console.error('Error fetching products:', error);
       return res.status(500).json({ message: 'Error fetching products' });

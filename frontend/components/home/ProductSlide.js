@@ -33,6 +33,8 @@ export default function ProductSlide() {
     return <Typography color="error">Failed to load products.</Typography>;
   }
 
+  const slicedProducts = productsData.slice(0, 10)
+
   const formattedPrice = (price) => {
     return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   }
@@ -161,8 +163,8 @@ export default function ProductSlide() {
 
         <Box sx={{ width: "100%", display: "flex", flexDirection: "column", gap: { xs: "2rem", md: "2rem" } }}>
           <Slider ref={sliderRef} {...settings}>
-            {productsData.length > 0 &&
-              productsData.map((product) => (
+            {slicedProducts.length > 0 &&
+              slicedProducts.map((product) => (
                 <Box
                   key={product._id}
                   sx={{
@@ -180,9 +182,28 @@ export default function ProductSlide() {
                       flexDirection: "column",
                       overflow: "hidden",
                       boxShadow: 3,
-                      borderRadius: "5px",
+                      borderRadius: "12px",
+                      position: 'relative',
                     }}
                   >
+                    {/* Badge */}
+                    <Box sx={{
+                      position: 'absolute',
+                      top: '4%',
+                      left: '5%',
+                      zIndex: 2,
+                      backgroundColor: '#00d60c',
+                      color: '#fff',
+                      padding: '0.3rem 0.7rem',
+                      borderRadius: '16px',
+                      fontSize: '0.75rem',
+                      fontWeight: '600',
+                      textTransform: 'uppercase',
+                      display: 'inline-block',
+                    }}>
+                      New
+                    </Box>
+
                     {/* Link for the Image */}
                     <Box
                       component={Link}
