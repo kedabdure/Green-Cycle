@@ -1,10 +1,13 @@
-import { Box, Button, TextField, Typography, Alert } from '@mui/material';
+import { Box, Button, TextField, Typography, Alert, CircularProgress } from '@mui/material';
 import Map from '../map/MyMap';
 import React from 'react';
+import Swal from 'sweetalert2';
+import axios from 'axios';
 
 export default function NewsLetter() {
   const [formData, setFormData] = React.useState({ email: '' });
   const [formError, setFormError] = React.useState('');
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -25,10 +28,53 @@ export default function NewsLetter() {
     return error === '';
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsSubmitting(true);
+
     if (validate(formData)) {
-      console.log('Email submitted:', formData.email);
+      try {
+        const res = await axios.post('/api/newsletter', formData);
+        
+        if (res.status === 201) {
+          Swal.fire({
+            icon: 'success',
+            title: 'Success!',
+            text: 'You have successfully subscribed to our newsletter!',
+            confirmButtonColor: 'green',
+          });
+          setFormData({ email: '' });
+        }
+      } catch (error) {
+        const errorMessage = error.response?.data?.error;
+        
+        if (errorMessage === "Email already subscribed") {
+          Swal.fire({
+            icon: 'info',
+            title: 'Already Subscribed',
+            text: 'This email is already subscribed to our newsletter.',
+            confirmButtonColor: 'green',
+          });
+        } else if (errorMessage === "Email is required") {
+          Swal.fire({
+            icon: 'error',
+            title: 'Missing Email',
+            text: 'Please provide an email address to subscribe.',
+            confirmButtonColor: 'green',
+          });
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Something went wrong! Please try again later.',
+            confirmButtonColor: 'green',
+          });
+        }
+      } finally {
+        setIsSubmitting(false);
+      }
+    } else {
+      setIsSubmitting(false);
     }
   };
 
@@ -43,7 +89,7 @@ export default function NewsLetter() {
         px: { xs: '1rem', md: '5rem' },
         width: '100%',
         height: '500px',
-        gap: {xs: '2rem', md: '3rem'},
+        gap: { xs: '2rem', md: '3rem' },
       }}
     >
       <Box
@@ -103,7 +149,7 @@ export default function NewsLetter() {
               textTransform: 'none',
             }}
           >
-            Subscribe
+            {isSubmitting ? <CircularProgress color="inherit" size={24} /> : 'Subscribe'}
           </Button>
         </Box>
         {formError && (
