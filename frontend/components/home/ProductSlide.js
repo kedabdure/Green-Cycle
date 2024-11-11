@@ -165,8 +165,6 @@ export default function ProductSlide() {
               productsData.map((product) => (
                 <Box
                   key={product._id}
-                  href={`/product/${product._id}`}
-                  component={Link}
                   sx={{
                     position: 'relative',
                     textDecoration: 'none',
@@ -183,16 +181,18 @@ export default function ProductSlide() {
                       overflow: "hidden",
                       boxShadow: 3,
                       borderRadius: "5px",
-                      transition: "transform 0.3s ease",
-                      "&:hover": { transform: "scale(1.01)" },
                     }}
                   >
+                    {/* Link for the Image */}
                     <Box
+                      component={Link}
+                      href={`/product/${product._id}`}
                       sx={{
                         position: "relative",
                         width: "100%",
                         height: { xs: "235px", md: "250px" },
                         overflow: "hidden",
+                        "&:hover img": { transform: "scale(1.05)" },
                       }}
                     >
                       <Image
@@ -201,7 +201,7 @@ export default function ProductSlide() {
                         alt="Product photo"
                         placeholder="blur"
                         blurDataURL={`${product.images[0]}?tr=w-10,h-10,bl`}
-                        style={{ objectFit: "cover" }}
+                        style={{ objectFit: "contain", transition: "transform 0.3s ease" }}
                       />
                     </Box>
 
@@ -224,7 +224,11 @@ export default function ProductSlide() {
                       >
                         Furniture
                       </Typography>
+
+                      {/* Link for the Title */}
                       <Typography
+                        component={Link}
+                        href={`/product/${product._id}`}
                         variant="h5"
                         color="textPrimary"
                         sx={{
@@ -235,10 +239,15 @@ export default function ProductSlide() {
                           fontWeight: '700',
                           whiteSpace: "nowrap",
                           textOverflow: "ellipsis",
+                          textDecoration: "none",
+                          transition: "all 0.3s ease",
+
+                          "&:hover": { textDecoration: "underline", color: "#006608" },
                         }}
                       >
                         {product.title}
                       </Typography>
+
                       <Typography
                         variant="body2"
                         color="textSecondary"
@@ -266,6 +275,7 @@ export default function ProductSlide() {
                           ETB
                         </Typography>
                       </Typography>
+
                       <Typography
                         variant="caption"
                         sx={{

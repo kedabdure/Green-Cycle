@@ -7,7 +7,7 @@ import ProductsBox from "../components/product/ProductsBox";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useState } from "react";
-import { Box, Typography, Button, Grid } from "@mui/material";
+import { Box, Typography, Button, Grid, CircularProgress } from "@mui/material";
 import Image from "next/image";
 
 // Fetch function for products
@@ -38,6 +38,20 @@ export default function Products() {
     queryKey: ["categories"],
     queryFn: fetchCategories,
   });
+
+  if (productsLoading || categoriesLoading) {
+    return (
+      <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
+        <CircularProgress style={{ color: '#333' }} />
+      </Box>
+    );
+  }
+
+  if (!products || !categories) return (
+    <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
+      <Typography>Categories and products not found.😔</Typography>
+    </Box>
+  );
 
   const filteredProducts = selectedCategory
     ? products.filter((product) => product.category === selectedCategory)
@@ -139,8 +153,6 @@ export default function Products() {
             objectFit="cover"
           />
         </Box>
-
-
       </Box >
       <Footer />
     </>
