@@ -10,6 +10,7 @@ import Currency from "../../components/Currency";
 import Header from "../../components/Header";
 import { X as CloseIcon } from "phosphor-react";
 import ProductsBox from "../../components/product/ProductsBox";
+import Head from "next/head";
 
 
 const fetchProduct = async (id) => {
@@ -56,6 +57,9 @@ export default function ProductPage() {
 
   return (
     <>
+      <Head>
+        <title>Product - Green Cycle</title>
+      </Head>
       <Header />
       <Box sx={{ px: 4, py: "150px" }}>
         <Snackbar open={open} autoHideDuration={6000} onClose={handleCloseSnackbar} anchorOrigin={{ vertical: "bottom", horizontal: "left" }}>

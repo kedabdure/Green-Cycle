@@ -86,20 +86,13 @@ export default function ProductBox({ _id, title, price, images, badge }) {
           sx={{
             position: 'relative',
             bgcolor: '#fff',
-            height: {xs: '130px', md: '180px'},
+            height: { xs: '130px', md: '180px' },
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             borderRadius: '16px',
-            overflow: 'hidden',
-            '& Image': {
-              maxWidth: '100%',
-              maxHeight: "100px",
-              transition: 'transform 0.5s ease',
-            },
-            '&:hover Image': {
-              transform: 'scale(1.2)',
-            },
+            overflow: "hidden",
+            "&:hover img": { transform: "scale(1.05)" },
           }}
         >
           {badge && (
@@ -123,7 +116,7 @@ export default function ProductBox({ _id, title, price, images, badge }) {
             alt="Product photo"
             placeholder="blur"
             blurDataURL={`${images[0]}?tr=w-10,h-10,bl`}
-            style={{ objectFit: "contain" }}
+            style={{ objectFit: "contain", transition: 'transform .3s ease' }}
           />
         </Box>
 
@@ -197,6 +190,11 @@ export default function ProductBox({ _id, title, price, images, badge }) {
                 padding: { xs: '5px 6px', md: '8px 10px' },
                 fontSize: { xs: '.7rem', md: '0.9rem' },
                 cursor: 'pointer',
+                transition: 'backgroundColor 0.3s ease',
+
+                '&:hover': {
+                  backgroundColor: '#cbdbfb'
+                }
               }}
             >
               Add to
