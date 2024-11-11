@@ -50,7 +50,9 @@ export default function ProductPage() {
     setOpen(false);
   };
 
-  const slicedRelatedProducts = relatedProducts.slice(0, 4);
+  const slicedRelatedProducts = relatedProducts
+    .filter((relatedProduct) => relatedProduct._id !== product._id)
+    .slice(0, 5);
 
   if (productLoading) return <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', paddingTop: "5rem" }}><CircularProgress color="#333" size={32} /></Box>;
   if (productError || !product) return <Typography variant="h6" color="error">Failed to load product</Typography>;
@@ -61,7 +63,7 @@ export default function ProductPage() {
         <title>Product - Green Cycle</title>
       </Head>
       <Header />
-      <Box sx={{ px: 4, py: "150px" }}>
+      <Box sx={{ px: { xs: "1rem", md: "3rem", lg: "5rem" }, py: { xs: "50px", md: "100px", lg: "150px" } }}>
         <Snackbar open={open} autoHideDuration={6000} onClose={handleCloseSnackbar} anchorOrigin={{ vertical: "bottom", horizontal: "left" }}>
           <Alert onClose={handleCloseSnackbar} severity="success" variant="filled" action={
             <IconButton size="small" color="inherit" onClick={handleCloseSnackbar}>
@@ -79,7 +81,7 @@ export default function ProductPage() {
           <Grid item xs={12} md={6} sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
             <Stack direction="row" spacing={3} alignItems="center">
               {product.badge && <Chip label={product.badge} color="primary" />}
-              <Typography variant="h5" fontWeight="bold">{product.title}</Typography>
+              <Typography variant="h5" fontWeight="bold" sx={{ fontSize: { xs: '1.5rem', md: '1.8rem' } }}>{product.title}</Typography>
             </Stack>
             <Typography variant="body1" color="text.secondary">{product.description}</Typography>
             <Box display="flex" alignItems="center" gap={1} mt={2}>
@@ -93,14 +95,14 @@ export default function ProductPage() {
         </Grid>
 
         <Box sx={{ mt: 12 }}>
-          <Typography variant="h4" fontSize={'1.8rem'} mb={2} fontWeight="600">Related Products</Typography>
+          <Typography variant="h4" sx={{ fontSize: { xs: '1.5rem', md: '1.8rem' }, mb: { xs: "3rem", md: "3.5rem" }, fontWeight: "600" }} >Related Products</Typography>
           {relatedLoading ? (
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}><CircularProgress /></Box>
 
           ) : (
             <Grid container spacing={1}>
               {slicedRelatedProducts.map((product) => (
-                <Grid item xs={12} sm={4} md={4} lg={3} key={product._id}>
+                <Grid item xs={6} sm={4} md={4} lg={3} key={product._id}>
                   <ProductsBox {...product} />
                 </Grid>
               ))}
