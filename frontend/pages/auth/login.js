@@ -3,7 +3,7 @@ import { useState } from "react";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
 import Google from "../../components/icons/Google";
-import Snackbar, { SnackbarCloseReason } from "@mui/material/Snackbar";
+import Snackbar from "@mui/material/Snackbar";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -90,6 +90,9 @@ export default function RegisterPage() {
           height: '100vh',
           padding: { xs: "1rem", md: "2rem" },
           backgroundImage: "url('/assets/backgrounds/pyramid.svg')",
+          backgroundRepeat: 'no-repeat',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
           zIndex: -1,
           display: 'flex',
           alignItems: 'center',
@@ -98,48 +101,47 @@ export default function RegisterPage() {
       >
         <IconButton
           href="/"
-          sx={{ alignSelf: "flex-start", mb: 2 }}
+          sx={{ alignSelf: "flex-start", mb: 2, position: 'absolute', top: { xs: '3%', md: '5%' }, left: { xs: '3%', md: '5%' } }}
           aria-label="Back to home"
         >
           <ArrowBackIcon color="#fff" />
         </IconButton>
 
+
         {/* Notification */}
-        <Stack padding="1rem" spacing={2} >
-          <Snackbar
-            open={open}
-            autoHideDuration={6000}
+        <Snackbar
+          open={open}
+          autoHideDuration={6000}
+          onClose={handleClose}
+          anchorOrigin={{ vertical: "top", horizontal: "right" }}
+        >
+          <Alert
             onClose={handleClose}
-            anchorOrigin={{ vertical: "top", horizontal: "right" }}
+            severity="error"
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              width: "100%",
+              fontSize: "1rem",
+              padding: "0.4rem 1rem",
+            }}
+            variant="filled"
+            action={
+              <IconButton
+                size="small"
+                aria-label="close"
+                color="inherit"
+                onClick={handleClose}
+                sx={{ marginLeft: "auto", marginTop: "-0.25rem" }}
+              >
+                <CloseIcon fontSize="small" />
+              </IconButton>
+            }
           >
-            <Alert
-              onClose={handleClose}
-              severity="error"
-              sx={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                width: "100%",
-                fontSize: "1rem",
-                padding: "0.4rem 1rem",
-              }}
-              variant="filled"
-              action={
-                <IconButton
-                  size="small"
-                  aria-label="close"
-                  color="inherit"
-                  onClick={handleClose}
-                  sx={{ marginLeft: "auto", marginTop: "-0.25rem" }}
-                >
-                  <CloseIcon fontSize="small" />
-                </IconButton>
-              }
-            >
-              {errorMessages}
-            </Alert>
-          </Snackbar>
-        </Stack>
+            {errorMessages}
+          </Alert>
+        </Snackbar>
 
         {/* Form */}
         <Box
@@ -147,7 +149,7 @@ export default function RegisterPage() {
           onSubmit={handleFormSubmit}
           sx={{
             maxWidth: "330px",
-            mx: "auto",
+            // mx: "auto",
             p: { xs: "1rem", md: "1.7rem 1.2rem 1rem 1.2rem" },
             border: "1px solid #ddd",
             borderRadius: 2,
@@ -161,7 +163,7 @@ export default function RegisterPage() {
             align="center"
             color="textPrimary"
             sx={{
-              fontSize: { xs: '1.5rem', md: '2rem' },
+              fontSize: { xs: '2rem', md: '2rem' },
               fontWeight: '700',
             }}
           >
