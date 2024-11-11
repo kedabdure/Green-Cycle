@@ -35,6 +35,14 @@ export default function Header() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [scrollPosition]);
 
+  useEffect(() => {
+    if (mobileNavActive) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+  }, [mobileNavActive]);
+
   const linkStyles = {
     position: "relative",
     color: "#111",
@@ -145,14 +153,25 @@ export default function Header() {
               </Typography>
             </Link>
           ))}
+          <Link href="/account" passHref style={{ textDecoration: "none" }}>
+            <Typography
+              sx={{
+                ...linkStyles,
+                fontSize: "1.1rem",
+                marginBottom: ".5rem",
+                display: { xs: 'block', md: 'none' }, // Only visible on mobile
+              }}
+              onClick={() => setMobileNavActive(false)}
+              className={router.pathname === "/account" ? "active" : ""}
+            >
+              Account
+            </Typography>
+          </Link>
 
           {/* User Section */}
           {session ? (
             <Box sx={{ mt: "2rem", display: "flex", alignItems: "center", gap: 1 }}>
-              <Avatar sx={{ bgcolor: "green", cursor: "pointer" }} onClick={() => router.push("/account")} src={image}>
-                {!image && nameFirstChar}
-              </Avatar>
-              <Button onClick={() => signOut()}>Logout</Button>
+              <Button onClick={() => signOut()} sx={{ border: '1px solid #111', color: '#111' }}>Logout</Button>
             </Box>
           ) : (
             <>
@@ -176,7 +195,7 @@ export default function Header() {
               width: "100vw",
               height: "100vh",
               backgroundColor: "rgba(0, 0, 0, 0.5)",
-              zIndex: 900, // Set below sidebar to ensure it's behind
+              zIndex: 900,
             }}
             onClick={() => setMobileNavActive(false)}
           />
@@ -192,7 +211,7 @@ export default function Header() {
 
           <Box sx={{ display: { xs: "none", md: "flex" }, gap: 2 }}>
             {session ? (
-              <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+              <Box sx={{ display: "flex", alignItems: "center", gap: 3 }}>
                 <Avatar
                   sx={{ bgcolor: "green", cursor: "pointer" }}
                   onClick={() => router.push("/account")}
@@ -205,7 +224,7 @@ export default function Header() {
             ) : (
               <>
                 <Link href="/auth/login" passHref>
-                  <Button variant="outlined" sx={{ textTransform: "capitalize", color: "#111", borderColor: "#111" }}>Login</Button>
+                  <Button variant="outlined" sx={{ textTransform: "capitalize", color: "#111", borderColor: "#111" }}>Log In</Button>
                 </Link>
                 <Link href="/auth/register" passHref>
                   <Button variant="contained" sx={{ textTransform: "capitalize", color: "#fff", backgroundColor: "#111" }}>Sign up</Button>
