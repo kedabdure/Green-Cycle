@@ -2,148 +2,36 @@
 import { useState } from "react";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
-import Head from "next/head";
-import styled from "styled-components";
 import Google from "../../components/icons/Google";
-import axios from "axios";
-import { IconButton, CircularProgress, Alert, Stack, Snackbar } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
-
-
-// Styled Components
-const Section = styled.section`
-  margin-top: 2rem;
-  padding: 1rem;
-  @media screen and (min-width: 768px) {
-    margin-top: 1rem;
-    padding: 0 2rem;
-  }
-`;
-
-const Title = styled.h1`
-  text-align: center;
-  color: #333;
-  font-size: 2rem;
-  margin: .5rem auto 1rem auto;
-`;
-
-const Form = styled.form`
-  display: block;
-  max-width: 23rem;
-  margin: 0 auto;
-  padding: 1.5rem 1.2rem;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  background-color: #f9f9f9;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-`;
-
-const Input = styled.input`
-  display: block;
-  width: 100%;
-  padding: 0.75rem;
-  margin: 0.5rem 0;
-  border: 1px solid ${({ $isInvalid }) => ($isInvalid ? "red" : "#ddd")};
-  border-radius: 4px;
-  &:disabled {
-    background-color: #f3f3f3;
-  }
-  &::placeholder {
-    color: ${({ $isInvalid }) => ($isInvalid ? "red" : "#aaa")};
-  }
-  &:focus {
-    border-color: ${({ $isInvalid }) => ($isInvalid ? "red" : "#333")};
-    &::placeholder {
-      color: #333;
-    }
-  }
-`;
-
-const ErrorText = styled.div`
-  color: red;
-  font-size: 0.875rem;
-  margin-bottom: 0.5rem;
-`;
-
-const Button = styled.button`
-  display: block;
-  width: 100%;
-  padding: 0.75rem;
-  margin: 2rem 0 1rem 0;
-  background-color: #111;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: .9rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background-color 0.3s;
-  &:hover {
-    background-color: #444;
-  }
-  &:disabled {
-    background-color: #bbb;
-    cursor: not-allowed;
-  }
-`;
-
-const SmallText = styled.div`
-  margin: 1rem 0;
-  text-align: center;
-  color: #666;
-  font-size: 0.75rem;
-`;
-
-const ProviderButton = styled(Button)`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 1rem;
-  margin: 0;
-  font-size: .9rem;
-  padding: .5em 0.75rem;
-  background-color: #f1f1f1;
-  color: #333;
-  border: 1px solid #ddd;
-  &:hover {
-    background-color: #f3f3f3;
-  }
-`;
-
-const Divider = styled.div`
-  text-align: center;
-  margin: 1rem 0;
-  color: #666;
-  border-top: 1px solid #ddd;
-  padding-top: 1rem;
-  font-size: 0.75rem;
-
-  button {
-    background: none;
-    border: none;
-    color: #007bff;
-    cursor: pointer;
-    transition: color 0.3s;
-    &:hover {
-      color: #0056b3;
-    }
-  }
-`;
+import Snackbar from "@mui/material/Snackbar";
+import IconButton from "@mui/material/IconButton";
+import CloseIcon from "@mui/icons-material/Close";
+import CircularProgress from "@mui/material/CircularProgress";
+import Alert from "@mui/material/Alert";
+import Head from "next/head";
+import { ArrowLeft as ArrowBackIcon } from 'phosphor-react';
+import {
+  Box,
+  Typography,
+  TextField,
+  Button,
+  Divider,
+} from "@mui/material";
+import { useRouter } from "next/navigation";
+import axios from 'axios';
 
 export default function RegisterPage() {
-  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [creatingUser, setCreatingUser] = useState(false);
-  const [nameError, setNameError] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [registerInProgress, setRegisterInProgress] = useState(false);
+  const [name, setName] = useState("");
+  const [nameError, setNameError] = useState("")
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
-  const [open, setOpen] = useState(false);
-  const [errorMessages, setErrorMessages] = useState([]);
-  const [userCreated, setUserCreated] = useState(false);
-  const [successMessages, setSuccessMessages] = useState([]);
+  const [confirmPasswordError, setConfirmPasswordError] = useState("");
+  const [notification, setNotification] = useState({ open: false, message: "", severity: "error" });
+  const router = useRouter();
 
   async function handleFormSubmit(ev) {
     ev.preventDefault();
@@ -152,6 +40,7 @@ export default function RegisterPage() {
     setNameError("");
     setEmailError("");
     setPasswordError("");
+    setConfirmPasswordError("");
 
     let valid = true;
 
@@ -170,40 +59,48 @@ export default function RegisterPage() {
       valid = false;
     }
 
+    if (password !== confirmPassword) {
+      setConfirmPasswordError("Passwords do not match.");
+      valid = false;
+    }
+
     if (!valid) return;
 
-    setCreatingUser(true);
-    setUserCreated(false);
+    setRegisterInProgress(true);
 
     try {
-      const response = await axios.post("/api/register", { name, email, password });
+      const res = await axios.post('/api/register', { name, email, password });
 
-      if (response.status === 201) {
-        setUserCreated(true);
-        setSuccessMessages(["User created successfully."]);
-        window.location.href = "/auth/login"
-        setOpen(true)
-        setName("");
-        setEmail("");
-        setPassword("");
+      if (res.status === 201) {
+        setNotification({ open: true, message: "Sign-up successful! Redirecting to home...", severity: "success" });
+
+        setTimeout(async () => {
+          const signInResponse = await signIn("credentials", {
+            email,
+            password,
+            redirect: false,
+          });
+
+          if (signInResponse?.ok) {
+            router.push("/");
+          } else {
+            router.push("/auth/login");
+          }
+        }, 2000);
+      } else {
+        setNotification({ open: true, message: res.data.message || "An error occurred during sign-up.", severity: "error" });
       }
     } catch (err) {
-      const errorMessages = err.response?.data.message
-        ? [err.response.data.message]
-        : ["An error has occurred. Please try again later."];
-      setErrorMessages(errorMessages);
-      setUserCreated(false)
-      setOpen(true);
-    } finally {
-      setCreatingUser(false);
+      const errorMessage = err.response?.data?.message || "An error occurred. Try again later!";
+      setNotification({ open: true, message: errorMessage, severity: "error" });
     }
+
+    setRegisterInProgress(false);
   }
 
   const handleClose = (event, reason) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-    setOpen(false);
+    if (reason === "clickaway") return;
+    setNotification((prev) => ({ ...prev, open: false }));
   };
 
   return (
@@ -211,23 +108,46 @@ export default function RegisterPage() {
       <Head>
         <title>Sign Up - Auth - Green Cycle</title>
       </Head>
-      <Stack padding="1rem" spacing={2}>
+      <Box
+        component="section"
+        sx={{
+          width: '100%',
+          height: '100vh',
+          padding: { xs: "1rem", md: "2rem" },
+          backgroundImage: "url('/assets/backgrounds/pyramid.svg')",
+          backgroundRepeat: 'no-repeat',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          zIndex: -1,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <IconButton
+          href="/"
+          sx={{ alignSelf: "flex-start", mb: 2, position: 'absolute', top: { xs: '3%', md: '5%' }, left: { xs: '3%', md: '5%' } }}
+          aria-label="Back to home"
+        >
+          <ArrowBackIcon color="#fff" />
+        </IconButton>
+
         <Snackbar
-          open={open && !userCreated}
+          open={notification.open}
           autoHideDuration={6000}
           onClose={handleClose}
-          anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+          anchorOrigin={{ vertical: "top", horizontal: "right" }}
         >
           <Alert
             onClose={handleClose}
-            severity="error"
+            severity={notification.severity}
             sx={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              width: '100%',
-              fontSize: '1rem',
-              padding: '0.4rem 1rem',
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              width: "100%",
+              fontSize: "1rem",
+              padding: "0.4rem 1rem",
             }}
             variant="filled"
             action={
@@ -236,114 +156,149 @@ export default function RegisterPage() {
                 aria-label="close"
                 color="inherit"
                 onClick={handleClose}
-                sx={{ marginLeft: 'auto', marginTop: '-0.25rem' }}
+                sx={{ marginLeft: "auto", marginTop: "-0.25rem" }}
               >
                 <CloseIcon fontSize="small" />
               </IconButton>
             }
           >
-            {errorMessages}
+            {notification.message}
           </Alert>
         </Snackbar>
-      </Stack>
 
-      {/* Success */}
-      <Stack padding="1rem" spacing={2}>
-        <Snackbar
-          open={open && userCreated}
-          autoHideDuration={10000}
-          onClose={handleClose}
-          anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        <Box
+          component="form"
+          onSubmit={handleFormSubmit}
+          sx={{
+            maxWidth: "370px",
+            p: { xs: "1.3rem 1rem .5rem 1rem", md: "1.7rem 1.2rem .6rem 1.2rem" },
+            border: "1px solid #ddd",
+            borderRadius: 2,
+            backgroundColor: "#f9f9f9",
+            boxShadow: 1,
+          }}
         >
-          <Alert
-            onClose={handleClose}
-            severity="success"
+          <Typography
+            component="h1"
+            variant="h5"
+            align="center"
+            color="textPrimary"
             sx={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              width: '100%',
-              fontSize: '1rem',
-              padding: '0.4rem 1rem',
+              fontSize: { xs: '1.8rem', md: '2rem' },
+              fontWeight: '700',
+              mb: { xs: '.8rem', md: '1rem' }
             }}
-            variant="filled"
-            action={
-              <IconButton
-                size="small"
-                aria-label="close"
-                color="inherit"
-                onClick={handleClose}
-                sx={{ marginLeft: 'auto', marginTop: '-0.25rem' }}
-              >
-                <CloseIcon fontSize="small" />
-              </IconButton>
-            }
           >
-            {successMessages}
-          </Alert>
-        </Snackbar>
-      </Stack>
-
-
-      <Section>
-        <Form onSubmit={handleFormSubmit}>
-          <Title>Sign Up</Title>
-          <Input
+            Sign Up
+          </Typography>
+          <TextField
             type="text"
-            placeholder="Full name"
+            label="Full name"
+            variant="outlined"
+            size="small"
+            fullWidth
             value={name}
-            disabled={creatingUser}
+            disabled={registerInProgress}
             onChange={(ev) => {
               setName(ev.target.value);
               setNameError("");
             }}
-            $isInvalid={!!nameError}
-            pattern=".*"
+            error={!!nameError}
+            helperText={nameError}
+            margin="dense"
           />
-          {nameError && <ErrorText>{nameError}</ErrorText>}
-          <Input
+          <TextField
             type="email"
-            placeholder="Email"
+            label="Email"
+            variant="outlined"
+            size="small"
+            fullWidth
             value={email}
-            disabled={creatingUser}
+            disabled={registerInProgress}
             onChange={(ev) => {
               setEmail(ev.target.value);
               setEmailError("");
             }}
-            $isInvalid={!!emailError}
-            pattern=".*"
+            error={!!emailError}
+            helperText={emailError}
+            margin="dense"
           />
-          {emailError && <ErrorText>{emailError}</ErrorText>}
-          <Input
+          <TextField
             type="password"
-            placeholder="Password"
+            label="Password"
+            variant="outlined"
+            size="small"
+            fullWidth
             value={password}
-            disabled={creatingUser}
+            disabled={registerInProgress}
             onChange={(ev) => {
               setPassword(ev.target.value);
               setPasswordError("");
             }}
-            $isInvalid={!!passwordError}
-            pattern=".*"
+            error={!!passwordError}
+            helperText={passwordError}
+            margin="dense"
           />
-          {passwordError && <ErrorText>{passwordError}</ErrorText>}
-          <Button type="submit" disabled={creatingUser}>
-            {creatingUser && <CircularProgress size={17} style={{ marginRight: "1rem", color: "white" }} />}
+          <TextField
+            type="password"
+            label="Confirm Password"
+            variant="outlined"
+            size="small"
+            fullWidth
+            value={confirmPassword}
+            disabled={registerInProgress}
+            onChange={(ev) => {
+              setConfirmPassword(ev.target.value);
+              setConfirmPasswordError("");
+            }}
+            error={!!confirmPasswordError}
+            helperText={confirmPasswordError}
+            margin="dense"
+          />
+          <Button
+            type="submit"
+            variant="contained"
+            fullWidth
+            disabled={registerInProgress}
+            sx={{ mt: 3, mb: 1, color: '#fff', backgroundColor: '#111' }}
+          >
+            {registerInProgress && (
+              <CircularProgress size={17} sx={{ mr: 1 }} color="#fff" />
+            )}
             Sign Up
           </Button>
-          <SmallText>or login with provider</SmallText>
-          <ProviderButton type="button" onClick={() => signIn("google", { callbackUrl: "/" })}>
-            <Google />
-            Login with Google
-          </ProviderButton>
-          <Divider>
-            Existing account?{" "}
-            <Link href="/auth/login" passHref>
-              <button style={{ textDecoration: "underline" }}>Login here &raquo;</button>
-            </Link>
+          <Typography variant="body2" align="center" color="textSecondary" sx={{ my: 1 }}>
+            or sign up with
+          </Typography>
+          <Button
+            variant="outlined"
+            color="inherit"
+            fullWidth
+            startIcon={<Google />}
+            onClick={() => signIn("google", { callbackUrl: "/" })}
+            sx={{
+              color: "#333",
+              backgroundColor: "#f1f1f1",
+              borderColor: "#ddd",
+              "&:hover": {
+                backgroundColor: "#f3f3f3",
+              },
+            }}
+          >
+            Google
+          </Button>
+          <Divider sx={{ my: 2 }}>
+            <Typography variant="body2" color="textSecondary" fontSize='.8rem'>
+              Already have an account?
+              <Link href="/auth/login" passHref>
+                <Button variant="text" color="primary" sx={{ fontSize: ".75rem", textDecoration: "underline" }}>
+                  Log In
+                </Button>
+              </Link>
+            </Typography>
           </Divider>
-        </Form>
-      </Section>
+        </Box>
+      </Box>
     </>
   );
 }
