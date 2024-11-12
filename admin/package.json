@@ -1,9 +1,8 @@
 {
-  "name": "material-kit-react",
+  "name": "Green-Cycle-Admin",
   "version": "4.0.0",
-  "author": "Devias",
+  "author": "Abdurehim Kedir",
   "licence": "MIT",
-  "homepage": "https://devias.io",
   "private": false,
   "scripts": {
     "dev": "next dev",
