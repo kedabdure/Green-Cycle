@@ -7,10 +7,6 @@ import CredentialsProvider from 'next-auth/providers/credentials';
 import client from '@/lib/mongodb';
 import { mongooseConnect } from '@/lib/mongoose';
 
-const checkAdminUser = async (email: string) => {
-  const adminEmail = process.env.SUPER_ADMIN_EMAIL;
-  return email === adminEmail;
-};
 
 const options = {
   secret: process.env.NEXTAUTH_SECRET,
@@ -61,11 +57,6 @@ const options = {
         const isPasswordValid = bcrypt.compareSync(password, admin.password);
         if (!isPasswordValid) {
           throw new Error('Invalid password.');
-        }
-
-        const isAdmin = await checkAdminUser(email);
-        if (!isAdmin) {
-          throw new Error('You are not an admin!');
         }
 
         return {
