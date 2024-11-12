@@ -12,6 +12,9 @@ interface AdminInfo {
   name: string;
   email: string;
   image: string;
+  phone: string;
+  city: string;
+  country: string;
   role: string;
 }
 
