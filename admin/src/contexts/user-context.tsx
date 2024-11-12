@@ -1,85 +1,69 @@
 'use client';
 
-import * as React from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
+import { useQuery } from '@tanstack/react-query';
 import type { User } from '@/types/user';
 import { logger } from '@/lib/default-logger';
 import axios from 'axios';
 
-// UserContextValue defines the shape of context
+// CONTEXT SETUP
+interface AdminInfo {
+  name: string;
+  email: string;
+  image: string;
+  role: string;
+}
+
 export interface UserContextValue {
   user: User | null;
   error: string | null;
   isLoading: boolean;
-  adminInfo: AdminInfo | null;
-  checkSession: () => Promise<void>;
+  adminInfo: AdminInfo | null | undefined;
+  checkSession: () => void;
   updateUser: (updatedUser: Partial<User>) => Promise<void>;
 }
 
-interface AdminInfo {
-  name: string;
-  email: string;
-  phone: string;
-  image: string;
-  city: string;
-  country: string;
-  role: string;
-}
+export const UserContext = createContext<UserContextValue | undefined>(undefined);
 
-// CONTEXT SETUP
-export const UserContext = React.createContext<UserContextValue | undefined>(undefined);
+const fetchAdminInfo = async (email: string): Promise<AdminInfo | null> => {
+  try {
+    const { data } = await axios.get(`/api/admins?email=${email}`);
+    return data;
+  } catch (error) {
+    logger.error('Error fetching admin info:', error);
+    return null;
+  }
+};
 
-// USERPROVIDERPROPS DEFINES THE CHILDREN PROP
-export interface UserProviderProps {
-  children: React.ReactNode;
-}
-
-export function UserProvider({ children }: UserProviderProps): React.JSX.Element {
+// PROVIDER COMPONENT
+export function UserProvider({ children }: { children: React.ReactNode }): React.JSX.Element {
   const { data: session, status, update } = useSession();
-  const [adminInfo, setAdminInfo] = React.useState<AdminInfo | null>(null);
-  const [state, setState] = React.useState<{ user: User | null; error: string | null; isLoading: boolean }>({
-    user: null,
-    error: null,
-    isLoading: true,
+  const [error, setError] = useState<string | null>(null);
+
+  // Fetch admin info with TanStack Query
+  const { data: adminInfo, isLoading } = useQuery({
+    queryKey: ['admin', session?.user?.email],
+    queryFn: () => fetchAdminInfo(session?.user?.email as string),
+    enabled: !!session?.user?.email,
   });
 
-  // FETCH ADMIN INFO FROM AN API
-  const fetchAdminInfo = async (email: string) => {
-    try {
-      const res = await axios.get(`/api/admins?email=${email}`);
-      if (res.status === 200) {
-        setAdminInfo(res.data);
-      } else {
-        throw new Error('Failed to fetch admins info');
-      }
-    } catch (error) {
-      logger.error('Error fetching admins info:', error);
+  // Set user data based on session
+  const user: User | null = session
+    ? {
+      email: session.user?.email || '',
+      name: session.user?.name || '',
+      image: session.user?.image || '',
+      role: (session.user as any)?.role || 'admin',
     }
+    : null;
+
+  const checkSession = () => {
+    setError(status === 'unauthenticated' ? 'No session found' : null);
   };
 
-  // CHECK SESSION AND SET USER DATA
-  const checkSession = async (): Promise<void> => {
-    if (status === 'loading') {
-      setState((prev) => ({ ...prev, isLoading: true }));
-      return;
-    }
-
-    if (session) {
-      const userData: User = {
-        email: session.user?.email || '',
-        name: session.user?.name || '',
-        image: session.user?.image || '',
-        role: (session.user as any)?.role || 'admin',
-      };
-
-      setState({ user: userData, error: null, isLoading: false });
-    } else {
-      setState({ user: null, error: 'No session found', isLoading: false });
-    }
-  };
-
-  // UPDATE SESSION WITH NEW USER DATA
-  const updateUser = async (updatedUser: Partial<User>): Promise<void> => {
+  // Update user session
+  const updateUser = async (updatedUser: Partial<User>) => {
     try {
       const updatedSession = await update({
         ...session,
@@ -89,34 +73,22 @@ export function UserProvider({ children }: UserProviderProps): React.JSX.Element
         },
       });
 
-      if (updatedSession) {
-        setState((prev) => ({
-          ...prev,
-          user: prev.user ? { ...prev.user, ...updatedUser } : null,
-          error: null,
-        }));
-      } else {
-        throw new Error('Failed to update session');
-      }
+      if (!updatedSession) throw new Error('Failed to update session');
+      setError(null);
     } catch (error) {
       logger.error('Failed to update user session:', error);
-      setState((prev) => ({ ...prev, error: 'Failed to update session', isLoading: false }));
+      setError('Failed to update session');
     }
   };
 
-  // FETCH ADMIN INFO AND CHECK SESSION WHEN STATUS CHANGES
-  React.useEffect(() => {
+  // Check session when status changes
+  useEffect(() => {
     checkSession();
-    if (session && session?.user?.email) {
-      fetchAdminInfo(session.user.email);
-    }
   }, [status, session]);
 
   return (
-    <UserContext.Provider value={{ ...state, checkSession, updateUser, adminInfo }}>
+    <UserContext.Provider value={{ user, error, isLoading, adminInfo, checkSession, updateUser }}>
       {children}
     </UserContext.Provider>
   );
 }
-
-export const UserConsumer = UserContext.Consumer;
