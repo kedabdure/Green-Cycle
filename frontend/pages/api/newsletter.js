@@ -1,5 +1,5 @@
 import { mongooseConnect } from "../../lib/mongoose";
-import Newsletter from "../../models/Newsletter";
+import Newsletter from "../../models/NewsLetter";
 
 // Constants for error messages
 const ERROR_EMAIL_REQUIRED = "Email is required";

@@ -7,7 +7,7 @@ import ContactForm from "../../components/contact/ContactForm";
 import Header from '../../components/Header';
 import ContactLinks from "../../components/contact/ContactLinks";
 import ContactInfo from "../../components/contact/ContactInfo";
-import NewsLetter from "../../components/contact/Newsletter";
+import NewsLetter from "../../components/contact/NewsLetter";
 
 export default function AboutUs() {
   return (
