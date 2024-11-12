@@ -24,12 +24,12 @@ export function Layout({ children }: LayoutProps): React.JSX.Element {
       }}
     >
       <Box sx={{ display: 'flex', flex: '1 1 auto', flexDirection: 'column' }}>
-        <Box sx={{ p: 3 }}>
+        <Box sx={{ p: { xs: 2, md: 3 } }}>
           <Box component={RouterLink} href={paths.home} sx={{ display: 'inline-block', fontSize: 0 }}>
-            <Image src={'/assets/greenCycleLogo.svg'} height={48} width={150} alt="Logo" />
+            <Image src={'/assets/greenCycleLogo.svg'} height={40} width={120} alt="Logo" />
           </Box>
         </Box>
-        <Box sx={{ alignItems: 'center', display: 'flex', flex: '1 1 auto', justifyContent: 'center', p: 3 }}>
+        <Box sx={{ alignItems: 'center', display: 'flex', flex: '1 1 auto', justifyContent: 'center', p: {xs: '1rem', md: 3}, mt: '-5rem' }}>
           <Box sx={{ maxWidth: '450px', width: '100%' }}>{children}</Box>
         </Box>
       </Box>

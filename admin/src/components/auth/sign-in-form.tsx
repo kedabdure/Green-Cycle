@@ -12,6 +12,7 @@ import InputLabel from '@mui/material/InputLabel';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
+import { IconButton } from '@mui/material';
 import { Eye as EyeIcon } from '@phosphor-icons/react/dist/ssr/Eye';
 import { EyeSlash as EyeSlashIcon } from '@phosphor-icons/react/dist/ssr/EyeSlash';
 import { Controller, useForm } from 'react-hook-form';
@@ -44,28 +45,43 @@ export function SignInForm(): React.JSX.Element {
   const onSubmit = React.useCallback(
     async (values: Values): Promise<void> => {
       setIsPending(true);
+      setServerError(null);
 
-      const res = await signIn('credentials', {
-        redirect: false,
-        email: values.email,
-        password: values.password,
-      });
+      try {
+        const res = await signIn('credentials', {
+          redirect: false,
+          email: values.email,
+          password: values.password,
+        });
 
-      if (res?.error) {
-        setError('root', { type: 'server', message: "Check your connection. and try again!" });
-        setServerError("Check your connection. and try again!");
+        if (res?.error) {
+          let errorMessage = "Check your connection and try again!";
+
+          if (res.error.includes("Admin not found")) {
+            errorMessage = "No admin account found with this email.";
+          } else if (res.error.includes("Invalid password")) {
+            errorMessage = "The password you entered is incorrect.";
+          } else if (res.error.includes("not an admin")) {
+            errorMessage = "Access denied. Only admins can sign in.";
+          }
+
+          setError('root', { type: 'server', message: errorMessage });
+          setServerError(errorMessage);
+        } else {
+          router.push("/");
+        }
+      } catch (error) {
+        setError('root', { type: 'server', message: "Unexpected error occurred." });
+        setServerError("Unexpected error occurred. Please try again later.");
+      } finally {
         setIsPending(false);
-        return;
       }
-
-      router.push("/");
-      setIsPending(false);
     },
     [router, setError]
   );
 
   return (
-    <Stack spacing={4}>
+    <Stack spacing={5}>
       <Stack spacing={1}>
         <Typography variant="h4">Sign in</Typography>
       </Stack>
@@ -91,23 +107,13 @@ export function SignInForm(): React.JSX.Element {
                 <OutlinedInput
                   {...field}
                   endAdornment={
-                    showPassword ? (
-                      <EyeIcon
-                        cursor="pointer"
-                        fontSize="var(--icon-fontSize-md)"
-                        onClick={(): void => {
-                          setShowPassword(false);
-                        }}
-                      />
-                    ) : (
-                      <EyeSlashIcon
-                        cursor="pointer"
-                        fontSize="var(--icon-fontSize-md)"
-                        onClick={(): void => {
-                          setShowPassword(true);
-                        }}
-                      />
-                    )
+                    <IconButton
+                      onClick={() => setShowPassword((prev) => !prev)}
+                      edge="end"
+                      tabIndex={-1}
+                    >
+                      {showPassword ? <EyeIcon fontSize="medium" /> : <EyeSlashIcon fontSize="medium" />}
+                    </IconButton>
                   }
                   label="Password"
                   type={showPassword ? 'text' : 'password'}
@@ -117,7 +123,7 @@ export function SignInForm(): React.JSX.Element {
             )}
           />
           {serverError ? <Alert color="error">{serverError}</Alert> : null}
-          <Button disabled={isPending} type="submit" variant="contained">
+          <Button disabled={isPending} type="submit" variant="contained" sx={{ backgroundColor: "green" }}>
             Sign in
           </Button>
         </Stack>

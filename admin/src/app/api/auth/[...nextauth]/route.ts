@@ -55,7 +55,7 @@ const options = {
           role: string;
         };
         if (!admin) {
-          throw new Error('Admin not found.');
+          throw new Error('Admin not found with this email!');
         }
 
         const isPasswordValid = bcrypt.compareSync(password, admin.password);
@@ -84,7 +84,7 @@ const options = {
     signOut: '/auth/sign-out',
     error: '/auth/error',
   },
-callbacks: {
+  callbacks: {
     async jwt({ token, user }: { token: any; user?: any }) {
       if (user) {
         token.id = user.id;
@@ -117,7 +117,7 @@ callbacks: {
   },
   events: {
     async updateUser({ user }: { user: any }) {
-      console.log("User was updated:", user);
+      console.log('User was updated:', user);
 
       await updateUserToken(user._id, user.email, user.name, user.image);
     },
@@ -135,7 +135,7 @@ async function updateUserToken(userId: string, email: string, name: string, imag
 
     await user.save();
   }
-};
+}
 
 export const GET = NextAuth(options);
 export const POST = NextAuth(options);
