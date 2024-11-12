@@ -112,7 +112,7 @@ export function SignInForm(): React.JSX.Element {
                       edge="end"
                       tabIndex={-1}
                     >
-                      {showPassword ? <EyeIcon fontSize="medium" /> : <EyeSlashIcon fontSize="medium" />}
+                      {showPassword ? <EyeIcon fontSize="large" /> : <EyeSlashIcon fontSize="large" />}
                     </IconButton>
                   }
                   label="Password"
@@ -123,7 +123,7 @@ export function SignInForm(): React.JSX.Element {
             )}
           />
           {serverError ? <Alert color="error">{serverError}</Alert> : null}
-          <Button disabled={isPending} type="submit" variant="contained" sx={{ backgroundColor: "green" }}>
+          <Button disabled={isPending} type="submit" variant="contained" sx={{ backgroundColor: "green", "&:hover": { backgroundColor: 'darkgreen' } }}>
             Sign in
           </Button>
         </Stack>
