@@ -4,12 +4,11 @@ import * as React from 'react';
 import RouterLink from 'next/link';
 import { usePathname } from 'next/navigation';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
+import Image from 'next/image';
 import Divider from '@mui/material/Divider';
 import Drawer from '@mui/material/Drawer';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { ArrowSquareUpRight as ArrowSquareUpRightIcon } from '@phosphor-icons/react/dist/ssr/ArrowSquareUpRight';
 import { CaretUpDown as CaretUpDownIcon } from '@phosphor-icons/react/dist/ssr/CaretUpDown';
 
 import type { NavItemConfig } from '@/types/nav';
@@ -60,7 +59,7 @@ export function MobileNav({ open, onClose }: MobileNavProps): React.JSX.Element 
     >
       <Stack spacing={2} sx={{ p: 3 }}>
         <Box component={RouterLink} href={paths.home} sx={{ display: 'inline-flex' }} onClick={onClose}>
-          <Logo color="light" height={32} width={122} />
+          <Image src="/main-logo-white.png" width={120} height={40} alt="Logo white" />
         </Box>
         <Box
           sx={{
@@ -77,8 +76,8 @@ export function MobileNav({ open, onClose }: MobileNavProps): React.JSX.Element 
             <Typography color="var(--mui-palette-neutral-400)" variant="body2">
               Workspace
             </Typography>
-            <Typography color="inherit" variant="subtitle1">
-              Nexaddis
+            <Typography color="inherit" variant="subtitle2">
+              Green Cycle
             </Typography>
           </Box>
           <CaretUpDownIcon />
