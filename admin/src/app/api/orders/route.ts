@@ -6,11 +6,11 @@ import { NextResponse } from "next/server";
 export async function POST(req: Request) {
   try {
     await mongooseConnect();
-    const data = await req.json(); // Get the order data from the request body
+    const data = await req.json();
 
-    const newOrder = await Order.create(data); // Create a new order in MongoDB
+    const newOrder = await Order.create(data);
 
-    return NextResponse.json(newOrder, { status: 201 }); // Return the created order with status 201 (Created)
+    return NextResponse.json(newOrder, { status: 201 });
   } catch (error) {
     return NextResponse.json({ error: (error as Error).message }, { status: 500 });
   }
@@ -22,7 +22,7 @@ export async function GET(req: Request) {
     await mongooseConnect();
 
     const url = new URL(req.url);
-    const id = url.searchParams.get("id"); // Check if a specific order ID is requested
+    const id = url.searchParams.get("id");
 
     if (id) {
       const order = await Order.findById(id);
@@ -31,7 +31,7 @@ export async function GET(req: Request) {
       }
       return NextResponse.json(order, { status: 200 });
     } else {
-      const orders = await Order.find().sort({createdAt: -1}); // Fetch all orders
+      const orders = await Order.find().sort({createdAt: -1});
       return NextResponse.json(orders, { status: 200 });
     }
   } catch (error) {

@@ -188,7 +188,7 @@ export default function DashboardPage(): React.JSX.Element {
       {/* LATEST ORDERS */}
       <Grid xs={12}>
         <LatestOrders
-          orders={orders}
+          orders={orders.slice(0, 6)}
         />
       </Grid>
     </Grid>

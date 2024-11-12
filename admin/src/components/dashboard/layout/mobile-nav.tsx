@@ -14,7 +14,6 @@ import { CaretUpDown as CaretUpDownIcon } from '@phosphor-icons/react/dist/ssr/C
 import type { NavItemConfig } from '@/types/nav';
 import { paths } from '@/paths';
 import { isNavItemActive } from '@/lib/is-nav-item-active';
-import { Logo } from '@/components/core/logo';
 
 import { navItems } from './config';
 import { navIcons } from './nav-icons';
@@ -110,7 +109,7 @@ function renderNavItems({ items = [], pathname, onClose }: { items?: NavItemConf
 
 interface NavItemProps extends Omit<NavItemConfig, 'items'> {
   pathname: string;
-  onClose?: () => void;  // Add onClose as a prop
+  onClose?: () => void;
 }
 
 function NavItem({ disabled, external, href, icon, matcher, pathname, title, onClose }: NavItemProps): React.JSX.Element {
