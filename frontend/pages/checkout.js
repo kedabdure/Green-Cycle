@@ -51,7 +51,7 @@ export default function Checkout() {
 
   async function goToPayment(data) {
     if (!session) {
-      router.push('/auth/login');
+      router.push(`/auth/login?redirect=${encodeURIComponent(router.asPath)}`);
       return;
     }
 

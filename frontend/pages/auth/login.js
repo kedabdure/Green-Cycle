@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { useRouter } from "next/router";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
 import Google from "../../components/icons/Google";
@@ -8,7 +9,6 @@ import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import CircularProgress from "@mui/material/CircularProgress";
 import Alert from "@mui/material/Alert";
-import Stack from "@mui/material/Stack";
 import Head from "next/head";
 import { ArrowLeft as ArrowBackIcon } from 'phosphor-react'
 import {
@@ -23,17 +23,16 @@ export default function RegisterPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loginInProgress, setLoginInProgress] = useState(false);
-  const [userCreated, setUserCreated] = useState(false);
-  const [error, setError] = useState(false);
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [errorMessages, setErrorMessages] = useState([]);
   const [open, setOpen] = useState(false);
+  const router = useRouter();
+  const { redirect } = router.query;
 
   async function handleFormSubmit(ev) {
     ev.preventDefault();
 
-    // Reset error messages before validation
     setEmailError("");
     setPasswordError("");
 
@@ -50,10 +49,7 @@ export default function RegisterPage() {
     }
 
     if (!valid) return;
-
     setLoginInProgress(true);
-    setError(false);
-    setUserCreated(false);
 
     const res = await signIn("credentials", {
       email,
@@ -62,7 +58,11 @@ export default function RegisterPage() {
     });
 
     if (res?.ok) {
-      window.location.href = "/";
+      if (redirect) {
+        router.push(decodeURIComponent(redirect));
+      } else {
+        router.push('/');
+      }
     } else {
       setErrorMessages(res?.error);
       setOpen(true);
@@ -149,8 +149,7 @@ export default function RegisterPage() {
           onSubmit={handleFormSubmit}
           sx={{
             maxWidth: "330px",
-            // mx: "auto",
-            p: { xs: "1rem", md: "1.7rem 1.2rem 1rem 1.2rem" },
+            p: { xs: "1.2rem 1rem .5rem 1rem", md: "1.7rem 1.2rem 1rem 1.2rem" },
             border: "1px solid #ddd",
             borderRadius: 2,
             backgroundColor: "#f9f9f9",
@@ -165,6 +164,7 @@ export default function RegisterPage() {
             sx={{
               fontSize: { xs: '2rem', md: '2rem' },
               fontWeight: '700',
+              mb: { xs: ".8rem", md: '1rem' }
             }}
           >
             Log In
@@ -183,7 +183,7 @@ export default function RegisterPage() {
             }}
             error={!!emailError}
             helperText={emailError}
-            margin="normal"
+            margin="dense"
           />
           <TextField
             type="password"
@@ -199,7 +199,7 @@ export default function RegisterPage() {
             }}
             error={!!passwordError}
             helperText={passwordError}
-            margin="normal"
+            margin="dense"
           />
           <Button
             type="submit"
