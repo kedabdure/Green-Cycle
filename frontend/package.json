@@ -22,7 +22,7 @@
     "chapa-nodejs": "^2.0.1",
     "dayjs": "^1.11.13",
     "formidable": "^3.5.1",
-    "framer-motion": "^11.11.7",
+    "framer-motion": "^11.11.13",
     "fs": "^0.0.1-security",
     "imagekit": "^5.2.0",
     "jspdf": "^2.5.2",

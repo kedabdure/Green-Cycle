@@ -14,6 +14,7 @@ const OrderSchema = new Schema(
     paid: {type: Boolean, default: false},
     tx_ref: String,
     userId: { type: Schema.Types.ObjectId, ref: "User" },
+    notifiedDelivered: { type: Boolean, default: false },
     status: { type: String, default: "Pending" },
   },
   {

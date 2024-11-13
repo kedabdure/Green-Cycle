@@ -2,87 +2,74 @@ import { mongooseConnect } from "../../lib/mongoose";
 import { Order } from "../../models/Order";
 import { Product } from "../../models/Product";
 
-
 export default async function handler(req, res) {
   await mongooseConnect();
+  
+  // Set the allowed HTTP methods
+  const allowedMethods = ["GET", "POST", "PUT", "DELETE"];
+  res.setHeader("Allow", allowedMethods);
+
   const { id, tx_ref, userId } = req.query;
 
   try {
+    // GET Request Handling
     if (req.method === "GET") {
       let response;
 
       if (id) {
-        response = await Order.findOne({ _id: id });
-        if (!response) {
-          return res.status(404).json({ message: "Order not found with provided ID" });
-        }
+        response = await Order.findById(id);
+        if (!response) return res.status(404).json({ message: "Order not found with provided ID" });
         return res.status(200).json(response);
       }
 
       if (tx_ref) {
         response = await Order.findOne({ tx_ref });
-        if (!response) {
-          return res.status(404).json({ message: "Order not found with provided transaction reference" });
-        }
+        if (!response) return res.status(404).json({ message: "Order not found with provided transaction reference" });
         return res.status(200).json(response);
       }
 
       if (userId) {
-        response = await Order.find({ userId, status: { $ne: "Delivered" } }).sort({ createdAt: -1 });
-        if (!response || response.length === 0) {
-          return res.status(404).json({ message: "No active orders found for the provided user ID" });
-        }
+        response = await Order.find({ userId }).sort({ createdAt: -1 });
+        if (!response || response.length === 0) return res.status(404).json({ message: "No active orders found for the provided user ID" });
         return res.status(200).json(response);
       }
 
+      // Return all orders if no specific filters are provided
       response = await Order.find().sort({ createdAt: -1 });
       return res.status(200).json(response);
     }
 
-
-    // POST
+    // POST Request Handling - Creating a new Order
     if (req.method === "POST") {
       const {
-        firstName,
-        lastName,
-        email,
-        phone,
-        country,
-        city,
-        subCity,
-        streetAddress,
-        cartProducts,
-        userId,
+        firstName, lastName, email, phone,
+        country, city, subCity, streetAddress,
+        cartProducts, userId
       } = req.body;
 
-      if (!cartProducts) {
-        return res.status(400).json({ error: "Cart products are required" });
-      }
+      if (!cartProducts) return res.status(400).json({ error: "Cart products are required" });
 
-      const productsIds = cartProducts;
-      const uniqueIds = [...new Set(productsIds)];
-      const productsInfos = await Product.find({ _id: { $in: uniqueIds } });
+      // Retrieve product info for each unique product ID in the cart
+      const uniqueProductIds = [...new Set(cartProducts)];
+      const productInfoList = await Product.find({ _id: { $in: uniqueProductIds } });
 
-      let line_items = [];
+      // Build line items for the order
+      const lineItems = uniqueProductIds.map(productId => {
+        const product = productInfoList.find(p => p._id.toString() === productId);
+        const quantity = cartProducts.filter(id => id === productId).length;
+        return product && quantity > 0 ? {
+          quantity,
+          price_data: {
+            currency: "ETB",
+            product_data: { name: product.title },
+            amount: quantity * product.price,
+          }
+        } : null;
+      }).filter(item => item !== null); // Remove any null entries
 
-      for (const productId of uniqueIds) {
-        const productInfo = productsInfos.find(p => p._id.toString() === productId);
-        const quantity = productsIds.filter(id => id === productId)?.length || 0;
-        if (quantity > 0 && productInfo) {
-          line_items.push({
-            quantity,
-            price_data: {
-              currency: "ETB",
-              product_data: { name: productInfo.title },
-              amount: quantity * productInfo.price,
-            },
-          });
-        }
-      }
-
-      // Create the order document in MongoDB
-      const orderDoc = await Order.create({
-        line_items,
+      // Create the order
+      const newOrder = await Order.create({
+        line_items: lineItems,
         firstName,
         lastName,
         email,
@@ -93,31 +80,34 @@ export default async function handler(req, res) {
         streetAddress,
         userId,
       });
-
-      return res.status(201).json(orderDoc);
-    } else {
-      res.setHeader("Allow", ["POST"]);
-      res.status(405).json({ message: `Method ${req.method} Not Allowed` });
+      
+      return res.status(201).json(newOrder);
     }
 
-    // UPDATE
+    // PUT Request Handling - Updating an Order
     if (req.method === "PUT") {
-      if (!id) return res.status(400).json({ message: "Order ID is required for updating" });
-      const updatedOrder = await updateOrderById(id, req.body);
+      if (!id) return res.status(400).json({ message: "Order ID is required" });
+      
+      const updatedOrder = await Order.findByIdAndUpdate(id, req.body, { new: true });
+      if (!updatedOrder) return res.status(404).json({ message: "Order not found" });
+      
       return res.status(200).json(updatedOrder);
     }
 
-    // DELETE
+    // DELETE Request Handling - Deleting an Order
     if (req.method === "DELETE") {
       if (!id) return res.status(400).json({ message: "Order ID is required for deletion" });
-      const response = await deleteOrderById(id);
-      return res.status(200).json(response);
+      
+      const deletedOrder = await Order.findByIdAndDelete(id);
+      if (!deletedOrder) return res.status(404).json({ message: "Order not found" });
+
+      return res.status(200).json({ message: "Order deleted successfully", deletedOrder });
     }
 
-    res.setHeader("Allow", ["GET", "POST", "PUT", "DELETE"]);
-    res.status(405).json({ message: `Method ${req.method} Not Allowed` });
+    // If method is not allowed, respond with 405
+    return res.status(405).json({ message: `Method ${req.method} Not Allowed` });
 
   } catch (error) {
-    res.status(error.message === "Order not found" ? 404 : 500).json({ error: error.message });
+    return res.status(500).json({ error: error.message });
   }
 }
