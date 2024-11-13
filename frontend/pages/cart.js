@@ -33,12 +33,6 @@ export default function Cart() {
     }
   }, [fetchedProducts]);
 
-  if (isLoading) {
-    return <Box sx={{ height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center', pt: '4rem' }}>
-      <CircularProgress color="#333" size={32} />
-    </Box>
-  }
-
   function moreOfThisProduct(id) {
     addProduct(id);
   }

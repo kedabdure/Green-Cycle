@@ -45,7 +45,7 @@ export default function Header() {
 
   const linkStyles = {
     position: "relative",
-    fontSize: {xs: ".92rem", lg: ".95rem"},
+    fontSize: { xs: ".9rem", lg: ".9rem" },
     color: "#111",
     fontWeight: 500,
     textDecoration: "none",
@@ -102,7 +102,7 @@ export default function Header() {
           component="nav"
           sx={{
             display: { xs: "none", md: "flex" },
-            gap: 3,
+            gap: { xs: 1, md: 2, lg: 3 },
           }}
         >
           {navLinks.map((link) => (
@@ -204,7 +204,7 @@ export default function Header() {
         )}
 
         {/* User Actions */}
-        <Box sx={{ width: { xs: '100%', md: '240px' }, display: "flex", alignItems: "center", justifyContent:{xs: 'space-between', md: "center"}, gap: 3 }}>
+        <Box sx={{ width: { xs: '100%', md: '250px' }, display: "flex", alignItems: "center", justifyContent: { xs: 'space-between', md: "center" }, gap: 3 }}>
           <Box sx={{ display: { xs: "block", md: "none" } }}>
             <IconButton onClick={() => setMobileNavActive((prev) => !prev)}>
               <BarsIcon size={28} />
