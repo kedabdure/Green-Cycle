@@ -36,7 +36,7 @@ export default function Hero() {
         <Box
           sx={{
             width: { xs: "100%", md: "50%" },
-            height: { xs: "190px", md: "420px" },
+            height: { xs: "190px", md: "450px" },
             textAlign: { xs: "center", md: "left" },
             display: "flex",
             flexDirection: "column",
@@ -48,33 +48,22 @@ export default function Hero() {
             sx={{
               display: "flex",
               flexDirection: "column",
-              gap: "1rem",
+              gap: "1.2rem",
               alignItems: { xs: "center", md: "flex-start" },
             }}
           >
             <Typography
-              variant="h2"
+              variant="h1"
               sx={{
-                fontSize: { xs: "2rem", md: "3.4rem", lg: "3.5rem" },
+                fontSize: { xs: "2.4rem", md: "3.4rem", lg: "4.4rem" },
                 color: "#111",
-                maxWidth: { xs: "500px", sm: "400px", lg: "700px" },
-                fontFamily: "'Outfit', sans-serif",
-                fontWeight: "700",
-                lineHeight: { xs: "2.5rem", md: "4.3rem" },
+                maxWidth: { xs: "300px", sm: "400px", lg: "500px" },
+                fontFamily: "'Roboto', sans-serif",
+                fontWeight: "900",
+                lineHeight: { xs: "2.5rem", md: "4.3rem", lg: '5rem' },
               }}
             >
-              Sustain{" "}
-              <Box
-                component="span"
-                sx={{
-                  padding: "4px 14px",
-                  borderRadius: "68px",
-                  backgroundColor: "#D7FFB1",
-                }}
-              >
-                Green
-              </Box>{" "}
-              Furniture Rescue & Reuse
+              Eco-Friendly Marketplace for Used Furniture
             </Typography>
 
             <Typography
@@ -87,13 +76,13 @@ export default function Hero() {
                 mb: { xs: "2rem", md: ".6rem" },
               }}
             >
-              Support Ethiopia’s Green Legacy with sustainable furniture choices—embrace eco-friendly materials and reduce waste with every purchase.
+              Support Ethiopia’s Green Legacy with sustainable furniture choices embrace eco-friendly materials and reduce waste with every purchase.
             </Typography>
           </Box>
 
           <Box
             sx={{
-              display: { xs: 'none', sm: 'flex' },
+              display: { xs: 'none', md: 'flex' },
               justifyContent: { xs: "center", md: "space-between" },
               gap: { xs: "0.5rem", md: ".5rem" },
               width: { xs: "100%", sm: "auto" },
@@ -104,7 +93,7 @@ export default function Hero() {
             <Button
               onClick={() => router.push("/sell-furniture")}
               sx={{
-                padding: { xs: "0.4rem 1.5rem", md: "0.6rem 2rem" },
+                padding: { xs: "0.4rem 1.5rem", md: "0.72rem 2rem" },
                 fontSize: { xs: "0.8rem", md: "0.9rem" },
                 color: "#fff",
                 backgroundColor: "#111",
@@ -124,7 +113,7 @@ export default function Hero() {
               variant="outlined"
               onClick={() => router.push("/products")}
               sx={{
-                padding: { xs: "0.4rem 1.5rem", md: "0.6rem 2rem" },
+                padding: { xs: "0.4rem 1.5rem", md: "0.7rem 1rem" },
                 fontSize: { xs: "0.8rem", md: "0.9rem" },
                 color: "#111",
                 borderColor: "#111",
@@ -136,7 +125,7 @@ export default function Hero() {
                 width: { xs: "100%", sm: "auto" },
               }}
             >
-              Buy
+              Shop Now
             </Button>
           </Box>
         </Box>
@@ -164,11 +153,11 @@ export default function Hero() {
               }}
             >
               <Image
-                src={'/assets/images/abiy.jpg'}
+                src={'/assets/images/hero-small1.jpg'}
                 fill
                 alt="Product photo 1"
                 placeholder="blur"
-                blurDataURL={'/assets/images/abiy.jpg'}
+                blurDataURL={'/assets/images/hero-small1.jpg'}
                 style={{ objectFit: "cover" }}
               />
             </Box>
@@ -183,11 +172,11 @@ export default function Hero() {
               }}
             >
               <Image
-                src={'/assets/images/forest.jpg'}
+                src={'/assets/images/hero-small2.jpg'}
                 fill
                 alt="Product photo 2"
                 placeholder="blur"
-                blurDataURL={'/assets/images/forest.jpg'}
+                blurDataURL={'/assets/images/hero-small2.jpg'}
                 style={{ objectFit: "cover" }}
               />
             </Box>
@@ -205,11 +194,11 @@ export default function Hero() {
             }}
           >
             <Image
-              src={'/assets/images/abiy.jpg'}
+              src={'/assets/images/hero-large.jpg'}
               fill
               alt="Product photo 3"
               placeholder="blur"
-              blurDataURL={'/assets/images/abiy.jpg'}
+              blurDataURL={'/assets/images/hero-large.jpg'}
               style={{ objectFit: "cover" }}
             />
           </Box>
@@ -218,10 +207,10 @@ export default function Hero() {
         {/* Button on Small Screen */}
         <Box
           sx={{
-            display: { xs: "flex", sm: "none" },
+            display: { xs: "flex", md: "none" },
             alignItems: "center",
-            justifyContent: "space-between",
-            width: '60%',
+            justifyContent: {xs: "center", md: "space-between"},
+            width: '80%',
             mt: 3,
             gap: 1,
           }}
@@ -229,7 +218,7 @@ export default function Hero() {
           <Button
             onClick={() => router.push("/sell-furniture")}
             sx={{
-              padding: { xs: "0.6rem 1.6rem", md: "0.6rem 2rem" },
+              padding: { xs: "0.6rem .5rem", md: "0.6rem 2rem" },
               fontSize: { xs: "0.8rem", md: "0.9rem" },
               color: "#fff",
               backgroundColor: "#111",
@@ -249,7 +238,7 @@ export default function Hero() {
             variant="outlined"
             onClick={() => router.push("/products")}
             sx={{
-              padding: { xs: "0.6rem 1.6rem", md: "0.6rem 2rem" },
+              padding: { xs: "0.6rem .5rem", md: "0.6rem 2rem" },
               fontSize: { xs: "0.8rem", md: "0.9rem" },
               color: "#111",
               borderColor: "#111",
@@ -261,7 +250,7 @@ export default function Hero() {
               width: { xs: "100%", sm: "auto" },
             }}
           >
-            Buy
+            Shop Now
           </Button>
         </Box>
       </Box>
