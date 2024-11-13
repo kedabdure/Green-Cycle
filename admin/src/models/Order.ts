@@ -1,4 +1,4 @@
-import { model, models, Schema } from "mongoose";
+import { model, models, Schema } from 'mongoose';
 
 const OrderSchema = new Schema(
   {
@@ -13,11 +13,12 @@ const OrderSchema = new Schema(
     streetAddress: String,
     paid: Boolean,
     tx_ref: String,
-    status: { type: String, default: "Pending" },
+    notifiedDelivered: { type: Boolean, default: false },
+    status: { type: String, default: 'Pending' },
   },
   {
     timestamps: true,
   }
 );
 
-export const Order = models?.Order || model("Order", OrderSchema);
+export const Order = models?.Order || model('Order', OrderSchema);
