@@ -9,7 +9,7 @@ export default function EmptyCartPage() {
       display="flex"
       justifyContent="center"
       alignItems="center"
-      sx={{ mt: { xs: '10rem', md: '6rem' } }}
+      height="80vh"
     >
       <Paper
         elevation={6}

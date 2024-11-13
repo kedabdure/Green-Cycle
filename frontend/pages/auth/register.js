@@ -113,11 +113,8 @@ export default function RegisterPage() {
         sx={{
           width: '100%',
           height: '100vh',
+          backgroundColor: '#f1f1f1',
           padding: { xs: "1rem", md: "2rem" },
-          backgroundImage: "url('/assets/backgrounds/pyramid.svg')",
-          backgroundRepeat: 'no-repeat',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
           zIndex: -1,
           display: 'flex',
           alignItems: 'center',
@@ -129,7 +126,7 @@ export default function RegisterPage() {
           sx={{ alignSelf: "flex-start", mb: 2, position: 'absolute', top: { xs: '3%', md: '5%' }, left: { xs: '3%', md: '5%' } }}
           aria-label="Back to home"
         >
-          <ArrowBackIcon color="#fff" />
+          <ArrowBackIcon color="#111" />
         </IconButton>
 
         <Snackbar

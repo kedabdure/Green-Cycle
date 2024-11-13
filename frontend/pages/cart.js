@@ -1,30 +1,43 @@
 import React, { useContext, useEffect, useState } from "react";
 import Header from "../components/Header";
 import { CartContext } from "../components/cart/CartContext";
-import { Box, Button, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
+import { Box, Button, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, CircularProgress } from "@mui/material";
 import Footer from "../components/Footer";
 import EmptyCartPage from "../components/cart/EmptyCartPage";
 import Image from "next/image";
 import Head from 'next/head';
 import { Plus as PlusIcon, Minus as XIcon, Trash as DeleteIcon } from "phosphor-react";
 import router from "next/router";
+import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 
+
+const fetchCartProducts = async (cartProducts) => {
+  const { data } = await axios.post('/api/cart', { ids: cartProducts });
+  return data;
+}
 
 export default function Cart() {
   const { cartProducts, addProduct, removeProduct, removeAllInstance } = useContext(CartContext);
   const [products, setProducts] = useState([]);
 
+  const { data: fetchedProducts, isLoading } = useQuery({
+    queryKey: ['cartProducts', cartProducts],
+    queryFn: () => fetchCartProducts(cartProducts),
+    enabled: !!cartProducts?.length,
+  });
+
   useEffect(() => {
-    if (cartProducts.length > 0) {
-      axios.post('/api/cart', { ids: cartProducts })
-        .then(response => {
-          setProducts(response.data);
-        });
-    } else {
-      setProducts([]);
+    if (fetchedProducts) {
+      setProducts(fetchedProducts);
     }
-  }, [cartProducts]);
+  }, [fetchedProducts]);
+
+  if (isLoading) {
+    return <Box sx={{ height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center', pt: '4rem' }}>
+      <CircularProgress color="#333" size={32} />
+    </Box>
+  }
 
   function moreOfThisProduct(id) {
     addProduct(id);
@@ -62,7 +75,7 @@ export default function Cart() {
         <title>Cart - Green Cycle</title>
       </Head>
       <Header />
-      <Box p={"5rem"} sx={{ p: { xs: '5rem 1rem', md: '5rem' }, position: 'relative', overflow: 'hidden' }}>
+      <Box sx={{ p: { xs: '5rem 1rem', md: '5rem' }, position: 'relative', overflow: 'hidden', minHeight: '100vh', }}>
         {!cartProducts?.length && (
           <Box sx={{
             display: 'flex',
@@ -89,8 +102,7 @@ export default function Cart() {
             src="/assets/images/greenGradient.svg"
             fill
             alt="Background SVG"
-            layout="fill"
-            objectFit="cover"
+            style={{ objectFit: 'cover' }}
           />
         </Box>
 
@@ -111,8 +123,7 @@ export default function Cart() {
             src="/assets/images/greenGradient.svg"
             fill
             alt="Background SVG"
-            layout="fill"
-            objectFit="cover"
+            style={{ objectFit: 'cover' }}
           />
         </Box>
 

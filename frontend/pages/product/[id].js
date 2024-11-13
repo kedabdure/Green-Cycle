@@ -11,6 +11,7 @@ import Header from "../../components/Header";
 import { X as CloseIcon } from "phosphor-react";
 import ProductsBox from "../../components/product/ProductsBox";
 import Head from "next/head";
+import Footer from '../../components/Footer';
 
 
 const fetchProduct = async (id) => {
@@ -41,6 +42,12 @@ export default function ProductPage() {
     enabled: !!product?.category,
   });
 
+  if (productLoading) {
+    return <Box sx={{ height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center', pt: '4rem' }}>
+      <CircularProgress color="#333" size={32} />
+    </Box>
+  }
+
   const handleAddToCart = () => {
     addProduct(product._id);
     setOpen(true);
@@ -63,7 +70,7 @@ export default function ProductPage() {
         <title>Product - Green Cycle</title>
       </Head>
       <Header />
-      <Box sx={{ px: { xs: "1rem", md: "3rem", lg: "5rem" }, py: { xs: "50px", md: "100px", lg: "150px" } }}>
+      <Box sx={{ px: { xs: "1rem", md: "3rem", lg: "5rem" }, py: { xs: "90px", md: "100px", lg: "150px" } }}>
         <Snackbar open={open} autoHideDuration={6000} onClose={handleCloseSnackbar} anchorOrigin={{ vertical: "bottom", horizontal: "left" }}>
           <Alert onClose={handleCloseSnackbar} severity="success" variant="filled" action={
             <IconButton size="small" color="inherit" onClick={handleCloseSnackbar}>
@@ -94,22 +101,24 @@ export default function ProductPage() {
           </Grid>
         </Grid>
 
-        <Box sx={{ mt: 12 }}>
-          <Typography variant="h4" sx={{ fontSize: { xs: '1.5rem', md: '1.8rem' }, mb: { xs: "3rem", md: "3.5rem" }, fontWeight: "600" }} >Related Products</Typography>
-          {relatedLoading ? (
-            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}><CircularProgress /></Box>
-
-          ) : (
-            <Grid container spacing={1}>
-              {slicedRelatedProducts.map((product) => (
-                <Grid item xs={6} sm={4} md={4} lg={3} key={product._id}>
-                  <ProductsBox {...product} />
-                </Grid>
-              ))}
-            </Grid>
-          )}
-        </Box>
+        {slicedRelatedProducts.length > 0 && (
+          <Box sx={{ mt: 12 }}>
+            <Typography variant="h4" sx={{ fontSize: { xs: '1.5rem', md: '1.8rem' }, mb: { xs: "3rem", md: "3.5rem" }, fontWeight: "600" }} >You may also like this!</Typography>
+            {relatedLoading ? (
+              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', pt: '2rem' }}><CircularProgress /></Box>
+            ) : (
+              <Grid container spacing={1}>
+                {slicedRelatedProducts.map((product) => (
+                  <Grid item xs={6} sm={4} md={4} lg={3} key={product._id}>
+                    <ProductsBox {...product} />
+                  </Grid>
+                ))}
+              </Grid>
+            )}
+          </Box>
+        )}
       </Box>
+      <Footer />
     </>
   );
 }

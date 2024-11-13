@@ -1,10 +1,12 @@
 import React, { useContext } from "react";
 import { CartContext } from "../../components/cart/CartContext";
-import { Box, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, Stack, useMediaQuery } from "@mui/material";
+import { Box, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, CircularProgress, useMediaQuery } from "@mui/material";
 import { Plus as PlusIcon, Minus as XIcon, Trash as DeleteIcon, Minus } from "phosphor-react";
 import Image from "next/image";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import PageLoader from "../PageLoader";
 import axios from "axios";
+import { Router, useRouter } from "next/router";
 
 const fetchProducts = async (ids) => {
   if (!ids || ids.length === 0) return [];
@@ -13,6 +15,7 @@ const fetchProducts = async (ids) => {
 }
 
 export default function OrderPreview() {
+  const router = useRouter();
   const { cartProducts, addProduct, removeProduct, removeAllInstance } = useContext(CartContext);
   const queryClient = useQueryClient();
   const isMobile = useMediaQuery('(max-width: 600px)');
@@ -22,6 +25,12 @@ export default function OrderPreview() {
     queryFn: () => fetchProducts(cartProducts),
     enabled: cartProducts.length > 0,
   });
+
+  if (isLoading) {
+    return <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', pt: '4rem' }}>
+      <CircularProgress color="#333" size={32} />
+    </Box>
+  }
 
   function moreOfThisProduct(id) {
     addProduct(id);

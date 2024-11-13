@@ -126,7 +126,7 @@ export default function SellFurnitureForm() {
         sx={{
           position: 'relative',
           px: { xs: '1rem', md: '5rem' },
-          py: { xs: '3rem', md: '5rem' },
+          py: { xs: '90px', md: '5rem' },
           minHeight: '100vh',
           overflow: 'hidden',
           display: 'flex',
@@ -145,9 +145,9 @@ export default function SellFurnitureForm() {
             order: { xs: 2, md: 1 },
           }}
         >
-          <Box sx={{ width: { md: '600px', xs: '100%' }, mb: '2.5rem' }}>
-            <Typography variant="h1" sx={{ textAlign: 'left', fontSize: { xs: '1.7rem', md: '2rem' }, fontWeight: '600', mb: '1rem', lineHeight: '2.8rem' }}>
-              Sell Your Furniture to <span style={{ backgroundColor: '#ddd', borderRadius: '33px', padding: '5px 10px' }}>Save</span> Forests
+          <Box sx={{ width: { md: '500px', xs: '100%' }, mb: '2.5rem' }}>
+            <Typography variant="h1" sx={{ textAlign: 'left', fontSize: { xs: '1.7rem', md: '2.2rem' }, fontWeight: '600', mb: '1rem', lineHeight: '3rem' }}>
+              Sell  Your Used Furniture To <span style={{ backgroundColor: '#bfffca', borderRadius: '33px', padding: '5px 10px' }}>Save</span> Forests From Being Cut Down
             </Typography>
             <Typography variant="subtitle1" sx={{ textAlign: 'left', fontSize: '.8rem', color: '#555' }}>
               Thank you for choosing to sell your used furniture to us! Your contribution helps save countless trees from being cut down and supports sustainable practices that protect our environment.
@@ -373,20 +373,20 @@ export default function SellFurnitureForm() {
                       component="label"
                       variant="outlined"
                       sx={{
-                        width: "80%",
-                        height: "80%",
+                        width: "100%",
+                        height: "100%",
                         display: "flex",
                         flexDirection: "column",
                         justifyContent: "center",
+                        gap: { md: '.1rem' },
                         alignItems: "center",
                         borderColor: "#aaa",
-                        border: '2px dashed #aaa',
                         borderRadius: "16px",
                         textTransform: "none",
                       }}
                     >
                       <UploadSimple size={32} color="#18BFF9" />
-                      <Typography color="#18BFF9" fontSize={{ xs: ".4rem", md: ".6rem" }}>
+                      <Typography color="#18BFF9" fontSize={{ xs: ".6rem", md: ".8rem" }}>
                         Upload image
                       </Typography>
                       <input
