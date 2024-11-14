@@ -2,13 +2,25 @@
 
 Green Cycle is a sustainable furniture reuse platform built with Next.js and MongoDB. It connects buyers and sellers of pre-owned furniture, allowing users to buy, sell, and trade second-hand furniture. The platform features a fully functional admin panel for managing products, users, and orders, and provides a seamless experience across desktop and mobile devices, promoting eco-friendly practices by supporting the reuse of furniture.
 
-## Screenshots of Frontend App
+## Frontend Screenshots 
+**Frontend demo**: [https://online-shop-three-weld.vercel.app/](https://online-shop-three-weld.vercel.app/)
+
 ![s1](readme-assets/screenshot-home.png)
 ![s2](readme-assets/screenshot-login.png)
 ![s3](readme-assets/screenshot-product-detail.png)
 ![s4](readme-assets/screenshot-checkout.png)
 ![s5](readme-assets/screenshot-awarness.png)
 ![s6](readme-assets/screenshot-slider.png)
+
+## Admin Screenshots
+**Admin demo**: [https://online-shop-indol-three.vercel.app/](https://online-shop-indol-three.vercel.app/)
+
+![s7](readme-assets/admin-overview.png)
+![s8](readme-assets/admin-products.png)
+![s9](readme-assets/admin-categories.png)
+![s12](readme-assets/admin-orders.png)
+![s10](readme-assets/admin-admins.png)
+![s11](readme-assets/admin-account.png)
 
 # Green Cycle Documentation
 
