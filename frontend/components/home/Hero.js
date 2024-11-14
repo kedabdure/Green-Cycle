@@ -55,12 +55,12 @@ export default function Hero() {
             <Typography
               variant="h1"
               sx={{
-                fontSize: { xs: "2.4rem", md: "3.4rem", lg: "4.4rem" },
+                fontSize: { xs: "2.4rem", md: "3.4rem", lg: "3.6rem" },
                 color: "#111",
                 maxWidth: { xs: "300px", sm: "400px", lg: "500px" },
                 fontFamily: "'Roboto', sans-serif",
-                fontWeight: "900",
-                lineHeight: { xs: "2.5rem", md: "4.3rem", lg: '5rem' },
+                fontWeight: "700",
+                lineHeight: { xs: "2.5rem", md: "4.3rem", lg: '4.5rem' },
               }}
             >
               Eco-Friendly Marketplace for Used Furniture
