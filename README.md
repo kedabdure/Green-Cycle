@@ -3,13 +3,13 @@
 Green Cycle is a sustainable furniture reuse platform built with Next.js and MongoDB. It connects buyers and sellers of pre-owned furniture, allowing users to buy, sell, and trade second-hand furniture. The platform features a fully functional admin panel for managing products, users, and orders, and provides a seamless experience across desktop and mobile devices, promoting eco-friendly practices by supporting the reuse of furniture.
 
 ## Screenshots of Frontend App
-![s1](assets/secreenshot-home.png)
-![s2](assets/secreenshot-login.png)
-![s3](assets/secreenshot-categories.png)
-![s4](assets/secreenshot-product-detail.png)
-![s5](assets/secreenshot-checkout.png)
-![s6](assets/screenshot-awarness.png)
-![s7](assets/screenshot-slider.png)
+![s1](readme-assets/secreenshot-home.png)
+![s2](readme-assets/secreenshot-login.png)
+![s3](readme-assets/secreenshot-categories.png)
+![s4](readme-assets/secreenshot-product-detail.png)
+![s5](readme-assets/secreenshot-checkout.png)
+![s6](readme-assets/screenshot-awarness.png)
+![s7](readme-assets/screenshot-slider.png)
 
 # Green Cycle Documentation
 
