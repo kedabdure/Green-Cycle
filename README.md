@@ -5,11 +5,10 @@ Green Cycle is a sustainable furniture reuse platform built with Next.js and Mon
 ## Screenshots of Frontend App
 ![s1](readme-assets/screenshot-home.png)
 ![s2](readme-assets/screenshot-login.png)
-![s3](readme-assets/screenshot-categories.png)
-![s4](readme-assets/screenshot-product-detail.png)
-![s5](readme-assets/screenshot-checkout.png)
-![s6](readme-assets/screenshot-awarness.png)
-![s7](readme-assets/screenshot-slider.png)
+![s3](readme-assets/screenshot-product-detail.png)
+![s4](readme-assets/screenshot-checkout.png)
+![s5](readme-assets/screenshot-awarness.png)
+![s6](readme-assets/screenshot-slider.png)
 
 # Green Cycle Documentation
 
