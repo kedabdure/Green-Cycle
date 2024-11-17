@@ -5,6 +5,7 @@ export interface ProductProps {
   description?: string;
   price?: string;
   images?: string[];
+  panoramicImages?: string[];
   properties?: Record<string, string>;
   updatedAt?: Date;
   createdAt?: Date;

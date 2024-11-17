@@ -10,7 +10,7 @@ const nextConfig = {
       {
         protocol: 'https',
         hostname: 'ik.imagekit.io',
-        pathname: '/gfpycoip3/ecommerce/products/**',
+        pathname: '/gfpycoip3/ecommerce/**',
       },
     ],
   },

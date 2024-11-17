@@ -4,26 +4,20 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
-import { ReactSortable } from "react-sortablejs";
-import { CameraPlus as CameraPlusIcon } from "@phosphor-icons/react";
-import { Trash as Delete } from "@phosphor-icons/react";
-import { ProductProps } from "@/types/product";
 import { CategoryProps } from "@/types/category";
 import {
   TextField,
   Select,
   MenuItem,
   Button,
-  Typography,
   FormControl,
   InputLabel,
   Box,
-  IconButton,
   CircularProgress,
-  Paper,
 } from "@mui/material";
-import { FadeLoader } from "react-spinners";
 import { useQueryClient } from "@tanstack/react-query";
+import ImageUploader from "./ImageUploader";
+import { ProductProps } from "@/types/product";
 
 export default function ProductForm({
   _id,
@@ -32,6 +26,7 @@ export default function ProductForm({
   description: existingDescription,
   price: existingPrice,
   images: existingImages,
+  panoramicImages: existingPanoramicImage,
   properties: assignedProperties,
 }: ProductProps) {
   const [title, setTitle] = useState(existingTitle || "");
@@ -40,8 +35,8 @@ export default function ProductForm({
   const [description, setDescription] = useState(existingDescription || "");
   const [productProperties, setProductProperties] = useState<Record<string, string>>(assignedProperties || {});
   const [price, setPrice] = useState(existingPrice || "");
+  const [panoramicImages, setPanoramicImages] = useState<string[]>(existingPanoramicImage || [])
   const [images, setImages] = useState<string[]>(existingImages || []);
-  const [isUploading, setIsUploading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const router = useRouter();
   const queryClient = useQueryClient();
@@ -71,7 +66,7 @@ export default function ProductForm({
           ${title ? '' : 'Product name,'}
           ${category ? '' : 'category,'}
           ${price ? '' : 'price,'}
-          ${images ? '' : 'and at least one image.,'}
+          ${images ? '' : 'and at least one image,'}
         `,
         icon: "error",
         confirmButtonText: "OK",
@@ -86,6 +81,7 @@ export default function ProductForm({
       price,
       images,
       category,
+      panoramicImages,
       properties: productProperties,
     };
 
@@ -151,48 +147,6 @@ export default function ProductForm({
     }
   }
 
-  // UPLOAD IMAGES TO IMAGEKIT AND GET URLS
-  async function uploadImages(ev: React.ChangeEvent<HTMLInputElement>) {
-    const files = ev.target.files;
-    if (!files || files.length === 0) return;
-
-    setIsUploading(true);
-
-    const data = new FormData();
-    Array.from(files).forEach((file) => data.append("file", file));
-    data.append("directory", "/ecommerce/products");
-
-    try {
-      const res = await axios.post("/api/imageUpload", data, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-      setImages((prev) => [...prev, ...res.data.urls]);
-    } catch (error) {
-      setIsUploading(false);
-      console.error("Upload Error:", error);
-      Swal.fire({
-        title: "Error",
-        text: "Failed to upload images. Please try again.",
-        icon: "error",
-        confirmButtonText: "OK",
-      });
-    } finally {
-      setIsUploading(false);
-    }
-  }
-
-  // UPDATE IMAGES ORDER
-  function updateImagesOrder(newImages: string[] | any) {
-    setImages(newImages);
-  }
-
-  // REMOVE IMAGE
-  function removeImage(link: string) {
-    setImages(images.filter((img) => img !== link));
-  }
-
   // SET PRODUCT PROPERTY
   function setProductProp(propName: string, value: string) {
     setProductProperties((prev) => ({
@@ -226,11 +180,11 @@ export default function ProductForm({
 
       {/* CATEGORY */}
       <FormControl fullWidth margin="normal">
-        <InputLabel>CategoryProps</InputLabel>
+        <InputLabel>Category</InputLabel>
         <Select
           value={categories.length > 0 ? category : ""}
           onChange={(ev) => setCategory(ev.target.value)}
-          label="CategoryProps"
+          label="Category"
           required
         >
           <MenuItem value="">Uncategorized</MenuItem>
@@ -261,96 +215,12 @@ export default function ProductForm({
               ))}
             </Select>
           </FormControl>
-        ))}
-
-      {/* PRODUCT PHOTO */}
-      <Typography sx={{ m: "15px 0 5px 0", color: "#666" }}>Photos</Typography>
-      <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, mb: 2 }}>
-      </Box>
-      <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, mb: 2 }}>
-        <ReactSortable
-          list={images.map((img) => ({ id: img, img }))}
-          setList={(newState) => updateImagesOrder(newState.map((item) => item.img))}
-          style={{ display: "flex", flexWrap: "wrap", gap: 1 }}
-        >
-          {images.map((link) => (
-            <Box key={link} sx={{ position: "relative", width: 96, height: 96, mr: "10px" }}>
-              <Paper
-                sx={{
-                  position: "relative",
-                  width: "100%",
-                  height: "100%",
-                  padding: 1,
-                  borderRadius: 1,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  boxShadow: 1,
-                  backgroundColor: "white",
-                }}
-              >
-                <img
-                  src={link}
-                  alt="Product Image"
-                  style={{ width: "100%", height: "100%", borderRadius: 2 }}
-                />
-                <IconButton
-                  onClick={() => removeImage(link)}
-                  sx={{
-                    position: "absolute",
-                    top: 1,
-                    right: 1,
-                    color: "white",
-                    backgroundColor: "red",
-                    opacity: 0.8,
-                    padding: ".2rem",
-                    borderRadius: "50%",
-                    fontSize: 18,
-                    transition: "background-color 0.3s ease",
-                  }}
-                >
-                  <Delete size={16} />
-                </IconButton>
-              </Paper>
-            </Box>
-          ))}
-        </ReactSortable>
-
-        {isUploading && (
-          <Box sx={{ width: 96, height: 96, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <FadeLoader />
-          </Box>
-        )}
-
-        <label htmlFor="upload-photo">
-          <input
-            style={{ display: "none" }}
-            id="upload-photo"
-            name="upload-photo"
-            type="file"
-            multiple
-            onChange={uploadImages}
-          />
-          <IconButton
-            component="span"
-            sx={{
-              width: 96,
-              height: 96,
-              borderRadius: 1,
-              backgroundColor: "#f0f0f0",
-              boxShadow: 1,
-              transition: "background-color 0.3s ease",
-              "&:hover": { backgroundColor: "#e0e0e0" },
-            }}
-          >
-            <CameraPlusIcon size={40} />
-          </IconButton>
-        </label>
-      </Box>
+        ))
+      }
 
       {/* PRODUCT PRICE */}
       <TextField
-        label="Product Price (USD)"
+        label="Product Price (ETB)"
         variant="outlined"
         type="number"
         fullWidth
@@ -367,7 +237,7 @@ export default function ProductForm({
 
       {/* PRODUCT DESCRIPTION */}
       <TextField
-        label="Description"
+        label="Description *"
         variant="outlined"
         fullWidth
         multiline
@@ -376,6 +246,24 @@ export default function ProductForm({
         value={description}
         onChange={(ev) => setDescription(ev.target.value)}
       />
+
+      <Box sx={{ mt: 4 }}>
+        <ImageUploader
+          title="Product Photos *"
+          directory="/ecommerce/products"
+          images={images}
+          setImages={setImages}
+        />
+      </Box>
+
+      <Box sx={{ mt: 3, mb: 6 }}>
+        <ImageUploader
+          title="Panorama Images (optional)"
+          directory="/ecommerce/panorama"
+          images={panoramicImages}
+          setImages={setPanoramicImages}
+        />
+      </Box>
 
       {/* SUBMIT / CANCEL BUTTONS */}
       <Box sx={{ display: "flex", gap: 2, mt: 2 }}>
