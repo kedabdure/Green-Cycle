@@ -2,11 +2,11 @@
 
 import Link from "next/link";
 import { useContext, useState, useEffect } from "react";
-import { CartContext } from "./cart/CartContext";
+import { CartContext } from "../cart/CartContext";
 import { useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/router";
 import { ShoppingCart, X as Close, List as BarsIcon } from "phosphor-react";
-import MainLogo from "./icons/Logo";
+import MainLogo from "../icons/Logo";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";

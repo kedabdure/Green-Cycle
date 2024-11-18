@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect } from "react";
-import Header from "../components/Header";
+import Header from "../components/header/Header";
 import Footer from "../components/Footer";
 import ProductsBox from "../components/product/ProductsBox";
 import { useQuery } from "@tanstack/react-query";

@@ -4,7 +4,7 @@ import React from "react";
 import Head from "next/head";
 import Footer from '../../components/Footer'
 import ContactForm from "../../components/contact/ContactForm";
-import Header from '../../components/Header';
+import Header from '../../components/header/Header';
 import ContactLinks from "../../components/contact/ContactLinks";
 import ContactInfo from "../../components/contact/ContactInfo";
 import NewsLetter from "../../components/contact/NewsLetter";

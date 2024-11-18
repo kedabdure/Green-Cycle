@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react';
 import Image from 'next/image';
 import Head from 'next/head';
-import Header from '../components/Header';
+import Header from '../components/header/Header';
 import Footer from '../components/Footer';
 import OrderForm from '../components/order/OrderForm';
 import { Box, Typography, Stack, Paper, Radio, RadioGroup, FormControlLabel, styled, Alert, Snackbar } from '@mui/material';

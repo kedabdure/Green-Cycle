@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import Header from "../components/Header";
+import Header from "../components/header/Header";
 import { CartContext } from "../components/cart/CartContext";
 import { Box, Button, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, CircularProgress } from "@mui/material";
 import Footer from "../components/Footer";
