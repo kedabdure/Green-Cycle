@@ -94,8 +94,9 @@ export default function Hero() {
             <Button
               onClick={() => router.push("/sell-furniture")}
               sx={{
-                padding: { xs: "0.4rem 1.5rem", md: "0.72rem 2rem" },
+                padding: "0.72rem 1.5rem",
                 fontSize: { xs: "0.8rem", md: "0.9rem" },
+                fontWeight: 500,
                 color: "#fff",
                 backgroundColor: "#111",
                 border: "1px solid #111",
@@ -107,16 +108,17 @@ export default function Hero() {
                 width: { xs: "100%", sm: "auto" },
               }}
             >
-              Sell
+              Sell Now
             </Button>
 
             <Button
               variant="outlined"
               onClick={() => router.push("/products")}
               sx={{
-                padding: { xs: "0.4rem 1.5rem", md: "0.7rem 1rem" },
+                padding: "0.72rem 1.5rem",
                 fontSize: { xs: "0.8rem", md: "0.9rem" },
                 color: "#111",
+                fontWeight: 500,
                 borderColor: "#111",
                 borderRadius: "4px",
                 "&:hover": {
