@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
@@ -24,8 +24,6 @@ import ProductsBox from "../../components/product/ProductsBox";
 import Head from "next/head";
 import Footer from "../../components/Footer";
 
-const panasonic1 = "/360/panoramic1.jpg";
-
 const fetchProduct = async (id) => {
   const { data } = await axios.get(`/api/products?id=${id}`);
   return data;
@@ -41,7 +39,7 @@ export default function ProductPage() {
   const { id } = router.query;
   const { addProduct } = useContext(CartContext);
   const [open, setOpen] = useState(false);
-  const [panoramicImage, setPanoramicImage] = useState(panasonic1 || null);
+  const [panoramicImage, setPanoramicImage] = useState("");
   const [isExpanded, setIsExpanded] = useState(false);
 
   const {
@@ -63,6 +61,14 @@ export default function ProductPage() {
     queryFn: () => fetchRelatedProducts(product?.category),
     enabled: !!product?.category,
   });
+
+  useEffect(() => {
+    if (product?.panoramicImages?.length) {
+      const cleanImageUrl = product.panoramicImages[0].split("?")[0];
+      setPanoramicImage(cleanImageUrl);
+    }
+  }, [product]);
+
 
   if (productLoading) {
     return (
@@ -89,26 +95,19 @@ export default function ProductPage() {
   };
 
   const slicedRelatedProducts = relatedProducts
-    .filter((relatedProduct) => relatedProduct._id !== product._id)
+    .filter((relatedProduct) => relatedProduct._id !== product?._id)
     .slice(0, 5);
-
-  if (productError || !product)
-    return (
-      <Typography variant="h6" color="error" sx={{ textAlign: "center" }}>
-        Failed to load product
-      </Typography>
-    );
 
   return (
     <>
       <Head>
-        <title>Product - Green Cycle</title>
+        <title>{product?.title || "Product"} - Green Cycle</title>
       </Head>
       {!isExpanded && <Header />}
       <Box
         sx={{
-          px: isExpanded ? 0 : { xs: '1rem', sm: '2.5rem', md: '4rem', lg: '5rem' },
-          py: isExpanded ? 0 : { xs: '5rem', sm: '5rem', md: '8rem' },
+          px: isExpanded ? 0 : { xs: "1rem", sm: "2.5rem", md: "4rem", lg: "5rem" },
+          py: isExpanded ? 0 : { xs: "5rem", sm: "5rem", md: "8rem" },
           maxWidth: "1440px",
           margin: "0 auto",
         }}
@@ -143,7 +142,7 @@ export default function ProductPage() {
             }}
           >
             <ProductDetail
-              images={product.images || []}
+              images={product?.images?.length ? product.images : [fallbackPanoramicImage]}
               panoramicImage={panoramicImage}
               isExpanded={isExpanded}
               onExpandImage={setIsExpanded}
@@ -162,17 +161,17 @@ export default function ProductPage() {
               }}
             >
               <Stack direction="row" spacing={2} alignItems="center">
-                {product.badge && <Chip label={product.badge} color="primary" />}
+                {product?.badge && <Chip label={product.badge} color="primary" />}
                 <Typography variant="h5" fontWeight="bold">
-                  {product.title}
+                  {product?.title || "Untitled Product"}
                 </Typography>
               </Stack>
               <Typography variant="body1" color="text.secondary">
-                {product.description}
+                {product?.description || "No description available."}
               </Typography>
               <Box display="flex" alignItems="center" gap={1} mt={2}>
                 <Typography variant="h5" fontWeight="600">
-                  {product.price.toLocaleString()}
+                  {product?.price?.toLocaleString() || "0"}
                 </Typography>
                 <Currency>ETB</Currency>
               </Box>
@@ -216,9 +215,9 @@ export default function ProductPage() {
               </Box>
             ) : (
               <Grid container spacing={2}>
-                {slicedRelatedProducts.map((product) => (
-                  <Grid item xs={12} sm={6} md={4} lg={3} key={product._id}>
-                    <ProductsBox {...product} />
+                {slicedRelatedProducts.map((relatedProduct) => (
+                  <Grid item xs={12} sm={6} md={4} lg={3} key={relatedProduct._id}>
+                    <ProductsBox {...relatedProduct} />
                   </Grid>
                 ))}
               </Grid>

@@ -1,8 +1,11 @@
 import React, { useEffect, useRef } from "react";
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { Box } from "@mui/material";
 import * as THREE from "three";
 import { CornersOut, CornersIn } from "phosphor-react";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+import { FontLoader } from "three/examples/jsm/loaders/FontLoader";
+import { TextGeometry } from "three/examples/jsm/geometries/TextGeometry";
+
 
 export default function PanoramaBox({
   panoramicImage,
@@ -34,7 +37,7 @@ export default function PanoramaBox({
     const camera = new THREE.PerspectiveCamera(
       fovRef.current,
       imageContainerRef.current.clientWidth /
-        imageContainerRef.current.clientHeight,
+      imageContainerRef.current.clientHeight,
       0.1,
       1000
     );
@@ -60,6 +63,87 @@ export default function PanoramaBox({
     const sphere = new THREE.Mesh(geometry, material);
     sphereRef.current = sphere;
     scene.add(sphere);
+
+    // const fontLoader = new FontLoader();
+    // fontLoader.load(
+    //   "https://threejs.org/examples/fonts/helvetiker_regular.typeface.json",
+    //   (font) => {
+    //     // Geometry for the name text
+    //     const nameGeometry = new TextGeometry("Elegant Oak Chair", {
+    //       font,
+    //       size: 10,
+    //       height: 1,
+    //       curveSegments: 16,
+    //       bevelEnabled: true,
+    //       bevelThickness: 0.5,
+    //       bevelSize: .3,
+    //       bevelSegments: 1,
+    //     });
+
+    //     // Geometry for the price text
+    //     const priceGeometry = new TextGeometry("Price: 7,500 ETB", {
+    //       font,
+    //       size: 5,
+    //       height: 2,
+    //       curveSegments: 2,
+    //       bevelEnabled: true,
+    //       bevelThickness: 0.4,
+    //       bevelSize: 0.2,
+    //       bevelSegments: 5,
+    //     });
+
+    //     // Materials for the gaming look
+    //     const nameMaterial = new THREE.MeshStandardMaterial({
+    //       color: "black",
+    //       roughness: 0.4,
+    //       metalness: 0.9,
+    //       emissive: "rgb(0, 0, 0)",
+    //       emissiveIntensity: 0.7,
+    //       side: THREE.DoubleSide,
+    //       wireframe: false,
+    //       flatShading: true,
+    //     });
+
+    //     const priceMaterial = new THREE.MeshStandardMaterial({
+    //       color: "magenta",
+    //       roughness: 0.5,
+    //       metalness: 0.8,
+    //       emissive: "rgb(255, 0, 0)",
+    //       emissiveIntensity: .2,
+    //       side: THREE.DoubleSide,
+    //       wireframe: false,
+    //       flatShading: true,
+    //     });
+
+    //     // Mesh for name and price text
+    //     const nameMesh = new THREE.Mesh(nameGeometry, nameMaterial);
+    //     const priceMesh = new THREE.Mesh(priceGeometry, priceMaterial);
+
+    //     // Position the name and price text creatively
+    //     nameMesh.position.set(-100, 15, -20);
+    //     priceMesh.position.set(-100, 5, -20);
+
+    //     // Adding slight rotation to make it dynamic and gaming-styled
+    //     nameMesh.rotation.y = Math.PI / 4;
+    //     priceMesh.rotation.y = Math.PI / 4;
+
+    //     // Adding some animated rotation for dynamic effects
+    //     // const animateText = () => {
+    //     //   requestAnimationFrame(animateText);
+
+    //     //   // Rotate for more dynamic look
+    //     //   nameMesh.rotation.y += 0.005;
+    //     //   priceMesh.rotation.y += 0.005;
+
+    //     //   renderer.render(scene, camera);
+    //     // };
+
+    //     // animateText();
+
+    //     // Add both meshes to the scene
+    //     scene.add(nameMesh, priceMesh);
+    //   }
+    // );
 
     // Camera position
     camera.position.set(0, 0, 0.1);
