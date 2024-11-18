@@ -18,11 +18,12 @@ import { CartContext } from "../../components/cart/CartContext";
 import ProductDetail from "../../components/product/ProductDetail";
 import CartIcon from "../../components/icons/CartIcon";
 import Currency from "../../components/Currency";
-import Header from "../../components/Header";
+import Header from "../../components/header/Header";
 import { X as CloseIcon } from "phosphor-react";
 import ProductsBox from "../../components/product/ProductsBox";
 import Head from "next/head";
 import Footer from "../../components/Footer";
+
 
 const fetchProduct = async (id) => {
   const { data } = await axios.get(`/api/products?id=${id}`);
@@ -142,7 +143,7 @@ export default function ProductPage() {
             }}
           >
             <ProductDetail
-              images={product?.images?.length ? product.images : [fallbackPanoramicImage]}
+              images={product.images}
               panoramicImage={panoramicImage}
               isExpanded={isExpanded}
               onExpandImage={setIsExpanded}

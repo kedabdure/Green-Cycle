@@ -15,7 +15,7 @@ export default function Hero() {
       alignItems: "center",
       justifyContent: "center",
       position: "relative",
-      py: { xs: "90px", md: "120px" },
+      py: { xs: "100px", md: "120px" },
       px: { xs: "1rem", md: "2rem", lg: "5rem" },
       overFlow: "hidden",
       zIndex: 1,
@@ -29,7 +29,7 @@ export default function Hero() {
           justifyContent: "center",
           position: "relative",
           flexDirection: { xs: "column", md: "row" },
-          gap: { xs: "2rem", md: "3rem" },
+          gap: { xs: "1.5rem", md: "3rem" },
         }}
       >
         {/* Left Section */}
@@ -42,25 +42,26 @@ export default function Hero() {
             flexDirection: "column",
             justifyContent: "space-between",
             alignItems: { xs: "center", md: "flex-start" },
+            mb: { xs: "1.7rem", md: "0" },
           }}
         >
           <Box
             sx={{
               display: "flex",
               flexDirection: "column",
-              gap: "1.2rem",
+              gap: { xs: "1rem", md: "1.2rem" },
               alignItems: { xs: "center", md: "flex-start" },
             }}
           >
             <Typography
-              variant="h1"
+              variant="h3"
               sx={{
-                fontSize: { xs: "2.4rem", md: "3.4rem", lg: "3.6rem" },
                 color: "#111",
                 maxWidth: { xs: "300px", sm: "400px", lg: "500px" },
                 fontFamily: "'Roboto', sans-serif",
-                fontWeight: "700",
-                lineHeight: { xs: "2.5rem", md: "4.3rem", lg: '4.5rem' },
+                fontSize: { xs: "2.5rem", md: "3.4rem", lg: "3.6rem" },
+                fontWeight: 700,
+                lineHeight: { xs: "2.55rem", md: "4.3rem", lg: '4.5rem' },
               }}
             >
               Eco-Friendly Marketplace for Used Furniture
@@ -73,7 +74,7 @@ export default function Hero() {
                 color: "#4f4f4f",
                 lineHeight: "1.6",
                 maxWidth: { xs: "230px", md: "700px" },
-                mb: { xs: "2rem", md: ".6rem" },
+                mb: { xs: "2.5rem", md: ".6rem" },
               }}
             >
               Support Ethiopia’s Green Legacy with sustainable furniture choices embrace eco-friendly materials and reduce waste with every purchase.
@@ -137,7 +138,7 @@ export default function Hero() {
             maxWidth: '580px',
             display: "flex",
             flexDirection: "column",
-            gap: { xs: ".9rem", md: "1rem" },
+            gap: { xs: ".8rem", md: "1rem" },
           }}
         >
           {/* Top Two Images */}
@@ -155,6 +156,7 @@ export default function Hero() {
               <Image
                 src={'/assets/images/hero-small1.jpg'}
                 fill
+                sizes="100%"
                 alt="Product photo 1"
                 placeholder="blur"
                 blurDataURL={'/assets/images/hero-small1.jpg'}
@@ -174,6 +176,7 @@ export default function Hero() {
               <Image
                 src={'/assets/images/hero-small2.jpg'}
                 fill
+                sizes="100%"
                 alt="Product photo 2"
                 placeholder="blur"
                 blurDataURL={'/assets/images/hero-small2.jpg'}
@@ -196,6 +199,7 @@ export default function Hero() {
             <Image
               src={'/assets/images/hero-large.jpg'}
               fill
+              sizes="100%"
               alt="Product photo 3"
               placeholder="blur"
               blurDataURL={'/assets/images/hero-large.jpg'}
@@ -209,20 +213,20 @@ export default function Hero() {
           sx={{
             display: { xs: "flex", md: "none" },
             alignItems: "center",
-            justifyContent: {xs: "center", md: "space-between"},
-            width: '80%',
-            mt: 3,
+            justifyContent: { xs: "center", md: "space-between" },
+            width: '65%',
+            mt: 1,
             gap: 1,
           }}
         >
           <Button
             onClick={() => router.push("/sell-furniture")}
             sx={{
-              padding: { xs: "0.6rem .5rem", md: "0.6rem 2rem" },
+              padding: { xs: "0.6rem 0", md: "0.6rem 2rem" },
               fontSize: { xs: "0.8rem", md: "0.9rem" },
               color: "#fff",
               backgroundColor: "#111",
-              border: "1px solid #111",
+              border: "1.3px solid #111",
               borderRadius: "4px",
               "&:hover": {
                 backgroundColor: "#fff",
@@ -231,14 +235,14 @@ export default function Hero() {
               width: { xs: "100%", sm: "auto" },
             }}
           >
-            Sell
+            Sell Now
           </Button>
 
           <Button
             variant="outlined"
             onClick={() => router.push("/products")}
             sx={{
-              padding: { xs: "0.6rem .5rem", md: "0.6rem 2rem" },
+              padding: { xs: "0.6rem 0", md: "0.6rem 2rem" },
               fontSize: { xs: "0.8rem", md: "0.9rem" },
               color: "#111",
               borderColor: "#111",
@@ -259,7 +263,7 @@ export default function Hero() {
       <Box sx={{
         width: '100%',
         position: 'absolute',
-        bottom: { xs: '0', md: '0%' },
+        bottom: { xs: '0', md: '-4%' },
         left: 0,
       }}>
         <ClientSlider />

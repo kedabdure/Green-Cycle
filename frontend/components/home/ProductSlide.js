@@ -219,6 +219,7 @@ export default function ProductSlide() {
                       <Image
                         src={product?.images[0]}
                         fill
+                        sizes="100%"
                         alt="Product photo"
                         placeholder="blur"
                         blurDataURL={`${product.images[0]}?tr=w-10,h-10,bl`}
@@ -292,7 +293,7 @@ export default function ProductSlide() {
                         }}
                       >
                         {formattedPrice(product.price)}{" "}
-                        <Typography variant="h6" fontSize=".7rem" display="inline-block">
+                        <Typography variant="body2" fontSize=".7rem" display="inline-block">
                           ETB
                         </Typography>
                       </Typography>
@@ -371,9 +372,9 @@ export default function ProductSlide() {
         <Image
           src="/assets/blobs/blob.svg"
           fill
+          sizes="100%"
           alt="Background SVG"
-          layout="fill"
-          objectFit="cover"
+          style={{objectFit: 'cover'}}
         />
       </Box>
 

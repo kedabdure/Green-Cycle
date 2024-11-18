@@ -109,6 +109,7 @@ export default function ClientSlider() {
             backgroundColor: '#003F2E',
             width: '100%',
             padding: { xs: '10px', sm: '15px', md: '18px' },
+            margin: '0 auto',
             zIndex: 1,
           }}
         >
@@ -122,8 +123,8 @@ export default function ClientSlider() {
                   alignItems: 'center',
                   flexDirection: 'row',
                   padding: '0 5px',
+                  mt: '7px',
                   height: '100%',
-                  cursor: 'pointer',
                   width: '100%',
                   gap: '8px',
                 }}
@@ -140,10 +141,6 @@ export default function ClientSlider() {
                     fontWeight: 'bold',
                     whiteSpace: 'nowrap',
                     textAlign: 'center',
-                    transition: 'color 0.3s ease-in-out',
-                    '&:hover': {
-                      color: '#A3D7BF',
-                    },
                   }}
                 >
                   {icons[index]} {text}

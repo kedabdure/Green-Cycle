@@ -13,6 +13,8 @@ import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import Badge from "@mui/material/Badge";
 import Avatar from "@mui/material/Avatar";
+import UserPopover from "./UserPopover";
+
 
 export default function Header() {
   const { cartProducts } = useContext(CartContext);
@@ -21,6 +23,8 @@ export default function Header() {
   const { data: session } = useSession();
   const nameFirstChar = session?.user?.name?.[0]?.toUpperCase() || "";
   const image = session?.user?.image;
+
+  const [anchorEl, setAnchorEl] = useState(null);
 
   const [isHeaderVisible, setIsHeaderVisible] = useState(true);
   const [scrollPosition, setScrollPosition] = useState(0);
@@ -62,10 +66,19 @@ export default function Header() {
   const navLinks = [
     { href: "/", label: "Home" },
     { href: "/products", label: "Shop Now" },
+    { href: "/sell-furniture", label: "Sell Now" },
     { href: "/about", label: "About Us" },
     { href: "/contact", label: "Contact Us" },
-    { href: "/sell-furniture", label: "Sell Now" },
   ];
+
+  // Popover
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  }
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  }
 
   return (
     <Box
@@ -161,7 +174,7 @@ export default function Header() {
                 ...linkStyles,
                 fontSize: "1.1rem",
                 marginBottom: ".5rem",
-                display: { xs: 'block', md: 'none' }, // Only visible on mobile
+                display: { xs: 'block', md: 'none' },
               }}
               onClick={() => setMobileNavActive(false)}
               className={router.pathname === "/account" ? "active" : ""}
@@ -214,13 +227,33 @@ export default function Header() {
           <Box sx={{ display: { xs: "none", md: "flex" }, gap: 2 }}>
             {session ? (
               <Box sx={{ width: '100%', display: "flex", alignItems: "center", gap: 3 }}>
-                <Avatar
-                  sx={{ bgcolor: "green", cursor: "pointer" }}
-                  onClick={() => router.push("/account")}
-                  src={image}
+                <Box
+                  sx={{
+                    cursor: "pointer",
+                    width: 38,
+                    height: 38,
+                    padding: "10px",
+                    borderRadius: "50%",
+                    transition: "background-color 0.2s ease-in-out",
+                    display: "inline-flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    "&:hover": { backgroundColor: "lightgreen" },
+                  }}
                 >
-                  {!image && nameFirstChar}
-                </Avatar>
+                  <Avatar
+                    sx={{ width: 32, height: 32, objectFit: 'contained' }}
+                    src={image}
+                    onClick={handleClick}
+                  >
+                    {!image && nameFirstChar}
+                  </Avatar>
+                  <UserPopover
+                    anchorEl={anchorEl}
+                    user={session?.user}
+                    popOverClose={handleClose}
+                  />
+                </Box>
                 <Button variant="outlined" sx={{ textTransform: 'capitalize', color: '#111', borderColor: '#111' }} onClick={() => signOut()}>Logout</Button>
               </Box>
             ) : (

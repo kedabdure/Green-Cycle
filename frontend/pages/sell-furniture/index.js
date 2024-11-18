@@ -469,13 +469,12 @@ export default function SellFurnitureForm() {
             src="/assets/images/greenGradient.svg"
             fill
             alt="Background SVG"
-            layout="fill"
-            objectFit="cover"
+            style={{ objectFit: 'contained' }}
           />
         </Box >
 
         {/* Background SVG bottom left*/}
-        < Box
+        <Box
           sx={{
             position: 'absolute',
             bottom: { xs: '-70%', md: '-70%' },
@@ -490,8 +489,7 @@ export default function SellFurnitureForm() {
             src="/assets/images/greenGradient.svg"
             fill
             alt="Background SVG"
-            layout="fill"
-            objectFit="cover"
+            style={{ objectFit: 'contained' }}
           />
         </Box >
       </Box >

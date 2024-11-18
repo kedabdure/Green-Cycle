@@ -90,6 +90,7 @@ export default function TransformingScrap() {
               <Image
                 src="/assets/images/before-and-after.jpg"
                 fill
+                sizes="100%"
                 alt="Big image"
                 placeholder="blur"
                 blurDataURL={'/assets/images/before-and-after.jpg'}
@@ -138,7 +139,7 @@ export default function TransformingScrap() {
               <Box
                 sx={{
                   width: '100%',
-                  height: '150px',
+                  height: 'auto',
                   overflow: 'hidden',
                   borderRadius: '16px',
                 }}
@@ -154,7 +155,7 @@ export default function TransformingScrap() {
               <Box
                 sx={{
                   width: '100%',
-                  height: '150px',
+                  height: 'auto',
                   overflow: 'hidden',
                   borderRadius: '16px',
                 }}
