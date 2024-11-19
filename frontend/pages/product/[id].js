@@ -67,8 +67,10 @@ export default function ProductPage() {
     if (product?.panoramicImages?.length) {
       const cleanImageUrl = product.panoramicImages[0].split("?")[0];
       setPanoramicImage(cleanImageUrl);
+    } else {
+      setPanoramicImage("");
     }
-  }, [product]);
+  }, [product?.panoramicImages]);
 
 
   if (productLoading) {
@@ -143,7 +145,7 @@ export default function ProductPage() {
             }}
           >
             <ProductDetail
-              images={product.images}
+              images={product?.images || []}
               panoramicImage={panoramicImage}
               isExpanded={isExpanded}
               onExpandImage={setIsExpanded}
