@@ -238,7 +238,7 @@ export default function Header() {
                     display: "inline-flex",
                     alignItems: "center",
                     justifyContent: "center",
-                    "&:hover": { backgroundColor: "lightgreen" },
+                    "&:hover": { backgroundColor: "#e6feef" },
                   }}
                 >
                   <Avatar

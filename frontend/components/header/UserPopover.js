@@ -46,7 +46,7 @@ const UserPopover = ({ anchorEl, user, popOverClose }) => {
       <Divider />
       {/* Menu List Section */}
       <MenuList disablePadding sx={{ p: '8px', '& .MuiMenuItem-root': { borderRadius: 1 } }}>
-        <MenuItem component={Link} href="/account" onClick={popOverClose}>
+        <MenuItem component={Link} href="/order-history" onClick={popOverClose}>
           <ListItemIcon>
             <History fontSize="medium" />
           </ListItemIcon>
