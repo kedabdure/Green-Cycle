@@ -41,6 +41,7 @@
     "react-slick": "^0.30.2",
     "react-spinners": "^0.14.1",
     "react-spring": "^9.7.4",
+    "resend": "^4.0.1",
     "slick-carousel": "^1.8.1",
     "styled-components": "^6.1.13",
     "sweetalert2": "^11.14.5",

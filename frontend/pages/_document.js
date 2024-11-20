@@ -10,6 +10,7 @@ export default function Document() {
       <body style={{ overflowX: 'hidden'}}>
         <Main />
         <NextScript />
+        <script defer src="https://app.fastbots.ai/embed.js" data-bot-id="cm3q7vl460i4osvbmkvrnzbj5"></script>
       </body>
     </Html>
   );
