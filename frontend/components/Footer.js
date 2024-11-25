@@ -238,7 +238,8 @@ export default function Contact() {
 
         <Box sx={{ display: "flex", justifyContent: { xs: "left", md: "center" }, alignItems: "center", py: 2 }}>
           <Typography variant="body2" sx={{ mb: "1rem", fontSize: { xs: "0.65rem", sm: "0.875rem", md: ".8rem" }, color: "#e1e2e2" }}>
-            &copy; {getCurrentYear()} Green Cycle. All Rights Reserved. Powered by <Link href={'http://t.me/kedabdure'} style={{ color: "#48cb66" }} >Abdurehim</Link>
+            &copy; {getCurrentYear()} Green Cycle. All Rights Reserved.
+            Designed by <Link href={'https://www.linkedin.com/in/philofix'} style={{ color: "#48cb66" }} >Mensur</Link> and Powered by <Link href={'http://t.me/kedabdure'} style={{ color: "#48cb66" }} >Abdurehim </Link>
           </Typography>
         </Box>
       </Container>
