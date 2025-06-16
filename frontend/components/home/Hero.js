@@ -263,6 +263,7 @@ export default function Hero() {
 
       {/* Quote Slider */}
       <Box sx={{
+        position: 'relative',
         width: '100%',
         position: 'absolute',
         bottom: { xs: '0', md: '-4%' },

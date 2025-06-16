@@ -139,7 +139,7 @@ const OrdersPage = () => {
                     </TableCell>
 
                     <TableCell>
-                      {`${order.streetAddress}, ${order.subCity}, ${order.city}, ${order.country}`} <br />
+                      {`${order.streetAddress}, ${order.subCity}, ${order.city}, ${order.email}`} <br />
                       <Typography color='blueviolet' variant='caption'>{order.phone}</Typography>
                     </TableCell>
 

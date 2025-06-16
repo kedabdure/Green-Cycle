@@ -94,7 +94,7 @@ export default function ClientSlider() {
   ];
 
   return (
-    <Box maxWidth="xl">
+    <Box maxWidth="100%">
       <Box
         sx={{
           display: 'flex',
